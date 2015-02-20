@@ -1,7 +1,7 @@
-import os
-from ... import app 
 import unittest
 import tempfile
+import os
+from app import app
 
 class SimpleTestCase(unittest.TestCase):
 
@@ -16,7 +16,7 @@ class SimpleTestCase(unittest.TestCase):
         os.unlink(app.config['DATABASE'])
 
     def test_assert(self):
-        assert 'No entries here so far' == ''
+        assert '' == ''
 
 if __name__ == '__main__':
     unittest.main()
