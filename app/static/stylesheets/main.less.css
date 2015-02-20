@@ -1,0 +1,7 @@
+.crud_list {
+	width: 100%;
+
+	thead td{
+		font-weight: bold;	
+	}
+}
