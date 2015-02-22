@@ -9,6 +9,9 @@ $(document).ready(function(){
 		maxZoom: 18
 	}).addTo(map);
 
+	var latlngs = [[48.1533, 11.5667], [48.1423, 11.5697]]
+	var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
+
 
 	$.ajax({
 		url : "/points",
