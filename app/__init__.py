@@ -4,13 +4,13 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 
 # Create app
-app = Flask(__name__)
-Bootstrap(app)
-app.config.from_object('config')
-db = SQLAlchemy(app)
+GisApp = Flask(__name__)
+Bootstrap(GisApp)
+GisApp.config.from_object('config')
+db = SQLAlchemy(GisApp)
 
 # Assets
-assets = Environment(app)
+assets = Environment(GisApp)
 js = Bundle('javascripts/leaflet-src.js', 'javascripts/jquery-2.1.3.min.js', 'javascripts/main.js',
             filters='jsmin', output='gen/packed.js')
 assets.register('application_js', js)

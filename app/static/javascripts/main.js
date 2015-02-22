@@ -9,9 +9,14 @@ $(document).ready(function(){
 		maxZoom: 18
 	}).addTo(map);
 
-	var latlngs = [[48.1533, 11.5667], [48.1423, 11.5697]]
-	var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
-
+	$.ajax({
+		url : "/lines",
+		success : function(data){
+			for(var i = 0; i < data.length; i++){
+				var polyline = L.polyline(data[i], {color: 'red'}).addTo(map);
+			}			
+		}
+	});
 
 	$.ajax({
 		url : "/points",
