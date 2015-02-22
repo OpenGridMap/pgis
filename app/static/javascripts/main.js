@@ -17,7 +17,7 @@ $(document).ready(function(){
 		url : "/points",
 		success : function(data){
 			for(var i = 0; i < data.length; i++){
-				var marker = L.marker(data[i], {draggable:'true'}).addTo(map);
+				var marker = L.marker(data[i]).addTo(map);
 			}			
 		}
 	});
