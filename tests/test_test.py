@@ -1,19 +1,19 @@
 import unittest
 import tempfile
 import os
-from app import app
+from app import GisApp
 
 class SimpleTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-        app.config['TESTING'] = True
-        self.app = app.test_client()
+        self.db_fd, GisApp.config['DATABASE'] = tempfile.mkstemp()
+        GisApp.config['TESTING'] = True
+        self.app = GisApp.test_client()
         #app.init_db()
 
     def tearDown(self):
         os.close(self.db_fd)
-        os.unlink(app.config['DATABASE'])
+        os.unlink(GisApp.config['DATABASE'])
 
     def test_assert(self):
         assert '' == ''
