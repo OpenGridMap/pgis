@@ -10,11 +10,11 @@ $(document).ready(function(){
 	}).addTo(map);
 
 	$.ajax({
-		url : "/lines",
+		url : "/powerlines",
 		success : function(data){
 			for(var i = 0; i < data.length; i++){
 				var polyline = L.polyline(data[i], {color: 'red'}).addTo(map);
-			}			
+			}
 		}
 	});
 

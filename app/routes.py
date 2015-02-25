@@ -2,7 +2,6 @@ from flask import render_template, flash, redirect, abort, session, url_for, req
 from app import GisApp, db
 import app.models.point
 import app.models.powerline
-import app.helpers.point_add_form
 import app.controllers.application_controller
 import app.controllers.points_controller
 import app.controllers.powerlines_controller
@@ -22,8 +21,8 @@ def points():
 	controller = app.controllers.points_controller.PointsController()
 	return controller.index()
 
-@GisApp.route('/lines', methods=['GET'])
-def lines():
+@GisApp.route('/powerlines', methods=['GET'])
+def powerlines():
 	controller = app.controllers.powerlines_controller.PowerlinesController()
 	return controller.index()	
 
@@ -57,4 +56,27 @@ def admin_powerlines():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.index()
 
+@GisApp.route('/admin/powerlines/new')
+def admin_powerlines_new():
+	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
+	return controller.new()
 
+@GisApp.route('/admin/powerlines/create', methods=['POST'])
+def admin_powerlines_create():
+	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
+	return controller.create()
+
+@GisApp.route('/admin/powerlines/edit/<id>', methods=['GET'])
+def admin_powerlines_edit(id):
+	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
+	return controller.edit(id)
+
+@GisApp.route('/admin/powerlines/update/<id>', methods=['POST'])
+def admin_powerlines_update(id):
+	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
+	return controller.update(id)
+
+@GisApp.route('/admin/powerlines/delete/<id>', methods=['GET'])
+def admin_powerlines_delete(id):
+	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
+	return controller.delete(id)

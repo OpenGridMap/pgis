@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
+from app.models.powerline import Powerline
 
 class PowerlinesController:
 	def index(self):
-		lines = [[[48.1533, 11.5667], [48.1423, 11.5697]], [[48.1533, 11.5667], [48.1123, 11.5197], [48.1323, 11.6097]]]
-		return Response(json.dumps(lines),  mimetype='application/json')
+		powerlines = list(map(lambda powerline: powerline.serialize(), Powerline.query.all()))
+		return Response(json.dumps(powerlines),  mimetype='application/json')
