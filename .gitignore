@@ -1,3 +1,4 @@
 app/static/.webassets-cache
 app/static/gen
 __pycache__
+__init__.pyc
