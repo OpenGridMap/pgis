@@ -1,6 +1,3 @@
-//alert('test')
-
-
 $(document).ready(function(){
 	L.Icon.Default.imagePath = APP_IMAGES_URL;
 	var map = L.map('map').setView([48.1333, 11.5667], 13);
@@ -13,6 +10,7 @@ $(document).ready(function(){
 		url : "/powerlines",
 		success : function(data){
 			for(var i = 0; i < data.length; i++){
+				console.log(data[i])
 				var polyline = L.polyline(data[i], {color: 'red'}).addTo(map);
 			}
 		}
