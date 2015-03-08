@@ -3,14 +3,14 @@
 {% block styles %}
 {{super()}}
 
-{% assets "application_css" %}
+{% assets "admin_application_css" %}
 <link rel="stylesheet" href="{{ ASSET_URL }}" />
 {% endassets %}
 
 {% endblock %}
 
 {% block scripts %}
-
+{{super()}}
 {% assets "admin_application_js" %}
 
 <script type="text/javascript" src="{{ ASSET_URL }}"></script>
@@ -20,7 +20,7 @@
 
 {% endassets %}
 
-{{super()}}
+
 {% endblock %}
 
 {% block navbar %}
