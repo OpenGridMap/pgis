@@ -2,15 +2,16 @@
 {% block content %}
 <div class="container center-block clearfix">
 	<h3>Edit Powerline</h3>
-	<form class="col-md-4" action="/admin/powerlines/update/{{id}}" method="post" name="new_powerline">
+	<form id="powerline-edit-form" class="col-md-4" action="/admin/powerlines/update/{{id}}" method="post" name="new_powerline">
 		{{ form.hidden_tag() }}
 
 		<div class="form-group">
 			<label class="control-label" for="point_field_name">LatLngs</label>
-			{{ form.latlngs(class_="form-control ", placeholder="48.11 11.56, 48.12 11.61") }}
+			{{ form.latlngs(class_="form-control ", placeholder="48.11 11.56, 48.12 11.61", autocomplete="off" )}}
 		</div>
 
-		<button type="submit" class="btn btn-default">Submit</button>
+		<button type="submit" class="btn btn-default">Save</button>
+		<button id="cancel-edit" class="btn btn-default">Cancel</button>
 	</form>
 	
 	<div id="map" data-powerline="{{ form.latlngs.data }}" style="width:500px; height:500px;"></div>
@@ -31,8 +32,9 @@
 		var powerline = $(map.getContainer()).data('powerline');
 
 		if(powerline != ""){
-			var coords 		= latlngStringToCoords(powerline);
-			var polyline 	= L.polyline(coords, {color: 'red'}).addTo(map);
+			var coords 				= latlngStringToCoords(powerline);
+			var default_powerline 	= powerline;
+			var polyline 			= L.polyline(coords, {color: 'red'}).addTo(map);
 		}
 
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -49,7 +51,16 @@
 			}
 			var powerline = $(this).val();
 			polyline.setLatLngs(latlngStringToCoords(powerline));
+			map.fitBounds(polyline.getBounds());
+			$('form button').fadeIn();
 		})
+
+		$('#cancel-edit').click(function(e){
+			e.preventDefault();
+			$('input[name=latlngs]').val(default_powerline);
+			$('input[name=latlngs]').trigger('keyup');
+			$('form button').fadeOut();
+		});
 	})
 </script>
 {% endblock %}
