@@ -18,5 +18,24 @@
 	</span>
 	
 	<script src="https://apis.google.com/js/client:platform.js" async defer></script>
+	<meta name="google-signin-callback" content="signinCallback" />
+	<script type="text/javascript">
+		function signinCallback(authResult) {
+			if (authResult['status']['signed_in']) {
+							// Your user is signed in. You can use the access token to perform
+							// calls or if you get a `code`, you could send that to your API
+							// server to get server-side access to the APIs.
+				var loc = '/admin/oauth2connect?GoogleAuthToken=' + authResult['access_token'];
+				window.location.href = loc;
+			} else {
+							// User is not signed in to your app, handle any user interface
+							// changes or other aspects of your design based on this condition.
+
+						
+			}
+				
+		}
+	</script>
+
 </body>
 </html>

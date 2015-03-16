@@ -4,7 +4,7 @@ DataShape==0.3.0
 Flask==0.10.1
 Flask-Assets==0.10
 Flask-Babel==0.9
-Flask-Login==0.2.11
+Flask-Login==0.2.9
 Flask-Mail==0.9.1
 Flask-OpenID==1.2.4
 Flask-SQLAlchemy==2.0
