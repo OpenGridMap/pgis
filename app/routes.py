@@ -1,13 +1,19 @@
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
+from flask.ext.principal import Principal, Permission, RoleNeed
+
 from app import GisApp, db
 import app.models.point
 import app.models.powerline
+import app.models.user
 import app.controllers.application_controller
 import app.controllers.points_controller
 import app.controllers.powerlines_controller
 import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
+
+principals = Principal(GisApp)
+admin_permission = Permission(RoleNeed('admin'))
 
 @GisApp.route('/')
 @GisApp.route('/index')
@@ -25,6 +31,12 @@ def points():
 def powerlines():
 	controller = app.controllers.powerlines_controller.PowerlinesController()
 	return controller.index()	
+
+@GisApp.route('/admin/login')
+def admin_login():
+    controller = app.controllers.admin.application_controller.ApplicationController()
+    return controller.login()
+    
 
 @GisApp.route('/admin')
 def admin():

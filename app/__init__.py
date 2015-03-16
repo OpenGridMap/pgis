@@ -30,5 +30,3 @@ assets.register('admin_application_css', admin_less)
 # Load Routes
 from app import routes
 
-
-
