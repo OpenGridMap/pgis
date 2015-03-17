@@ -1,5 +1,6 @@
-from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
+from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, jsonify, Response
 from flask.ext.login import LoginManager, login_user, login_required
+from flask_oauthlib.client import OAuth
 
 from app import GisApp, db
 import app.models.point
@@ -14,6 +15,24 @@ import app.controllers.admin.powerlines_controller
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
+
+oauth = OAuth(GisApp)
+
+google = oauth.remote_app(
+    'google',
+    consumer_key=GisApp.config.get('GOOGLE_CLIENT_ID'),
+    consumer_secret=GisApp.config.get('GOOGLE_CLIENT_SECRET'),
+    request_token_params={
+        'scope': 'https://www.googleapis.com/auth/userinfo.email'
+
+    },
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
+
 
 @login_manager.user_loader
 def load_user(userid):
@@ -38,7 +57,23 @@ def powerlines():
 @GisApp.route('/admin/login')
 def admin_login():
     controller = app.controllers.admin.application_controller.ApplicationController()
-    return controller.login()
+    return google.authorize(callback=url_for('authorized', _external=True))
+
+@GisApp.route('/login/authorized')
+def authorized():
+    resp = google.authorized_response()
+    if resp is None:
+        return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    session['google_token'] = (resp['access_token'], '')
+    me = google.get('userinfo')
+    return jsonify({"data": me.data})
+
+@google.tokengetter
+def get_google_oauth_token():
+    return session.get('google_token')
 
 @GisApp.route('/admin')
 @login_required
