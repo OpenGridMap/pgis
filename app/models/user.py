@@ -1,7 +1,10 @@
 from app import db
 
 class User(db.Model):
-    id 	 = db.Column(db.Integer, primary_key=True)
+    id 	            = db.Column(db.Integer, primary_key=True)
+    email           = db.Column(db.String)
+    password        = db.Column(db.String) 
+    authenticated   = db.Column(db.Boolean, default=False) 
 
     def roles(self):
         return []
