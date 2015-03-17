@@ -1,10 +1,6 @@
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
 from flask.ext.login import LoginManager, login_user, login_required
 
-from oauth2client.client import AccessTokenRefreshError
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
-
 from app import GisApp, db
 import app.models.point
 import app.models.powerline
@@ -29,7 +25,6 @@ def index():
 	controller = app.controllers.application_controller.ApplicationController()
 	return controller.index()
 
-
 @GisApp.route('/points')
 def points():
 	controller = app.controllers.points_controller.PointsController()
@@ -44,13 +39,6 @@ def powerlines():
 def admin_login():
     controller = app.controllers.admin.application_controller.ApplicationController()
     return controller.login()
-    
-@GisApp.route('/admin/oauth2connect')
-def admin_oauth2connect():
-    if(login_user(app.models.user.User())):
-        return "Logged In" 
-    else:
-        return 'Failed To Log In'
 
 @GisApp.route('/admin')
 @login_required
