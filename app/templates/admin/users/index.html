@@ -1,0 +1,34 @@
+{% extends 'admin/base.html' %}
+{% block content %}
+
+<div class="container">
+	<div>
+		<a class="btn btn-primary" href="/admin/users/new">Add User</a>
+	</div>
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<td>Email</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users %}
+			<tr class="crud_row">
+				<td>{{ user.email }}</td>
+				<td></td>
+				<td></td>
+				<td>
+					<a class="btn btn-default" href="/admin/points/edit/{{user.id}}">Edit</a> 
+					<a class="btn btn-default" href="/admin/points/delete/{{user.id}}">Delete</a>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>	
+
+</div>
+
+{% endblock %}

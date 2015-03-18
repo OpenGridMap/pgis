@@ -12,6 +12,7 @@ import app.controllers.powerlines_controller
 import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
+import app.controllers.admin.users_controller
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
@@ -59,7 +60,7 @@ def admin_login():
     controller = app.controllers.admin.application_controller.ApplicationController()
     return google.authorize(callback=url_for('authorized', _external=True))
 
-@GisApp.route('/login/authorized')
+@GisApp.route('/admin/login/authorized')
 def authorized():
     resp = google.authorized_response()
     if resp is None:
@@ -130,3 +131,13 @@ def admin_powerlines_update(id):
 def admin_powerlines_delete(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.delete(id)
+
+@GisApp.route('/admin/users')
+def admin_users():
+    controller = app.controllers.admin.users_controller.UsersController()
+    return controller.index()
+
+@GisApp.route('/admin/users/new')
+def admin_users_new():
+    controller = app.controllers.admin.users_controller.UsersController()
+    return controller.new()
