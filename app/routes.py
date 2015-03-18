@@ -141,3 +141,13 @@ def admin_users():
 def admin_users_new():
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.new()
+
+@GisApp.route('/admin/users/create', methods=['POST'])
+def admin_users_create():
+    controller = app.controllers.admin.users_controller.UsersController()
+    return controller.create()
+
+@GisApp.route('/admin/users/delete/<id>')
+def admin_users_delete(id):
+    controller = app.controllers.admin.users_controller.UsersController()
+    return controller.delete(id)
