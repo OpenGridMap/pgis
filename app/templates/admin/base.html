@@ -28,9 +28,11 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container">
 		<div id="navbar" class="collapse navbar-collapse">
+			<div id="login-nav-info" class="navbar-right">{{ current_user.email }} <a href="/admin/logout">Logout</a> </div>
 			<ul class="nav navbar-nav">
 				<li><a href="/admin/points">Points</a></li>
 				<li><a href="/admin/powerlines">Powerlines</a></li>
+				<li><a href="/admin/users">Users</a></li>
 			</ul>
 		</div>
 	</div>

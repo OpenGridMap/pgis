@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, jsonify, Response
-from flask.ext.login import LoginManager, login_user, login_required
+from flask.ext.login import LoginManager, login_user, login_required, logout_user
 from flask_oauthlib.client import OAuth
 
 from app import GisApp, db
@@ -16,6 +16,7 @@ import app.controllers.admin.users_controller
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
+login_manager.login_view = "/admin/login"
 
 oauth = OAuth(GisApp)
 
@@ -37,7 +38,7 @@ google = oauth.remote_app(
 
 @login_manager.user_loader
 def load_user(userid):
-    return app.models.user.User()
+    return app.models.user.User.query.get(userid)
 
 @GisApp.route('/')
 @GisApp.route('/index')
@@ -58,7 +59,17 @@ def powerlines():
 @GisApp.route('/admin/login')
 def admin_login():
     controller = app.controllers.admin.application_controller.ApplicationController()
+    return controller.login()
+
+@GisApp.route('/admin/do_login')
+def admin_do_login():
     return google.authorize(callback=url_for('authorized', _external=True))
+
+@GisApp.route("/admin/logout")
+@login_required
+def admin_logout():
+    logout_user()
+    return redirect("/admin/login")
 
 @GisApp.route('/admin/login/authorized')
 def authorized():
@@ -70,6 +81,15 @@ def authorized():
         )
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
+    user = app.models.user.User.query.filter_by(email=me.data['email']).first()
+    print(user)
+
+    if user is None:
+        return 'Your user is not part of a system'
+    else:
+        login_user(user)        
+        return redirect('/admin')
+
     return jsonify({"data": me.data})
 
 @google.tokengetter
@@ -83,71 +103,85 @@ def admin():
 	return controller.index()
 
 @GisApp.route('/admin/points')
+@login_required
 def admin_points():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.index()
 
 @GisApp.route('/admin/points/new')
+@login_required
 def admin_points_add():	
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.new()
 
 @GisApp.route('/admin/points/create', methods=['POST'])
+@login_required
 def admin_points_create():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.create()
 
 @GisApp.route('/admin/points/delete/<id>', methods=['GET'])
+@login_required
 def admin_points_delete(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.delete(id)
 
 @GisApp.route('/admin/powerlines')
+@login_required
 def admin_powerlines():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.index()
 
 @GisApp.route('/admin/powerlines/new')
+@login_required
 def admin_powerlines_new():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.new()
 
 @GisApp.route('/admin/powerlines/create', methods=['POST'])
+@login_required
 def admin_powerlines_create():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.create()
 
 @GisApp.route('/admin/powerlines/edit/<id>', methods=['GET'])
+@login_required
 def admin_powerlines_edit(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.edit(id)
 
 @GisApp.route('/admin/powerlines/update/<id>', methods=['POST'])
+@login_required
 def admin_powerlines_update(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.update(id)
 
 @GisApp.route('/admin/powerlines/delete/<id>', methods=['GET'])
+@login_required
 def admin_powerlines_delete(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.delete(id)
 
 @GisApp.route('/admin/users')
+@login_required
 def admin_users():
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.index()
 
 @GisApp.route('/admin/users/new')
+@login_required
 def admin_users_new():
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.new()
 
 @GisApp.route('/admin/users/create', methods=['POST'])
+@login_required
 def admin_users_create():
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.create()
 
 @GisApp.route('/admin/users/delete/<id>')
+@login_required
 def admin_users_delete(id):
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.delete(id)

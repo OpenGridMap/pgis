@@ -5,3 +5,8 @@ body {
 #powerline-edit-form button {
 	display: none;
 }
+
+#login-nav-info {
+	color: #9d9d9d;
+	margin-top: 15px;
+}

@@ -19,4 +19,4 @@ class User(db.Model):
         return False
 
     def get_id(self):
-        return 1
+        return self.id
