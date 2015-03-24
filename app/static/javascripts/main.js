@@ -6,6 +6,12 @@ $(document).ready(function(){
 		maxZoom: 18
 	}).addTo(map);
 
+	map.on('moveend', function(e){
+		if(map.getZoom() > 7) {
+			loadMapFragment()
+		}
+	})
+
 	$.ajax({
 		url : "/powerlines",
 		success : function(data){
@@ -16,12 +22,27 @@ $(document).ready(function(){
 		}
 	});
 
-	$.ajax({
-		url : "/points",
-		success : function(data){
-			for(var i = 0; i < data.length; i++){
-				var marker = L.marker(data[i]).addTo(map);
-			}			
-		}
-	});
+	loadMapFragment();
+
+	function loadMapFragment(){
+		$.ajax({
+			url : "/points?bounds=" + latLngBoundsToStr(map.getBounds()),
+			success : function(data){
+				for(var i = 0; i < data.length; i++){
+					var marker = L.marker(data[i]).addTo(map);
+				}			
+			}
+		});
+	}
+
 })
+
+
+function latLngBoundsToStr(latLngBounds) {
+	bounds = "";
+	bounds += latLngBounds.getSouth() + ","; 
+	bounds += latLngBounds.getWest() + ",";
+	bounds += latLngBounds.getNorth() + ",";
+	bounds += latLngBounds.getEast();   
+	return bounds;
+}
