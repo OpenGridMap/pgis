@@ -15,7 +15,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for point in points %}
+			{% for point in points.items %}
 			<tr class="crud_row">
 				<td>{{ point.name }}</td>
 				<td>{{ point.shape().x }}</td>
@@ -28,6 +28,8 @@
 			{% endfor %}
 		</tbody>
 	</table>	
+	{% if points.has_prev %}<a href="{{ url_for('admin_points', page=points.prev_num)  }}">&lt;&lt; Prev</a>{% else %}&lt;&lt; Prev{% endif %} | 
+	{% if points.has_next %}<a href="{{ url_for('admin_points', page=points.next_num)  }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
 
 </div>
 

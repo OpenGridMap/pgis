@@ -120,7 +120,19 @@ def admin_points_create():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.create()
 
-@GisApp.route('/admin/points/delete/<id>', methods=['GET'])
+@GisApp.route('/admin/points/edit/<id>')
+@login_required
+def admin_points_edit(id):
+	controller = app.controllers.admin.points_controller.PointsController()
+	return controller.edit(id)
+
+@GisApp.route('/admin/points/update/<id>', methods=['POST'])
+@login_required
+def admin_points_update(id):
+	controller = app.controllers.admin.points_controller.PointsController()
+	return controller.update(id)
+
+@GisApp.route('/admin/points/delete/<id>')
 @login_required
 def admin_points_delete(id):
 	controller = app.controllers.admin.points_controller.PointsController()

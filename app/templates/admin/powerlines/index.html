@@ -14,7 +14,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for powerline in powerlines %}
+			{% for powerline in powerlines.items %}
 			<tr class="crud_row">
 				<td>{{ powerline.id }}</td>
 				<td>{{ powerline.shape() }}</td>
@@ -26,6 +26,9 @@
 			{% endfor %}
 		</tbody>
 	</table>	
+
+	{% if powerlines.has_prev %}<a href="{{ url_for('admin_powerlines', page=powerlines.prev_num)  }}">&lt;&lt; Prev</a>{% else %}&lt;&lt; Prev{% endif %} | 
+	{% if powerlines.has_next %}<a href="{{ url_for('admin_powerlines', page=powerlines.next_num)  }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
 
 </div>
 

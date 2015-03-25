@@ -5,7 +5,8 @@ import app.models.point
 
 class PointsController:
     def index(self):
-        points = app.models.point.Point.query.all()
+        page = int(request.args.get('page') or 1) 
+        points = app.models.point.Point.query.paginate(page, 20)
         return render_template('admin/points/index.html', points=points)
 
     def new(self):
@@ -18,6 +19,22 @@ class PointsController:
             geometry = "POINT({} {})".format(form.latitude.data, form.longitude.data)
             new_point = app.models.point.Point(name=form.name.data, geom=geometry)
             db.session.add(new_point)
+            db.session.commit()
+            return redirect(url_for('admin_points'))
+        return 'Error'
+    
+    def edit(self, id):
+        point = app.models.point.Point.query.get(id)
+        form = app.helpers.point_form.PointForm(None, point) 
+        return render_template('admin/points/edit.html', form=form, point=point)
+    
+    def update(self, id):
+        point = app.models.point.Point.query.get(id)
+        form = app.helpers.point_form.PointForm(request.form, obj=point) 
+        if form.validate_on_submit():
+            point.geom = form.geom
+            point.name = form.name.data
+            db.session.add(point)
             db.session.commit()
             return redirect(url_for('admin_points'))
         return 'Error'

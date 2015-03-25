@@ -15,7 +15,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for user in users %}
+			{% for user in users.items %}
 			<tr class="crud_row">
 				<td>{{ user.email }}</td>
 				<td></td>
@@ -29,6 +29,8 @@
 		</tbody>
 	</table>	
 
+	{% if users.has_prev %}<a href="{{ url_for('admin_users', page=users.prev_num)  }}">&lt;&lt; Prev</a>{% else %}&lt;&lt; Prev{% endif %} | 
+	{% if users.has_next %}<a href="{{ url_for('admin_users', page=users.next_num)  }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
 </div>
 
 {% endblock %}

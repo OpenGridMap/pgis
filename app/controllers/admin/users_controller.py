@@ -6,7 +6,8 @@ import app.models.user
 class UsersController:
 
     def index(self):
-        users = app.models.user.User.query.all()
+        page = int(request.args.get('page') or 1)
+        users = app.models.user.User.query.paginate(page)
         return render_template('admin/users/index.html', users=users)
 
     def new(self):
