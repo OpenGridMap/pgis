@@ -32,15 +32,43 @@
 	$(document).ready(function(){
 		L.Icon.Default.imagePath = APP_IMAGES_URL;
 
-
-		var marker = new L.Marker([{{point.latitude}}, {{point.longitude}}], { draggable: true });
+		var marker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}])
 		var map = L.map('map').setView(marker.getLatLng(), 13);
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			maxZoom: 18
 		}).addTo(map);
 
+		// Initialise the FeatureGroup to store editable layers
+		var drawnItems = new L.FeatureGroup();
+		map.addLayer(drawnItems);
+		drawnItems.addLayer(marker)
+
+		// Initialise the draw control and pass it the FeatureGroup of editable layers
+		var drawControl = new L.Control.Draw({
+			edit: {
+				featureGroup: drawnItems,
+				remove: false
+						    
+			},
+			draw: {
+				polyline: false,
+				polygon: false,
+				circle: false,
+				rectangle: false,
+				marker: false,
+			},
+		});
+		map.addControl(drawControl);
+
 		map.addLayer(marker);
+
+		var latInput = $('#latitude');
+		var lngInput = $('#longitude');
+		marker.on('drag', function(e){
+			latInput.val(e.target.getLatLng().lat)
+			lngInput.val(e.target.getLatLng().lng)
+		});
 	})
 </script>
 {% endblock %}
