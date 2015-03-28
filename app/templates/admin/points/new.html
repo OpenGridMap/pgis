@@ -34,7 +34,7 @@
 
 		var latInput = $('#latitude');
 		var lngInput = $('#longitude');
-		var updateInputs = false;
+		var updateInputsOnMove = false;
 		
 		var map = L.map('map', {drawControl: false}).setView([48.1333, 11.12], 3);
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -62,21 +62,30 @@
 	 	map.addControl(drawControl);
 
 		map.on('mousemove', function(e){
-			if(updateInputs){
+			if(updateInputsOnMove){
 				latInput.val(e.latlng.lat);
 				lngInput.val(e.latlng.lng);
 			}	
 		});
 		map.on('draw:drawstart', function(e){
-			updateInputs = true;
+			drawnItems.clearLayers();
+			updateInputsOnMove = true;
 		});
 		
 		map.on('draw:drawstop', function(e){
-			updateInputs = false;
+			updateInputsOnMove = false;
 		});
 		map.on('draw:created', function (e) {
 			var type = e.layerType,
 			layer = e.layer;
+
+			if(type == 'marker'){
+				layer.on('drag', function(){
+					var latlng = layer.getLatLng();
+					latInput.val(latlng.lat);
+					lngInput.val(latlng.lng);
+				});
+			}
 			drawnItems.addLayer(layer);
 		}); 
 
