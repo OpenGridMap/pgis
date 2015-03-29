@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container center-block clearfix">
 	<h3>Edit Powerline</h3>
-	<form id="powerline-edit-form" class="col-md-4" action="/admin/powerlines/update/{{id}}" method="post" name="new_powerline">
+	<form id="powerline-edit-form" class="col-md-4" action="/admin/powerlines/update/{{powerline.id}}" method="post" name="new_powerline">
 		{{ form.hidden_tag() }}
 
 		<div class="form-group">

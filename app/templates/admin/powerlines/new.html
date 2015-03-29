@@ -37,8 +37,6 @@
 		var drawControl = new L.Control.Draw({
 			edit: {
 				featureGroup: drawnItems,
-				remove: false
-						    
 			},
 			draw: {
 				polygon: false,
@@ -63,7 +61,12 @@
 			polyline.setLatLngs(latlngStringToCoords(powerline));
 			map.fitBounds(polyline.getBounds());
 			$('form button').fadeIn();
-		})
+		});
+
+		map.on('draw:deleted', function(e){
+			drawnItems.clearLayers();
+			latlngsInput.val('');
+		});
 	});
 </script>
 {% endblock %}
