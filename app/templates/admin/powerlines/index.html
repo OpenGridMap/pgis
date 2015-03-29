@@ -19,8 +19,8 @@
 				<td>{{ powerline.id }}</td>
 				<td>{{ powerline.shape()|string|truncate(80) }}</td>
 				<td>
-					<a class="btn btn-default" href="/admin/powerlines/edit/{{powerline.id}}">Edit</a> 
-					<a class="btn btn-default" href="/admin/powerlines/delete/{{powerline.id}}">Delete</a>
+					<a class="btn btn-primary" href="/admin/powerlines/edit/{{powerline.id}}">Edit</a> 
+					<a class="btn btn-danger" href="/admin/powerlines/delete/{{powerline.id}}">Delete</a>
 				</td>
 			</tr>
 			{% endfor %}
