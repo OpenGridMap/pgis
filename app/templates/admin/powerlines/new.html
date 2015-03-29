@@ -12,6 +12,58 @@
 		</div>
 		<button type="submit" class="btn btn-default">Submit</button>
 	</form>
+	<div id="map" style="width:500px; height:500px;"></div>
 </div>
 
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script>
+
+	$(document).ready(function(){
+		var map = L.map('map').setView([48.1333, 11.12], 3);
+		var latlngsInput = $('#latlngs')
+
+		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			maxZoom: 18
+		}).addTo(map);
+
+		// Initialise the FeatureGroup to store editable layers
+		var drawnItems = new L.FeatureGroup();
+		map.addLayer(drawnItems);
+
+		// Initialise the draw control and pass it the FeatureGroup of editable layers
+		var drawControl = new L.Control.Draw({
+			edit: {
+				featureGroup: drawnItems,
+				remove: false
+						    
+			},
+			draw: {
+				polygon: false,
+				circle: false,
+				rectangle: false,
+				marker: false,
+			},
+		});
+		map.addControl(drawControl);
+
+		map.on('draw:created', function (e) {
+			var type = e.layerType,
+			layer = e.layer;
+			drawnItems.addLayer(layer);
+			if(type == 'polyline'){
+				latlngsInput.val(polylineToString(layer));
+			}
+		}); 
+
+		$('input[name=latlngs]').keyup(function(){
+			var powerline = $(this).val();
+			polyline.setLatLngs(latlngStringToCoords(powerline));
+			map.fitBounds(polyline.getBounds());
+			$('form button').fadeIn();
+		})
+	});
+</script>
 {% endblock %}

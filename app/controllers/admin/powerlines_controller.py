@@ -26,7 +26,7 @@ class PowerlinesController:
     def edit(self, id):
         powerline = app.models.powerline.Powerline.query.get(id)
         form = app.helpers.powerline_form.PowerlineForm(None, powerline)
-        return render_template('admin/powerlines/edit.html', form=form, id=id)
+        return render_template('admin/powerlines/edit.html', form=form, powerline=powerline)
 
     def update(self, id):
         powerline = app.models.powerline.Powerline.query.get(id)

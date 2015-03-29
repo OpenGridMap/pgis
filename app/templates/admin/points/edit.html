@@ -30,8 +30,6 @@
 <script>
 
 	$(document).ready(function(){
-		L.Icon.Default.imagePath = APP_IMAGES_URL;
-
 		var marker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}])
 		var map = L.map('map').setView(marker.getLatLng(), 13);
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -60,8 +58,6 @@
 			},
 		});
 		map.addControl(drawControl);
-
-		map.addLayer(marker);
 
 		var latInput = $('#latitude');
 		var lngInput = $('#longitude');

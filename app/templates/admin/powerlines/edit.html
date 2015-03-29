@@ -11,10 +11,10 @@
 		</div>
 
 		<button type="submit" class="btn btn-default">Save</button>
-		<button id="cancel-edit" class="btn btn-default">Cancel</button>
+		<a href="/admin/powerlines"><button type="button" id="cancel-edit" class="btn btn-default">Cancel</button></a>			
 	</form>
 	
-	<div id="map" data-powerline="{{ form.latlngs.data }}" style="width:500px; height:500px;"></div>
+	<div id="map" style="width:500px; height:500px;"></div>
 	
 </div>
 {% endblock %}
@@ -24,43 +24,52 @@
 <script>
 
 	$(document).ready(function(){
-		L.Icon.Default.imagePath = APP_IMAGES_URL;
-
-
 		var map = L.map('map');
 
-		var powerline = $(map.getContainer()).data('powerline');
-
-		if(powerline != ""){
-			var coords 				= latlngStringToCoords(powerline);
-			var default_powerline 	= powerline;
-			var polyline 			= L.polyline(coords, {color: 'red'}).addTo(map);
-		}
+		var coords 	= latlngStringToCoords("{{ powerline.latlngs }}");
+		var polyline	= L.polyline(coords, {color: 'red'}).addTo(map);
 
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			maxZoom: 18
 		}).addTo(map);
 
+		// Initialise the FeatureGroup to store editable layers
+		var drawnItems = new L.FeatureGroup();
+		map.addLayer(drawnItems);
+		drawnItems.addLayer(polyline)
+
+		// Initialise the draw control and pass it the FeatureGroup of editable layers
+		var drawControl = new L.Control.Draw({
+			edit: {
+				featureGroup: drawnItems,
+				remove: false
+						    
+			},
+			draw: {
+				polyline: false,
+				polygon: false,
+				circle: false,
+				rectangle: false,
+				marker: false,
+			},
+		});
+		map.addControl(drawControl);
 		map.fitBounds(polyline.getBounds());
 
 
 		$('input[name=latlngs]').keyup(function(){
-			if(!polyline){
-
-			}
 			var powerline = $(this).val();
 			polyline.setLatLngs(latlngStringToCoords(powerline));
 			map.fitBounds(polyline.getBounds());
 			$('form button').fadeIn();
 		})
 
-		$('#cancel-edit').click(function(e){
-			e.preventDefault();
-			$('input[name=latlngs]').val(default_powerline);
-			$('input[name=latlngs]').trigger('keyup');
-			$('form button').fadeOut();
+		map.on('draw:edited', function(e){
+			$('input[name=latlngs]').val(polylineToString(polyline));
+			$('form button').fadeIn();
 		});
-	})
+
+	});
 </script>
 {% endblock %}

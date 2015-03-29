@@ -13,3 +13,9 @@ function latlngStringToCoords(powerline){
 
 	return coords;
 }
+
+function polylineToString(polyline){
+	return polyline.getLatLngs().map(function(latlng) { return [latlng.lat, latlng.lng].join(" ")  }).join(",")
+}
+L.Icon.Default.imagePath = APP_IMAGES_URL;
+

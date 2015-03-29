@@ -13,10 +13,10 @@
 {{super()}}
 {% assets "admin_application_js" %}
 
-<script type="text/javascript" src="{{ ASSET_URL }}"></script>
 <script>
 	APP_IMAGES_URL = "{{ url_for('static', filename='images')}}"
 </script>
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
 
 {% endassets %}
 
