@@ -1,11 +1,12 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, FloatField
+from wtforms import StringField, FloatField, TextAreaField
 from wtforms.validators import DataRequired
 
 class PointForm(Form):
-    name 		= StringField('name', validators=[DataRequired()])
+    name 	= StringField('name', validators=[DataRequired()])
     latitude	= FloatField('latitude', validators=[DataRequired()])
     longitude	= FloatField('longitude', validators=[DataRequired()])
+    properties  = TextAreaField('properties') 
 
     @property
     def geom(self):

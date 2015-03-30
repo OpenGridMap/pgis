@@ -26,9 +26,22 @@
 			{% endfor %}
 		</tbody>
 	</table>	
+	<nav>
+		<ul class="pager">
+		{% if powerlines.has_prev %}
+			<li class="previous"><a href="{{ url_for('admin_powerlines', page=powerlines.prev_num)  }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+		{% else %}
+			<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Prev</a>	
+		{% endif %}
 
-	{% if powerlines.has_prev %}<a href="{{ url_for('admin_powerlines', page=powerlines.prev_num)  }}">&lt;&lt; Prev</a>{% else %}&lt;&lt; Prev{% endif %} | 
-	{% if powerlines.has_next %}<a href="{{ url_for('admin_powerlines', page=powerlines.next_num)  }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
+		{% if powerlines.has_next %}
+			<li class="next"><a href="{{ url_for('admin_powerlines', page=powerlines.next_num)  }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+		{% else %}
+			<li class="next disabled"><a href="#">Next <span aria-hidden="true">&rarr;</span></a>	
+		{% endif %}
+			
+		</ul>
+	</nav>
 
 </div>
 
