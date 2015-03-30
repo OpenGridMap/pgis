@@ -16,8 +16,8 @@ class PointsController:
     def create(self):
         form = app.helpers.point_form.PointForm() 
         if form.validate_on_submit():
-            geometry = "POINT({} {})".format(form.latitude.data, form.longitude.data)
-            new_point = app.models.point.Point(name=form.name.data, geom=geometry)
+            new_point = app.models.point.Point()
+            form.populate_obj(new_point)
             db.session.add(new_point)
             db.session.commit()
             return redirect(url_for('admin_points'))
@@ -32,8 +32,7 @@ class PointsController:
         point = app.models.point.Point.query.get(id)
         form = app.helpers.point_form.PointForm(request.form, obj=point) 
         if form.validate_on_submit():
-            point.geom = form.geom
-            point.name = form.name.data
+            form.populate_obj(point)
             db.session.add(point)
             db.session.commit()
             return redirect(url_for('admin_points'))

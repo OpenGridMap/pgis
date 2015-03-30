@@ -10,3 +10,7 @@ class PointForm(Form):
     @property
     def geom(self):
         return "POINT({} {})".format(self.latitude.data, self.longitude.data)
+
+    def populate_obj(self, point):
+        point.name = self.name.data
+        point.geom = self.geom 
