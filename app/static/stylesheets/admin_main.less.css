@@ -10,3 +10,13 @@ body {
 	color: #9d9d9d;
 	margin-top: 15px;
 }
+
+.textarea-json-beautify-button {
+	top:-25px;
+	left:5px;
+	position:relative;
+}
+
+.json-propeties-textarea {
+	padding-bottom: 27px;
+}

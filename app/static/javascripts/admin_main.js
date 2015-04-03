@@ -19,3 +19,13 @@ function polylineToString(polyline){
 }
 L.Icon.Default.imagePath = APP_IMAGES_URL;
 
+
+$('.textarea-json-beautify-button').on('click', function(){
+	var textarea = $(this).closest('.form-group').find('.json-propeties-textarea')
+
+	try {
+		var json = JSON.parse(textarea.val());
+		textarea.val(JSON.stringify(json, null, "\t"));
+	} catch(e){
+	}
+});

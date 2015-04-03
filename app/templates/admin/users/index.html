@@ -29,8 +29,22 @@
 		</tbody>
 	</table>	
 
-	{% if users.has_prev %}<a href="{{ url_for('admin_users', page=users.prev_num)  }}">&lt;&lt; Prev</a>{% else %}&lt;&lt; Prev{% endif %} | 
-	{% if users.has_next %}<a href="{{ url_for('admin_users', page=users.next_num)  }}">Next &gt;&gt;</a>{% else %}Next &gt;&gt;{% endif %}
+	<nav>
+		<ul class="pager">
+		{% if users.has_prev %}
+			<li class="previous"><a href="{{ url_for('admin_users', page=users.prev_num)  }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+		{% else %}
+			<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Prev</a>	
+		{% endif %}
+
+		{% if users.has_next %}
+			<li class="next"><a href="{{ url_for('admin_users', page=users.next_num)  }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+		{% else %}
+			<li class="next disabled"><a href="#">Next <span aria-hidden="true">&rarr;</span></a>	
+		{% endif %}
+			
+		</ul>
+	</nav>
 </div>
 
 {% endblock %}
