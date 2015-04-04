@@ -10,6 +10,10 @@
 			<label class="control-label" for="user_email">Email</label>
 			{{ form.email(class_="form-control ", placeholder="example@example.com") }}
 		</div>
+		<div class="form-group">
+			<label class="control-label" for="user_action_permissions">Permissions</label>
+			{{ form.action_permissions() }}
+		</div>
 		<button type="submit" class="btn btn-default">Submit</button>
 	</form>
 </div>

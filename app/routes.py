@@ -15,6 +15,7 @@ import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
 import app.controllers.admin.users_controller
+import app.permissions
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
@@ -37,8 +38,6 @@ google = oauth.remote_app(
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
 
-principals = Principal(GisApp)
-admin_permission = Permission(ActionNeed('admin_points_index'))
 
 
 @identity_loaded.connect_via(GisApp)
@@ -127,73 +126,84 @@ def admin():
 
 @GisApp.route('/admin/points')
 @login_required
-@admin_permission.require()
+@app.permissions.admin_points.require()
 def admin_points():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.index()
 
 @GisApp.route('/admin/points/new')
 @login_required
-def admin_points_add():	
+@app.permissions.admin_points_new.require()
+def admin_points_new():	
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.new()
 
 @GisApp.route('/admin/points/create', methods=['POST'])
 @login_required
+@app.permissions.admin_points_create.require()
 def admin_points_create():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.create()
 
 @GisApp.route('/admin/points/edit/<id>')
 @login_required
+@app.permissions.admin_points_edit.require()
 def admin_points_edit(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.edit(id)
 
 @GisApp.route('/admin/points/update/<id>', methods=['POST'])
 @login_required
+@app.permissions.admin_points_update.require()
 def admin_points_update(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.update(id)
 
 @GisApp.route('/admin/points/delete/<id>')
 @login_required
+@app.permissions.admin_points_delete.require()
 def admin_points_delete(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.delete(id)
 
 @GisApp.route('/admin/powerlines')
 @login_required
+@app.permissions.admin_powerlines.require()
 def admin_powerlines():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.index()
 
 @GisApp.route('/admin/powerlines/new')
 @login_required
+@app.permissions.admin_powerlines_new.require()
 def admin_powerlines_new():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.new()
 
 @GisApp.route('/admin/powerlines/create', methods=['POST'])
 @login_required
+@app.permissions.admin_powerlines_create.require()
 def admin_powerlines_create():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.create()
 
 @GisApp.route('/admin/powerlines/edit/<id>', methods=['GET'])
 @login_required
+@app.permissions.admin_powerlines_edit.require()
 def admin_powerlines_edit(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.edit(id)
 
 @GisApp.route('/admin/powerlines/update/<id>', methods=['POST'])
 @login_required
+@app.permissions.admin_powerlines_update.require()
 def admin_powerlines_update(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.update(id)
 
 @GisApp.route('/admin/powerlines/delete/<id>', methods=['GET'])
 @login_required
+@app.permissions.admin_powerlines_delete.require()
 def admin_powerlines_delete(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.delete(id)
