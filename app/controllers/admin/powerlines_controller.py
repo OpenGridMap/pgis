@@ -18,6 +18,7 @@ class PowerlinesController:
         if form.validate_on_submit():
             geometry = "LINESTRING({})".format(form.latlngs.data)
             new_powerline = app.models.powerline.Powerline(geom=geometry)
+            new_powerline.properties = json.loads(form.properties.data)
             db.session.add(new_powerline)
             db.session.commit()
             return redirect(url_for('admin_powerlines'))
@@ -25,6 +26,7 @@ class PowerlinesController:
 
     def edit(self, id):
         powerline = app.models.powerline.Powerline.query.get(id)
+        powerline.properties = json.dumps(powerline.properties)
         form = app.helpers.powerline_form.PowerlineForm(None, powerline)
         return render_template('admin/powerlines/edit.html', form=form, powerline=powerline)
 

@@ -9,6 +9,11 @@
 			<label class="control-label" for="point_field_name">LatLngs</label>
 			{{ form.latlngs(class_="form-control ", placeholder="48.11 11.56, 48.12 11.61", autocomplete="off" )}}
 		</div>
+		<div class="form-group">
+			<label class="control-label" for="powerline_field_properties">Properties</label>
+			{{ form.properties(class_="form-control json-propeties-textarea", rows="10" ) }}
+			<button type="button" class="btn btn-default btn-xs textarea-json-beautify-button">Beautify</button>
+		</div>
 
 		<button type="submit" class="btn btn-success">Save</button>
 		<a href="/admin/powerlines"><button type="button" id="cancel-edit" class="btn btn-danger">Cancel</button></a>			

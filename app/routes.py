@@ -1,6 +1,8 @@
-from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, jsonify, Response
-from flask.ext.login import LoginManager, login_user, login_required, logout_user
+from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, jsonify, Response, current_app
+from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_oauthlib.client import OAuth
+from flask.ext.principal import Principal, Permission, ActionNeed, identity_loaded, UserNeed, identity_changed, Identity, AnonymousIdentity
+
 
 from app import GisApp, db
 import app.models.point
@@ -34,6 +36,25 @@ google = oauth.remote_app(
     access_token_url='https://accounts.google.com/o/oauth2/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
 )
+
+principals = Principal(GisApp)
+admin_permission = Permission(ActionNeed('admin_points_index'))
+
+
+@identity_loaded.connect_via(GisApp)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'action_permissions'):
+       for action_permission in current_user.action_permissions:
+            identity.provides.add(ActionNeed(action_permission))
 
 
 @login_manager.user_loader
@@ -82,12 +103,14 @@ def authorized():
     session['google_token'] = (resp['access_token'], '')
     me = google.get('userinfo')
     user = app.models.user.User.query.filter_by(email=me.data['email']).first()
-    print(user)
 
     if user is None:
         return 'Your user is not part of a system'
     else:
         login_user(user)        
+        # Tell Flask-Principal the identity changed
+        identity_changed.send(current_app._get_current_object(),
+              identity=Identity(user.id))
         return redirect('/admin')
 
     return jsonify({"data": me.data})
@@ -104,6 +127,7 @@ def admin():
 
 @GisApp.route('/admin/points')
 @login_required
+@admin_permission.require()
 def admin_points():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.index()
