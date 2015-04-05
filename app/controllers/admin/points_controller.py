@@ -25,8 +25,8 @@ class PointsController:
     
     def edit(self, id):
         point = app.models.point.Point.query.get(id)
-        point.properties = json.dumps(point.properties) #TODO find out a better way of deserializing json
         form = app.helpers.point_form.PointForm(None, point) 
+        form.properties.data = json.dumps(form.properties.data) if form.properties.data else ""
         return render_template('admin/points/edit.html', form=form, point=point)
     
     def update(self, id):
