@@ -2,20 +2,32 @@
 {% block content %}
 
 <div class="container center-block clearfix">
-  <h3>New User</h3>
-  <form class="col-md-4" action="/admin/users/create" method="post" name="new_user">
+  <h3>Edit User</h3>
+  <form  action="/admin/users/create" method="post" name="new_user">
     {{ form.hidden_tag() }}
 
-    <div class="form-group">
-      <label class="control-label" for="user_email">Email</label>
-      {{ form.email(class_="form-control ", placeholder="example@example.com") }}
+    <div class="row">
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="user_email">Email</label>
+          {{ form.email(class_="form-control ", placeholder="example@example.com") }}
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="control-label" for="user_action_permissions">Permissions</label>
+          {{ form.action_permissions() }}
+        </div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="control-label" for="user_action_permissions">Permissions</label>
-      {{ form.action_permissions() }}
-    </div>
-    <button type="submit" class="btn btn-default">Submit</button>
+
   </form>
+
+  <br>
+  <br>
+
 </div>
 
 {% endblock %}
