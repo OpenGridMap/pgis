@@ -126,84 +126,84 @@ def admin():
 
 @GisApp.route('/admin/points')
 @login_required
-@app.permissions.admin_points.require()
+@app.permissions.admin_points.require(http_exception=403)
 def admin_points():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.index()
 
 @GisApp.route('/admin/points/new')
 @login_required
-@app.permissions.admin_points_new.require()
+@app.permissions.admin_points_new.require(http_exception=403)
 def admin_points_new():	
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.new()
 
 @GisApp.route('/admin/points/create', methods=['POST'])
 @login_required
-@app.permissions.admin_points_create.require()
+@app.permissions.admin_points_create.require(http_exception=403)
 def admin_points_create():
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.create()
 
 @GisApp.route('/admin/points/edit/<id>')
 @login_required
-@app.permissions.admin_points_edit.require()
+@app.permissions.admin_points_edit.require(http_exception=403)
 def admin_points_edit(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.edit(id)
 
 @GisApp.route('/admin/points/update/<id>', methods=['POST'])
 @login_required
-@app.permissions.admin_points_update.require()
+@app.permissions.admin_points_update.require(http_exception=403)
 def admin_points_update(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.update(id)
 
 @GisApp.route('/admin/points/delete/<id>')
 @login_required
-@app.permissions.admin_points_delete.require()
+@app.permissions.admin_points_delete.require(http_exception=403)
 def admin_points_delete(id):
 	controller = app.controllers.admin.points_controller.PointsController()
 	return controller.delete(id)
 
 @GisApp.route('/admin/powerlines')
 @login_required
-@app.permissions.admin_powerlines.require()
+@app.permissions.admin_powerlines.require(http_exception=403)
 def admin_powerlines():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.index()
 
 @GisApp.route('/admin/powerlines/new')
 @login_required
-@app.permissions.admin_powerlines_new.require()
+@app.permissions.admin_powerlines_new.require(http_exception=403)
 def admin_powerlines_new():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.new()
 
 @GisApp.route('/admin/powerlines/create', methods=['POST'])
 @login_required
-@app.permissions.admin_powerlines_create.require()
+@app.permissions.admin_powerlines_create.require(http_exception=403)
 def admin_powerlines_create():
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.create()
 
 @GisApp.route('/admin/powerlines/edit/<id>', methods=['GET'])
 @login_required
-@app.permissions.admin_powerlines_edit.require()
+@app.permissions.admin_powerlines_edit.require(http_exception=403)
 def admin_powerlines_edit(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.edit(id)
 
 @GisApp.route('/admin/powerlines/update/<id>', methods=['POST'])
 @login_required
-@app.permissions.admin_powerlines_update.require()
+@app.permissions.admin_powerlines_update.require(http_exception=403)
 def admin_powerlines_update(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.update(id)
 
 @GisApp.route('/admin/powerlines/delete/<id>', methods=['GET'])
 @login_required
-@app.permissions.admin_powerlines_delete.require()
+@app.permissions.admin_powerlines_delete.require(http_exception=403)
 def admin_powerlines_delete(id):
 	controller = app.controllers.admin.powerlines_controller.PowerlinesController()
 	return controller.delete(id)
@@ -226,8 +226,30 @@ def admin_users_create():
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.create()
 
+@GisApp.route('/admin/users/edit/<id>')
+@login_required
+def admin_users_edit(id):
+    controller = app.controllers.admin.users_controller.UsersController()
+    return controller.edit(id)
+
+@GisApp.route('/admin/users/update/<id>', methods=['POST'])
+@login_required
+def admin_users_update(id):
+    controller = app.controllers.admin.users_controller.UsersController()
+    return controller.update(id)
+
 @GisApp.route('/admin/users/delete/<id>')
 @login_required
 def admin_users_delete(id):
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.delete(id)
+
+@GisApp.errorhandler(500)
+def internal_error(error):
+    controller = app.controllers.application_controller.ApplicationController()
+    return controller.page500() 
+
+@GisApp.errorhandler(403)
+def internal_error(error):
+    controller = app.controllers.application_controller.ApplicationController()
+    return controller.page403() 

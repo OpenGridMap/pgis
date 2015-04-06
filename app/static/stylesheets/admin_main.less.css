@@ -20,3 +20,8 @@ body {
 .json-propeties-textarea {
 	padding-bottom: 27px;
 }
+
+#action_permissions label{
+        font-size: 12px;
+        font-weight: normal;
+}
