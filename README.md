@@ -3,7 +3,7 @@ Power Grid Information System
 
 ## Installation
 
-Download and install miniconda package, containing conda package manager and Anaconda's distribution of Python. (Use Python version 3.4)
+Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
 
 Create a virtual environment for the project:
 
