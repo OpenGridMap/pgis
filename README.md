@@ -3,7 +3,7 @@ Power Grid Information System
 
 ## Installation
 
-Download and install miniconda package, containing conda package manager and Anaconda's distribution of Python. (Use python version 3.4)
+Download and install miniconda package, containing conda package manager and Anaconda's distribution of Python. (Use Python version 3.4)
 
 Create a virtual environment for the project:
 
@@ -13,11 +13,11 @@ Activate virtual environment:
 
 ``source activate gisenv``
 
-Install python dependencies:
+Install Python dependencies:
 
 ``pip install -r requirements.txt``
 
-## Running the app
+## Running
 
 With a builting server (not ok for production):
 
