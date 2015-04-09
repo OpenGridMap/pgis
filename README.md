@@ -9,6 +9,13 @@ Create a virtual environment for the project:
 
 ``conda create -n gisenv anaconda python=3``
 
+Clone the repository:
+
+```
+git clone git@github.com:OpenGridMap/pgis.git
+cd pgis
+```
+
 Activate virtual environment:
 
 ``source activate gisenv``
