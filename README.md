@@ -35,3 +35,5 @@ Or with gunicorn:
 `gunicorn app:GisApp --bind localhost:3000`
 
 ## Testing
+
+``nosetests tests/``
