@@ -13,7 +13,7 @@ Clone the repository:
 
 ```
 git clone git@github.com:OpenGridMap/pgis.git
-cd pgis
+cd pgis/
 ```
 
 Activate virtual environment:
