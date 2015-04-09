@@ -7,7 +7,9 @@ Download and install miniconda package, containing conda package manager and Ana
 
 Create a virtual environment for the project:
 
-``conda create -n pgisenv anaconda python=3``
+```
+conda create -n pgisenv anaconda python=3
+```
 
 Clone the repository:
 
@@ -18,22 +20,32 @@ cd pgis/
 
 Activate virtual environment:
 
-``source activate pgisenv``
+```
+source activate pgisenv
+```
 
 Install Python dependencies:
 
-``pip install -r requirements.txt``
+```
+pip install -r requirements.txt
+```
 
 ## Running
 
 With a builting server (not ok for production):
 
-`./run`
+```
+./run
+```
 
 Or with gunicorn:
 
-`gunicorn app:GisApp --bind localhost:3000`
+```
+gunicorn app:GisApp --bind localhost:3000
+```
 
 ## Testing
 
-``nosetests tests/``
+```
+nosetests tests
+```
