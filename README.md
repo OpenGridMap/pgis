@@ -7,7 +7,7 @@ Download and install miniconda package, containing conda package manager and Ana
 
 Create a virtual environment for the project:
 
-``conda create -n gisenv anaconda python=3``
+``conda create -n pgisenv anaconda python=3``
 
 Clone the repository:
 
@@ -18,7 +18,7 @@ cd pgis/
 
 Activate virtual environment:
 
-``source activate gisenv``
+``source activate pgisenv``
 
 Install Python dependencies:
 
