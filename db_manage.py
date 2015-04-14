@@ -1,4 +1,4 @@
-#!/home/headshota/miniconda3/envs/gisenv/bin/python
+#!/usr/bin/env python3
 from app import db
 from app import GisApp
 from flask.ext.script import Manager
