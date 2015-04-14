@@ -10,6 +10,15 @@ sudo apt-get install postgresql-9.3
 sudo apt-get install postgresql-9.3-postgis-2.1
 ```
 
+create database and enable postgis:
+
+```
+sudo -u postgres psql
+> CREATE DATABASE gis;
+> \connect gis
+> CREATE EXTENSION postgis;
+```
+
 Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
 
 ```
