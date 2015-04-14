@@ -113,3 +113,4 @@ gunicorn==19.2.0
 flask-testing==0.4.2
 flask-principal==0.4.0
 flask-oauthlib==0.9.1
+alembic==0.7.4
