@@ -3,7 +3,21 @@ Power Grid Information System
 
 ## Installation
 
+Install Postgresql and Postgis:
+
+```
+sudo apt-get install postgresql-9.3
+sudo apt-get install postgresql-9.3-postgis-2.1
+```
+
 Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
+
+```
+wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh 
+```
+follow the instructions of the installation process.
 
 Create a virtual environment for the project:
 
