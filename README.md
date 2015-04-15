@@ -53,6 +53,12 @@ Install Python dependencies:
 pip install -r requirements.txt
 ```
 
+Run migrations:
+
+```
+./db_manage db upgrade
+```
+
 Install nodejs, npm (Used by less asset compiler) and less:
 
 ```
