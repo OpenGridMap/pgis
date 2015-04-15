@@ -53,6 +53,15 @@ Install Python dependencies:
 pip install -r requirements.txt
 ```
 
+Install nodejs, npm (Used by less asset compiler) and less:
+
+```
+sudo apt-get install nodejs
+ln -s /usr/bin/nodejs /usr/bin/node
+sudo apt-get install npm
+sudo npm install -g less
+```
+
 ## Running
 
 With a builting server (not ok for production):
