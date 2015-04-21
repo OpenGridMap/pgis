@@ -20,15 +20,25 @@ $(document).ready(function(){
 	});
 
 	function loadMapFragment(){
-		$.ajax({
-			url : "/points",
-			success : function(data){
-				for(var i = 0; i < data.length; i++){
-					markers.addLayer(new L.Marker(data[i]));
-				}			
-			}
-		});
-	}
+        if(map.getZoom() > 12) {
+            $.ajax({
+                url : "/points",
+                data: {
+                    "bounds" : latLngBoundsToStr(map.getBounds()) 
+                },
+                success : function(data){
+                    for(var i = 0; i < data.length; i++){
+                        markers.addLayer(new L.Marker(data[i]));
+                    }			
+                }
+            });
+        }
+    }
+
+    map.on('moveend', function(){
+        markers.clearLayers();
+        loadMapFragment();
+    })
 
 })
 
