@@ -24,11 +24,20 @@ $(document).ready(function(){
             $.ajax({
                 url : "/points",
                 data: {
-                    "bounds" : latLngBoundsToStr(map.getBounds()) 
+                    "bounds" : map.getBounds().toBBoxString() 
                 },
                 success : function(data){
+                    markers.clearLayers();
                     for(var i = 0; i < data.length; i++){
-                        markers.addLayer(new L.Marker(data[i]));
+                        var marker = new L.Marker(data[i]['latlng']);
+                        var popupContent = "<b>Name:</b> " + data[i]['name'];
+                        popupContent += "<br />";
+                        popupContent += "<b>Latitude:</b> " + data[i]['latlng'][0];
+                        popupContent += "<br />";
+                        popupContent += "<b>Longitude:</b> " + data[i]['latlng'][1];
+
+                        marker.bindPopup(popupContent)
+                        markers.addLayer(marker);
                     }			
                 }
             });
@@ -36,18 +45,7 @@ $(document).ready(function(){
     }
 
     map.on('moveend', function(){
-        markers.clearLayers();
         loadMapFragment();
     })
 
-})
-
-
-function latLngBoundsToStr(latLngBounds) {
-	bounds = "";
-	bounds += latLngBounds.getSouth() + ","; 
-	bounds += latLngBounds.getWest() + ",";
-	bounds += latLngBounds.getNorth() + ",";
-	bounds += latLngBounds.getEast();   
-	return bounds;
-}
+});
