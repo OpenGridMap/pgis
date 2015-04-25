@@ -1,5 +1,7 @@
 from imposm.parser import OSMParser
 import psycopg2
+import json
+import sys
 
 try:
     conn = psycopg2.connect("dbname='gis' user='postgres' host='localhost' password=''")
@@ -14,12 +16,11 @@ class PowerStationImporter(object):
     def perform(self, nodes):
         for osmid, tags, coords in nodes:
             if 'power' in tags:
-               query = 'INSERT INTO point("name", geom, properties) VALUES(\'{}\', ST_GeomFromText(\'{}\', 0), \'{}\')'.format("point #{}".format(self.counter), "POINT({} {})".format(coords[1], coords[0]), {}) 
-               print query
-               cur.execute(query) 
+               query = "INSERT INTO point(\"name\", geom, properties) VALUES(%s, %s, %s)"
+               cur.execute(query, ("Point #{}".format(self.counter), "POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags }) )) 
                self.counter += 1
 
 importer = PowerStationImporter()
 p = OSMParser(concurrency=4, nodes_callback=importer.perform)
-p.parse('/home/headshota/Downloads/germany-latest.osm.pbf')
+p.parse(sys.argv[1])
 conn.commit()

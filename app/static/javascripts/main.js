@@ -50,7 +50,11 @@ $(document).ready(function(){
         popupContent += "<b>Latitude:</b> " + point['latlng'][0];
         popupContent += "<br />";
         popupContent += "<b>Longitude:</b> " + point['latlng'][1];
-        return popupContent;
+        popupContent += "<br />";
+        popupContent += "<b>Tags:</b> " + JSON.stringify(point['tags'], null, 4);
+        var popup = L.popup({ autopan: false })
+            .setContent(popupContent);
+        return popup;
     }
 
 
