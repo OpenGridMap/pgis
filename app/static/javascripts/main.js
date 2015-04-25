@@ -19,8 +19,12 @@ $(document).ready(function(){
 		}
 	});
 
+    map.on('moveend', function(){
+        loadMapFragment();
+    });
+
 	function loadMapFragment(){
-        if(map.getZoom() > 12) {
+        if(map.getZoom() > 11) {
             $.ajax({
                 url : "/points",
                 data: {
@@ -28,24 +32,26 @@ $(document).ready(function(){
                 },
                 success : function(data){
                     markers.clearLayers();
+                    var newMarkers = []
                     for(var i = 0; i < data.length; i++){
                         var marker = new L.Marker(data[i]['latlng']);
-                        var popupContent = "<b>Name:</b> " + data[i]['name'];
-                        popupContent += "<br />";
-                        popupContent += "<b>Latitude:</b> " + data[i]['latlng'][0];
-                        popupContent += "<br />";
-                        popupContent += "<b>Longitude:</b> " + data[i]['latlng'][1];
-
-                        marker.bindPopup(popupContent)
-                        markers.addLayer(marker);
+                        marker.bindPopup(markerPopupContent(data[i]))
+                        newMarkers.push(marker);
                     }			
+                    markers.addLayers(newMarkers);
                 }
             });
         }
     }
 
-    map.on('moveend', function(){
-        loadMapFragment();
-    })
+    function markerPopupContent(point){
+        var popupContent = "<b>Name:</b> " + point['name'];
+        popupContent += "<br />";
+        popupContent += "<b>Latitude:</b> " + point['latlng'][0];
+        popupContent += "<br />";
+        popupContent += "<b>Longitude:</b> " + point['latlng'][1];
+        return popupContent;
+    }
+
 
 });
