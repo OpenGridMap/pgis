@@ -31,7 +31,7 @@ follow the instructions of the installation process.
 Create a virtual environment for the project:
 
 ```
-conda create -n pgisenv anaconda python=3
+conda create -n pgisenv anaconda python=3.4.1
 ```
 
 Clone the repository:
