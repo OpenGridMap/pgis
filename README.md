@@ -8,6 +8,7 @@ Install Postgresql and Postgis:
 ```
 sudo apt-get install postgresql-9.3
 sudo apt-get install postgresql-9.3-postgis-2.1
+sudo apt-get install postgresql-server-dev-9.3
 ```
 
 create database and enable postgis:
