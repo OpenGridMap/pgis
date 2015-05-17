@@ -7,6 +7,25 @@ $(document).ready(function(){
 	}).addTo(map);
 	
 	var markers = new L.MarkerClusterGroup();
+    markers.fadedOut = false;
+
+    markers.fadeOut = function(){
+        if(!markers.fadedout){
+            markers.eachLayer(function(marker){
+                marker.setOpacity(0.5);
+            })
+            markers.fadedout = true;
+        }
+    }
+    
+    markers.fadeIn = function(){
+        if(markers.fadedout){
+            markers.eachLayer(function(marker){
+                marker.setOpacity(1);
+            })
+            markers.fadedout = false;
+        }
+    }
 	loadMapFragment();
 	map.addLayer(markers);
     
@@ -30,6 +49,7 @@ $(document).ready(function(){
     map.on('draw:created', function (e) {
         var type = e.layerType,
         layer = e.layer;
+        markers.fadeOut();
         drawnItems.addLayer(layer);
     }); 
     
