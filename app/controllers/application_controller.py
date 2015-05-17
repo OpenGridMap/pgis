@@ -4,6 +4,9 @@ class ApplicationController:
     def index(self):
         return render_template('map.html')
 
+    def update(self):
+        return None 
+
     def page500(self):
         return render_template('500.html') 
     

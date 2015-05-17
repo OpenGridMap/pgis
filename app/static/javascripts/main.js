@@ -27,6 +27,12 @@ $(document).ready(function(){
     });
     map.addControl(drawControl);
 
+    map.on('draw:created', function (e) {
+        var type = e.layerType,
+        layer = e.layer;
+        drawnItems.addLayer(layer);
+    }); 
+    
 	$.ajax({
 		url : "/powerlines",
 		success : function(data){
