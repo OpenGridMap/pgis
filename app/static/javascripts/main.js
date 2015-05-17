@@ -9,6 +9,23 @@ $(document).ready(function(){
 	var markers = new L.MarkerClusterGroup();
 	loadMapFragment();
 	map.addLayer(markers);
+    
+    // Initialise the FeatureGroup to store editable layers
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    // Initialise the draw control and pass it the FeatureGroup of editable layers
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        },
+        draw: {
+            polygon: false,
+            circle: false,
+            rectangle: false,
+        },
+    });
+    map.addControl(drawControl);
 
 	$.ajax({
 		url : "/powerlines",
