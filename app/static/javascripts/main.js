@@ -7,25 +7,6 @@ $(document).ready(function(){
 	}).addTo(map);
 	
 	var markers = new L.MarkerClusterGroup();
-    markers.fadedOut = false;
-
-    markers.fadeOut = function(){
-        if(!markers.fadedout){
-            markers.eachLayer(function(marker){
-                marker.setOpacity(0.5);
-            })
-            markers.fadedout = true;
-        }
-    }
-    
-    markers.fadeIn = function(){
-        if(markers.fadedout){
-            markers.eachLayer(function(marker){
-                marker.setOpacity(1);
-            })
-            markers.fadedout = false;
-        }
-    }
 	loadMapFragment();
 	map.addLayer(markers);
     
@@ -49,7 +30,6 @@ $(document).ready(function(){
     map.on('draw:created', function (e) {
         var type = e.layerType,
         layer = e.layer;
-        markers.fadeOut();
         drawnItems.addLayer(layer);
     }); 
     
@@ -87,14 +67,12 @@ $(document).ready(function(){
         }
     }
 
+    var source   = $("#marker-popup-template").html();
+    var markerPopupTemplate = Handlebars.compile(source);
+
     function markerPopupContent(point){
-        var popupContent = "<b>Name:</b> " + point['name'];
-        popupContent += "<br />";
-        popupContent += "<b>Latitude:</b> " + point['latlng'][0];
-        popupContent += "<br />";
-        popupContent += "<b>Longitude:</b> " + point['latlng'][1];
-        popupContent += "<br />";
-        popupContent += "<b>Tags:</b> " + JSON.stringify(point['tags'], null, 4);
+        point['tags'] = JSON.stringify(point['tags'], null, 4);
+        var popupContent = markerPopupTemplate(point);
         var popup = L.popup({ autopan: false })
             .setContent(popupContent);
         return popup;

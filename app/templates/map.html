@@ -1,4 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
 <div id="map"></div>
+
+{% raw %}
+<script id="marker-popup-template" type="text/x-handlebars-template">
+<div><b>Name:</b> {{name}}</div>
+<div><b>Latitude:</b> {{latlng.[0]}}</div>
+<div><b>Longitude:</b> {{latlng.[1]}}</div>
+<div><b>Tags:</b> {{tags}}</div>
+</script>
+{% endraw %}
 {% endblock %}
