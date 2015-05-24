@@ -58,7 +58,7 @@ $(document).ready(function(){
                     var newMarkers = []
                     for(var i = 0; i < data.length; i++){
                         var marker = new L.Marker(data[i]['latlng']);
-                        marker.bindPopup(markerPopupContent(data[i]))
+                        bindClickEvent(marker);
                         newMarkers.push(marker);
                     }			
                     markers.addLayers(newMarkers);
@@ -67,16 +67,10 @@ $(document).ready(function(){
         }
     }
 
-    var source   = $("#marker-popup-template").html();
-    var markerPopupTemplate = Handlebars.compile(source);
-
-    function markerPopupContent(point){
-        point['tags'] = JSON.stringify(point['tags'], null, 4);
-        var popupContent = markerPopupTemplate(point);
-        var popup = L.popup({ autopan: false })
-            .setContent(popupContent);
-        return popup;
+    function bindClickEvent(marker){
+        marker.on('click', function(){
+            $('#myModal').modal("show");
+        });
     }
-
 
 });

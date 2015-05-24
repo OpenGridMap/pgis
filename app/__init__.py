@@ -11,7 +11,7 @@ db = SQLAlchemy(GisApp)
 
 # Assets
 assets = Environment(GisApp)
-js = Bundle('javascripts/leaflet-src.js', 'javascripts/jquery-2.1.3.min.js', 'javascripts/main.js', 'javascripts/leaflet.markercluster-src.js','javascripts/leaflet.draw-src.js', 'javascripts/handlebars-v3.0.3.js',
+js = Bundle('javascripts/leaflet-src.js', 'javascripts/main.js', 'javascripts/leaflet.markercluster-src.js','javascripts/leaflet.draw-src.js', 'javascripts/handlebars-v3.0.3.js',
             filters='jsmin', output='gen/packed.js')
 
 admin_js = Bundle('javascripts/leaflet-src.js', 'javascripts/jquery-2.1.3.min.js', 'javascripts/admin_main.js', 'javascripts/leaflet.draw-src.js',
