@@ -11,7 +11,7 @@ class Point(db.Model):
 
     def serialize(self):
         point = self.shape()
-        return { 'name': self.name, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties['tags'] } 
+        return { 'id': self.id, 'name': self.name, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties['tags'] } 
     
     def shape(self):
         return to_shape(self.geom)

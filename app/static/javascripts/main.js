@@ -28,9 +28,13 @@ $(document).ready(function(){
     map.addControl(drawControl);
 
     map.on('draw:created', function (e) {
+        drawnItems.clearLayers(); // allow only one element drawn
         var type = e.layerType,
         layer = e.layer;
         drawnItems.addLayer(layer);
+        markers.eachLayer(function(marker){
+            marker.setOpacity(0.5);
+        });
     }); 
     
 	$.ajax({
@@ -62,13 +66,18 @@ $(document).ready(function(){
                         newMarkers.push(marker);
                     }			
                     markers.addLayers(newMarkers);
+                    if(drawnItems.getLayers().length > 0){
+                        markers.eachLayer(function(marker){
+                            marker.setOpacity(0.5);
+                        });
+                    }
                 }
             });
         }
     }
 
     Handlebars.registerHelper('json', function(context) {
-        return JSON.stringify(context);
+        return JSON.stringify(context, null, '\t');
     });
 
     var markerModal = $('#markerModal');
