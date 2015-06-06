@@ -13,4 +13,12 @@
     border-radius: 0px;
     margin-bottom: 0px;
   }
+
+  .save-map-entity {
+    display:none;
+  }
+  
+  .cancel-map-entity-edit {
+    display:none;
+  }
 }

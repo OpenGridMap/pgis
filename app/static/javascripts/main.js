@@ -50,6 +50,8 @@ $(document).ready(function(){
         loadMapFragment();
     });
 
+    var markerMap = {};
+
 	function loadMapFragment(){
         if(map.getZoom() > 11) {
             $.ajax({
@@ -60,11 +62,13 @@ $(document).ready(function(){
                 success : function(data){
                     markers.clearLayers();
                     var newMarkers = []
+                    markerMap = {};
                     for(var i = 0; i < data.length; i++){
                         var marker = new L.Marker(data[i]['latlng']);
                         marker.panelOpen = false;
                         bindClickEvent(marker, data[i]);
                         newMarkers.push(marker);
+                        markerMap[data[i].id] = marker;
                     }			
                     markers.addLayers(newMarkers);
                     if(drawnItems.getLayers().length > 0){
@@ -94,5 +98,27 @@ $(document).ready(function(){
 
     mapControlPanel.on('click', '.close-panel', function(){
         mapControlPanel.slideUp();
+    });
+
+    mapControlPanel.on('click', '.edit-map-entity', function(e){
+        // Disable drag and zoom handlers.
+        map.dragging.disable();
+        map.touchZoom.disable();
+        map.doubleClickZoom.disable();
+        map.scrollWheelZoom.disable();
+
+        mapControlPanel.find('.save-map-entity').show();
+        mapControlPanel.find('.cancel-map-entity-edit').show();
+        $(e.target).hide();
+
+        var id = $(this).data('id')
+        var marker = markerMap[id];
+        markers.removeLayer(marker);
+        drawnItems.addLayer(marker);
+        var edit = new L.EditToolbar.Edit(map, {
+                featureGroup: drawnItems,
+                selectedPathOptions: drawControl.options.edit.selectedPathOptions
+        }).enable();
+        
     });
 });
