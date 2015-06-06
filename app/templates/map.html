@@ -30,31 +30,40 @@
 {% endblock %}
 
 {% block content %}
+<div id="map-control-panel"></div>
 <div id="map"></div>
 
-<!-- Modal -->
-<div class="modal fade" id="markerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div>
-  </div>
-</div>
 {% raw %}
-<script id="marker-modal-content-template" type="text/x-handlebars-template">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">{{ name }}</h4>
-      </div>
-      <div class="modal-body">
-        <p>Coordinates: [{{ latlng }}]</p>
-        <p>Tags: {{ json tags }}</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <a href="/admin/points/edit/{{ id }}">
-                <button type="button" class="btn btn-primary">Edit Point</button>
-        </a>
-      </div>
+<script id="map-control-panel-content" type="text/x-handlebars-template">
+        <div class="panel panel-default">
+          <div class="panel-heading">{{ name }}
+            <div class="btn-group pull-right">
+                <a  href="#" class="btn btn-default btn-xs close-panel">X</a>
+            </div>
+          </div>
+          <div class="panel-body">
+                <form role="form">
+                        <div class="form-group">
+                                <label for="latitude">Latitude:</label>
+                                <div>{{ latlng.[0] }}</div>
+                                <input type="text" style="display:none" value="{{ latlng.[0] }}" class="form-control" id="latitude" disabled>
+                        </div>
+                        <div class="form-group">
+                                <label for="longitude">Longitude:</label>
+                                <div>{{ latlng.[1] }}</div>
+                                <input style="display:none" type="text" value="{{ latlng.[1] }}" class="form-control" id="longitude" disabled>
+                        </div>
+                        <div class="form-group">
+                                <label for="tags">Tags:</label>
+                                <div>{{ json tags }}</div>
+                                <textarea style="display: none; font-size: 11px;" class="form-control" id="tags" disabled>
+                                        {{json tags }}
+                                </textarea>
+                        </div>
+                </form>
+
+          </div>
+        </div>
 </script>
 {% endraw %}
 {% endblock %}

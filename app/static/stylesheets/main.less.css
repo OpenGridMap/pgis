@@ -5,3 +5,12 @@
 		font-weight: bold;	
 	}
 }
+
+#map-control-panel {
+  display: none;
+
+  .panel {
+    border-radius: 0px;
+    margin-bottom: 0px;
+  }
+}

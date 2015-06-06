@@ -62,6 +62,7 @@ $(document).ready(function(){
                     var newMarkers = []
                     for(var i = 0; i < data.length; i++){
                         var marker = new L.Marker(data[i]['latlng']);
+                        marker.panelOpen = false;
                         bindClickEvent(marker, data[i]);
                         newMarkers.push(marker);
                     }			
@@ -77,20 +78,21 @@ $(document).ready(function(){
     }
 
     Handlebars.registerHelper('json', function(context) {
-        return JSON.stringify(context, null, '\t');
+        return JSON.stringify(context, null, 4);
     });
 
-    var markerModal = $('#markerModal');
-    var source   = $("#marker-modal-content-template").html();
-    var markerModalContentTemplate = Handlebars.compile(source)
+    var mapControlPanel = $('#map-control-panel');
+    var source   = $("#map-control-panel-content").html();
+    var mapControlPanelContentTemplate = Handlebars.compile(source)
 
     function bindClickEvent(marker, point){
         marker.on('click', function(){
-            var content = markerModalContentTemplate(point);
-            console.log(point)
-            markerModal.find('.modal-content').html(content);
-            markerModal.modal("show");
+           mapControlPanel.html(mapControlPanelContentTemplate(point));
+           mapControlPanel.slideDown();
         });
     }
 
+    mapControlPanel.on('click', '.close-panel', function(){
+        mapControlPanel.slideUp();
+    });
 });
