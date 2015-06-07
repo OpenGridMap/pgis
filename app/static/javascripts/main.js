@@ -24,16 +24,6 @@ $(document).ready(function(){
         draw: false
     });
     map.addControl(drawControl);
-
-    map.on('draw:created', function (e) {
-        drawnItems.clearLayers(); // allow only one element drawn
-        var type = e.layerType,
-        layer = e.layer;
-        drawnItems.addLayer(layer);
-        markers.eachLayer(function(marker){
-            marker.setOpacity(0.5);
-        });
-    }); 
     
 	$.ajax({
 		url : "/powerlines",
@@ -120,5 +110,18 @@ $(document).ready(function(){
                 selectedPathOptions: drawControl.options.edit.selectedPathOptions
         }).enable();
         
+    });
+    
+    mapControlPanel.on('click', '.cancel-map-entity-edit', function(e){
+        var id = $(this).data('id')
+        var marker = markerMap[id];
+        map.dragging.enable();
+        map.touchZoom.enable();
+        map.doubleClickZoom.enable();
+        map.scrollWheelZoom.enable();
+        $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
+        mapControlPanel.find('.save-map-entity').hide();
+        $(e.target).hide();
+        $('.edit-map-entity').show();
     });
 });
