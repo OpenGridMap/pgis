@@ -17,13 +17,11 @@ $(document).ready(function(){
     // Initialise the draw control and pass it the FeatureGroup of editable layers
     var drawControl = new L.Control.Draw({
         edit: {
-            featureGroup: drawnItems
+            featureGroup: drawnItems,
+            remove: false,
+            edit: false
         },
-        draw: {
-            polygon: false,
-            circle: false,
-            rectangle: false,
-        },
+        draw: false
     });
     map.addControl(drawControl);
 
@@ -115,6 +113,8 @@ $(document).ready(function(){
         var marker = markerMap[id];
         markers.removeLayer(marker);
         drawnItems.addLayer(marker);
+        $(marker._icon).addClass('leaflet-edit-marker-selected leaflet-marker-draggable');
+
         var edit = new L.EditToolbar.Edit(map, {
                 featureGroup: drawnItems,
                 selectedPathOptions: drawControl.options.edit.selectedPathOptions
