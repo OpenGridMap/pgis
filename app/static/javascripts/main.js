@@ -59,11 +59,6 @@ $(document).ready(function(){
                         markerMap[data[i].id] = marker;
                     }			
                     markers.addLayers(newMarkers);
-                    if(drawnItems.getLayers().length > 0){
-                        markers.eachLayer(function(marker){
-                            marker.setOpacity(0.5);
-                        });
-                    }
                 }
             });
         }
@@ -88,6 +83,11 @@ $(document).ready(function(){
         mapControlPanel.slideUp();
     });
 
+    var editToolbar = new L.EditToolbar.Edit(map, {
+        featureGroup: drawnItems,
+        selectedPathOptions: drawControl.options.edit.selectedPathOptions
+    });
+
     mapControlPanel.on('click', '.edit-map-entity', function(e){
         // Disable drag and zoom handlers.
         map.dragging.disable();
@@ -101,27 +101,24 @@ $(document).ready(function(){
 
         var id = $(this).data('id')
         var marker = markerMap[id];
-        markers.removeLayer(marker);
         drawnItems.addLayer(marker);
         $(marker._icon).addClass('leaflet-edit-marker-selected leaflet-marker-draggable');
-
-        var edit = new L.EditToolbar.Edit(map, {
-                featureGroup: drawnItems,
-                selectedPathOptions: drawControl.options.edit.selectedPathOptions
-        }).enable();
-        
+        editToolbar.enable();
     });
     
     mapControlPanel.on('click', '.cancel-map-entity-edit', function(e){
         var id = $(this).data('id')
         var marker = markerMap[id];
+        $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
+
+        mapControlPanel.find('.save-map-entity').hide();
+        $(e.target).hide();
+        $('.edit-map-entity').show();
+        
         map.dragging.enable();
         map.touchZoom.enable();
         map.doubleClickZoom.enable();
         map.scrollWheelZoom.enable();
-        $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
-        mapControlPanel.find('.save-map-entity').hide();
-        $(e.target).hide();
-        $('.edit-map-entity').show();
+        editToolbar.revertLayers();
     });
 });
