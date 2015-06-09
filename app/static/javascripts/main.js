@@ -110,7 +110,6 @@ $(document).ready(function(){
         var id = $(this).data('id')
         var marker = markerMap[id];
         $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
-
         mapControlPanel.find('.save-map-entity').hide();
         $(e.target).hide();
         $('.edit-map-entity').show();
@@ -120,5 +119,6 @@ $(document).ready(function(){
         map.doubleClickZoom.enable();
         map.scrollWheelZoom.enable();
         editToolbar.revertLayers();
+        editToolbar.disable();
     });
 });
