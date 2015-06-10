@@ -121,4 +121,19 @@ $(document).ready(function(){
         editToolbar.revertLayers();
         editToolbar.disable();
     });
+    
+    mapControlPanel.on('click', '.save-map-entity', function(e){
+        var id = $(this).data('id')
+        var marker = markerMap[id];
+        $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
+        mapControlPanel.find('.cancel-map-entity-edit').hide();
+        $(e.target).hide();
+        $('.edit-map-entity').show();
+        
+        map.dragging.enable();
+        map.touchZoom.enable();
+        map.doubleClickZoom.enable();
+        map.scrollWheelZoom.enable();
+        editToolbar.disable();
+    });
 });
