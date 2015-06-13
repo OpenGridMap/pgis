@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    var editMode = false;
+
 	L.Icon.Default.imagePath = APP_IMAGES_URL;
 	var map = L.map('map').setView([48.1333, 11.5667], 13);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -35,7 +37,9 @@ $(document).ready(function(){
 	});
 
     map.on('moveend', function(){
-        loadMapFragment();
+        if(!editMode) {
+            loadMapFragment();
+        }
     });
 
     var markerMap = {};
@@ -95,6 +99,8 @@ $(document).ready(function(){
         map.doubleClickZoom.disable();
         map.scrollWheelZoom.disable();
 
+        editMode = true;
+
         mapControlPanel.find('.save-map-entity').show();
         mapControlPanel.find('.cancel-map-entity-edit').show();
         $(e.target).hide();
@@ -104,6 +110,10 @@ $(document).ready(function(){
         drawnItems.addLayer(marker);
         $(marker._icon).addClass('leaflet-edit-marker-selected leaflet-marker-draggable');
         editToolbar.enable();
+
+        marker.on('dragend', function(){
+            map.setView(marker.getLatLng());
+        });
     });
     
     mapControlPanel.on('click', '.cancel-map-entity-edit', function(e){
@@ -120,6 +130,9 @@ $(document).ready(function(){
         map.scrollWheelZoom.enable();
         editToolbar.revertLayers();
         editToolbar.disable();
+
+        map.setView(marker.getLatLng());
+        editMode = false;
     });
     
     mapControlPanel.on('click', '.save-map-entity', function(e){
@@ -135,5 +148,6 @@ $(document).ready(function(){
         map.doubleClickZoom.enable();
         map.scrollWheelZoom.enable();
         editToolbar.disable();
+        editMode = false;
     });
 });
