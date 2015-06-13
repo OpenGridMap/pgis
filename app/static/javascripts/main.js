@@ -105,6 +105,9 @@ $(document).ready(function(){
         mapControlPanel.find('.cancel-map-entity-edit').show();
         $(e.target).hide();
 
+        mapControlPanel.find('form :input').show();
+        mapControlPanel.find('.input-mask').hide();
+
         var id = $(this).data('id')
         var marker = markerMap[id];
         drawnItems.addLayer(marker);

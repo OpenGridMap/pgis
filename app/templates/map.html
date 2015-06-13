@@ -43,22 +43,26 @@
           </div>
           <div class="panel-body">
                 <form role="form">
-                        <div class="form-group">
-                                <label for="latitude">Latitude:</label>
-                                <div>{{ latlng.[0] }}</div>
-                                <input type="text" style="display:none" value="{{ latlng.[0] }}" class="form-control" id="latitude" disabled>
-                        </div>
-                        <div class="form-group">
-                                <label for="longitude">Longitude:</label>
-                                <div>{{ latlng.[1] }}</div>
-                                <input style="display:none" type="text" value="{{ latlng.[1] }}" class="form-control" id="longitude" disabled>
-                        </div>
-                        <div class="form-group">
-                                <label for="tags">Tags:</label>
-                                <div>{{ json tags }}</div>
-                                <textarea style="display: none; font-size: 11px;" class="form-control" id="tags" disabled>
-                                        {{json tags }}
-                                </textarea>
+                        <div class="row">
+                                <div class="form-group col-md-6">
+                                        <div>
+                                                <label for="latitude">Latitude:</label>
+                                                <div class="input-mask">{{ latlng.[0] }}</div>
+                                                <input type="text" style="display:none" value="{{ latlng.[0] }}" class="form-control" id="latitude" >
+                                        </div>
+                                        <div>
+                                                <label for="longitude">Longitude:</label>
+                                                <div class="input-mask">{{ latlng.[1] }}</div>
+                                                <input style="display:none" type="text" value="{{ latlng.[1] }}" class="form-control" id="longitude" >
+                                        </div>
+                                </div>
+                                <div class="form-group col-md-3">
+                                        <label for="tags">Tags:</label>
+                                        <div class="input-mask">{{ json tags }}</div>
+                                        <textarea style="display: none; font-size: 11px;" class="form-control" id="tags" rows="10">
+                                                {{json tags }}
+                                        </textarea>
+                                </div>
                         </div>
                 </form>
                 <div>
