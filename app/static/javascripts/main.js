@@ -125,6 +125,18 @@ $(document).ready(function(){
         editToolbar.enable();
 
         map.invalidateSize();
+        var latInput = mapControlPanel.find('form [name=latitude]')
+        var lngInput = mapControlPanel.find('form [name=longitude]')
+        var latMask = $('#latitude-mask');
+        var lngMask = $('#longitude-mask');
+        
+        marker.on('drag', function(){
+            latInput.val(marker.getLatLng().lat);
+            lngInput.val(marker.getLatLng().lng);
+            latMask.val(marker.getLatLng().lat);
+            lngMask.val(marker.getLatLng().lng);
+        });
+
         marker.on('dragend', function(){
             map.setView(marker.getLatLng());
         });
@@ -159,13 +171,30 @@ $(document).ready(function(){
         mapControlPanel.find('.cancel-map-entity-edit').hide();
         $(e.target).hide();
         $('.edit-map-entity').show();
-        
+        mapControlPanel.find('form :input').hide();
+        mapControlPanel.find('.input-mask').show();
+
         map.dragging.enable();
         map.touchZoom.enable();
         map.doubleClickZoom.enable();
         map.scrollWheelZoom.enable();
+        persistMarker(id, function(data){
+            if(data !== 'ok')  editToolbar.revertLayers();
+        });
+       
         editToolbar.disable();
         map.invalidateSize();
         editMode = false;
     });
+
+
+    function persistMarker(id, callback){
+        $.ajax({
+            type: 'POST',
+            url: '/api/points/edit/' + id,
+            success: function(data){
+                callback(data);
+            }
+        });
+    }
 });

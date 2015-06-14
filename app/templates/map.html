@@ -47,13 +47,13 @@
                                 <div class="form-group col-md-6">
                                         <div>
                                                 <label for="latitude">Latitude:</label>
-                                                <div class="input-mask">{{ latlng.[0] }}</div>
-                                                <input type="text" style="display:none" value="{{ latlng.[0] }}" class="form-control" id="latitude" >
+                                                <div id="latitude-mask" class="input-mask">{{ latlng.[0] }}</div>
+                                                <input type="text" style="display:none" value="{{ latlng.[0] }}" class="form-control" id="latitude" name="latitude">
                                         </div>
                                         <div>
                                                 <label for="longitude">Longitude:</label>
-                                                <div class="input-mask">{{ latlng.[1] }}</div>
-                                                <input style="display:none" type="text" value="{{ latlng.[1] }}" class="form-control" id="longitude" >
+                                                <div id="longitude-mask" class="input-mask">{{ latlng.[1] }}</div>
+                                                <input style="display:none" type="text" value="{{ latlng.[1] }}" class="form-control" id="longitude" name="longitude" >
                                         </div>
                                 </div>
                                 <div class="form-group col-md-3">

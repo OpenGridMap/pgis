@@ -12,3 +12,6 @@ class PointsController:
 #        points = Point.query.all()
         points = list(map(lambda point: point.serialize(), points))
         return Response(json.dumps(points),  mimetype='application/json')
+
+    def api_edit(self, id):
+        return 'ok'
