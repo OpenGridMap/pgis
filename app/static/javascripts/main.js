@@ -75,16 +75,26 @@ $(document).ready(function(){
     var mapControlPanel = $('#map-control-panel');
     var source   = $("#map-control-panel-content").html();
     var mapControlPanelContentTemplate = Handlebars.compile(source)
+        
+    map.on('resize', function () {
+        $('#map').css("height", $(window).height() - mapControlPanel.height()  );
+    });
 
     function bindClickEvent(marker, point){
         marker.on('click', function(){
-           mapControlPanel.html(mapControlPanelContentTemplate(point));
-           mapControlPanel.slideDown();
+            if(!editMode){
+                mapControlPanel.html(mapControlPanelContentTemplate(point));
+                mapControlPanel.slideDown(function(){
+                    map.invalidateSize();
+                });
+            }
         });
     }
 
     mapControlPanel.on('click', '.close-panel', function(){
-        mapControlPanel.slideUp();
+        mapControlPanel.slideUp(function(){
+            $('#map').css("height", $(window).height());
+        });
     });
 
     var editToolbar = new L.EditToolbar.Edit(map, {
@@ -114,6 +124,7 @@ $(document).ready(function(){
         $(marker._icon).addClass('leaflet-edit-marker-selected leaflet-marker-draggable');
         editToolbar.enable();
 
+        map.invalidateSize();
         marker.on('dragend', function(){
             map.setView(marker.getLatLng());
         });
@@ -126,6 +137,8 @@ $(document).ready(function(){
         mapControlPanel.find('.save-map-entity').hide();
         $(e.target).hide();
         $('.edit-map-entity').show();
+        mapControlPanel.find('form :input').hide();
+        mapControlPanel.find('.input-mask').show();
         
         map.dragging.enable();
         map.touchZoom.enable();
@@ -134,6 +147,7 @@ $(document).ready(function(){
         editToolbar.revertLayers();
         editToolbar.disable();
 
+        map.invalidateSize();
         map.setView(marker.getLatLng());
         editMode = false;
     });
@@ -151,6 +165,7 @@ $(document).ready(function(){
         map.doubleClickZoom.enable();
         map.scrollWheelZoom.enable();
         editToolbar.disable();
+        map.invalidateSize();
         editMode = false;
     });
 });
