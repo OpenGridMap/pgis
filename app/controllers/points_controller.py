@@ -2,6 +2,8 @@ from app.models.point import Point
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
 from geoalchemy2 import Geometry, func
 from geoalchemy2.functions import GenericFunction
+import app.helpers.point_form
+from app import db
 
 class PointsController:
     def index(self):
@@ -14,4 +16,13 @@ class PointsController:
         return Response(json.dumps(points),  mimetype='application/json')
 
     def api_edit(self, id):
-        return 'ok'
+        point = Point.query.get(id)
+        form = app.helpers.point_form.PointForm(request.form, obj=point) 
+        form.properties.data = json.dumps(point.properties)
+        form.name.data = point.name 
+        if form.validate_on_submit():
+            form.populate_obj(point)
+            db.session.add(point)
+            db.session.commit()
+            return 'ok'
+        return 'error'

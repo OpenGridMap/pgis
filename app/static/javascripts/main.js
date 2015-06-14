@@ -179,6 +179,7 @@ $(document).ready(function(){
         map.doubleClickZoom.enable();
         map.scrollWheelZoom.enable();
         persistMarker(id, function(data){
+            console.log(data);
             if(data !== 'ok')  editToolbar.revertLayers();
         });
        
@@ -191,6 +192,7 @@ $(document).ready(function(){
     function persistMarker(id, callback){
         $.ajax({
             type: 'POST',
+            data: $('form').serialize(),
             url: '/api/points/edit/' + id,
             success: function(data){
                 callback(data);
