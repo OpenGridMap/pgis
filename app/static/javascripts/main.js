@@ -1,6 +1,4 @@
 $(document).ready(function(){
-    var editMode = false;
-
 	L.Icon.Default.imagePath = APP_IMAGES_URL;
 	var map = L.map('map').setView([48.1333, 11.5667], 13);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -37,9 +35,7 @@ $(document).ready(function(){
 	});
 
     map.on('moveend', function(){
-        if(!editMode) {
-            loadMapFragment();
-        }
+        loadMapFragment();
     });
 
     var markerMap = {};
@@ -82,12 +78,10 @@ $(document).ready(function(){
 
     function bindClickEvent(marker, point){
         marker.on('click', function(){
-            if(!editMode){
-                mapControlPanel.html(mapControlPanelContentTemplate(point));
-                mapControlPanel.slideDown(function(){
-                    map.invalidateSize();
-                });
-            }
+            mapControlPanel.html(mapControlPanelContentTemplate(point));
+            mapControlPanel.slideDown(function(){
+                map.invalidateSize();
+            });
         });
     }
 
@@ -103,100 +97,6 @@ $(document).ready(function(){
     });
 
     mapControlPanel.on('click', '.edit-map-entity', function(e){
-        // Disable drag and zoom handlers.
-        map.dragging.disable();
-        map.touchZoom.disable();
-        map.doubleClickZoom.disable();
-        map.scrollWheelZoom.disable();
-
-        editMode = true;
-
-        mapControlPanel.find('.save-map-entity').show();
-        mapControlPanel.find('.cancel-map-entity-edit').show();
-        $(e.target).hide();
-
-        mapControlPanel.find('form :input').show();
-        mapControlPanel.find('.input-mask').hide();
-
-        var id = $(this).data('id')
-        var marker = markerMap[id];
-        drawnItems.addLayer(marker);
-        $(marker._icon).addClass('leaflet-edit-marker-selected leaflet-marker-draggable');
-        editToolbar.enable();
-
-        map.invalidateSize();
-        var latInput = mapControlPanel.find('form [name=latitude]')
-        var lngInput = mapControlPanel.find('form [name=longitude]')
-        var latMask = $('#latitude-mask');
-        var lngMask = $('#longitude-mask');
-        
-        marker.on('drag', function(){
-            latInput.val(marker.getLatLng().lat);
-            lngInput.val(marker.getLatLng().lng);
-            latMask.val(marker.getLatLng().lat);
-            lngMask.val(marker.getLatLng().lng);
-        });
-
-        marker.on('dragend', function(){
-            map.setView(marker.getLatLng());
-        });
-    });
-    
-    mapControlPanel.on('click', '.cancel-map-entity-edit', function(e){
-        var id = $(this).data('id')
-        var marker = markerMap[id];
-        $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
-        mapControlPanel.find('.save-map-entity').hide();
-        $(e.target).hide();
-        $('.edit-map-entity').show();
-        mapControlPanel.find('form :input').hide();
-        mapControlPanel.find('.input-mask').show();
-        
-        map.dragging.enable();
-        map.touchZoom.enable();
-        map.doubleClickZoom.enable();
-        map.scrollWheelZoom.enable();
-        editToolbar.revertLayers();
-        editToolbar.disable();
-
-        map.invalidateSize();
-        map.setView(marker.getLatLng());
-        editMode = false;
-    });
-    
-    mapControlPanel.on('click', '.save-map-entity', function(e){
-        var id = $(this).data('id')
-        var marker = markerMap[id];
-        $(marker._icon).removeClass('leaflet-edit-marker-selected leaflet-marker-draggable');
-        mapControlPanel.find('.cancel-map-entity-edit').hide();
-        $(e.target).hide();
-        $('.edit-map-entity').show();
-        mapControlPanel.find('form :input').hide();
-        mapControlPanel.find('.input-mask').show();
-
-        map.dragging.enable();
-        map.touchZoom.enable();
-        map.doubleClickZoom.enable();
-        map.scrollWheelZoom.enable();
-        persistMarker(id, function(data){
-            console.log(data);
-            if(data !== 'ok')  editToolbar.revertLayers();
-        });
-       
-        editToolbar.disable();
-        map.invalidateSize();
-        editMode = false;
     });
 
-
-    function persistMarker(id, callback){
-        $.ajax({
-            type: 'POST',
-            data: $('form').serialize(),
-            url: '/api/points/edit/' + id,
-            success: function(data){
-                callback(data);
-            }
-        });
-    }
 });

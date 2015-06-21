@@ -244,18 +244,6 @@ def admin_users_delete(id):
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.delete(id)
 
-@GisApp.route('/api/points/add')
-@login_required
-def api_points_add():
-    controller = app.controllers.points_controller.PointsController();
-    return controller.api_add()
-
-@GisApp.route('/api/points/edit/<id>', methods=['POST'])
-@login_required
-def api_points_edit(id):
-    controller = app.controllers.points_controller.PointsController();
-    return controller.api_edit(id)
-
 @GisApp.errorhandler(500)
 def internal_error(error):
     controller = app.controllers.application_controller.ApplicationController()

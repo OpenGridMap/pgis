@@ -15,14 +15,3 @@ class PointsController:
         points = list(map(lambda point: point.serialize(), points))
         return Response(json.dumps(points),  mimetype='application/json')
 
-    def api_edit(self, id):
-        point = Point.query.get(id)
-        form = app.helpers.point_form.PointForm(request.form, obj=point) 
-        form.properties.data = json.dumps(point.properties)
-        form.name.data = point.name 
-        if form.validate_on_submit():
-            form.populate_obj(point)
-            db.session.add(point)
-            db.session.commit()
-            return 'ok'
-        return 'error'
