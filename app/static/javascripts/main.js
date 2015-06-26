@@ -7,23 +7,10 @@ $(document).ready(function(){
 	}).addTo(map);
 	
 	var markers = new L.MarkerClusterGroup();
-	loadMapFragment();
 	map.addLayer(markers);
-    
-    // Initialise the FeatureGroup to store editable layers
-    var drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
-
-    // Initialise the draw control and pass it the FeatureGroup of editable layers
-    var drawControl = new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems,
-            remove: false,
-            edit: false
-        },
-        draw: false
-    });
-    map.addControl(drawControl);
+	var powerlines = new L.LayerGroup();
+	map.addLayer(powerlines);
+	loadMapFragment();
     
 	$.ajax({
 		url : "/powerlines",
@@ -59,6 +46,18 @@ $(document).ready(function(){
                         markerMap[data[i].id] = marker;
                     }			
                     markers.addLayers(newMarkers);
+                }
+            });
+            $.ajax({
+                url : "/powerlines",
+                data : {
+                    "bounds"    : map.getBounds().toBBoxString(),
+                    "zoom"      : map.getZoom() 
+                },
+                success : function(data){
+                    for(var i = 0; i < 1000; i++){
+                        powerlines.addLayer(L.polyline(data[i], {color: 'red'}));
+                    }
                 }
             });
         }
