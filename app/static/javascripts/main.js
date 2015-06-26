@@ -48,19 +48,20 @@ $(document).ready(function(){
                     markers.addLayers(newMarkers);
                 }
             });
-            $.ajax({
-                url : "/powerlines",
-                data : {
-                    "bounds"    : map.getBounds().toBBoxString(),
-                    "zoom"      : map.getZoom() 
-                },
-                success : function(data){
-                    for(var i = 0; i < 1000; i++){
-                        powerlines.addLayer(L.polyline(data[i], {color: 'red'}));
-                    }
-                }
-            });
         }
+
+        $.ajax({
+            url : "/powerlines",
+            data : {
+                "bounds"    : map.getBounds().toBBoxString(),
+                "zoom"      : map.getZoom() 
+            },
+            success : function(data){
+                for(var i = 0; i < 1000; i++){
+                    powerlines.addLayer(L.polyline(data[i], {color: 'red'}));
+                }
+            }
+        });
     }
 
     Handlebars.registerHelper('json', function(context) {
