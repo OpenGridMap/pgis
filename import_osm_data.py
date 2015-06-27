@@ -12,18 +12,18 @@ except:
     print "I am unable to connect to the database"
 
 
-# class PowerStationImporter(object):
+class PowerStationImporter(object):
 
-#     def perform(self, nodes):
-#         for osmid, tags, coords in nodes:
-#             if 'power' in tags:
-#                 query = "INSERT INTO points(osmid, geom) VALUES(%s, %s)"
-#                 cur.execute(query, (osmid, "POINT({} {})".format(coords[1], coords[0]) )) 
+    def perform(self, nodes):
+        for osmid, tags, coords in nodes:
+            if 'power' in tags:
+                query = "INSERT INTO points(osmid, geom) VALUES(%s, %s)"
+                cur.execute(query, (osmid, "POINT({} {})".format(coords[1], coords[0]) )) 
 
-# importer = PowerStationImporter()
-# p = OSMParser(concurrency=4, nodes_callback=importer.perform)
-# p.parse(sys.argv[1])
-# conn.commit()
+importer = PowerStationImporter()
+p = OSMParser(concurrency=4, nodes_callback=importer.perform)
+p.parse(sys.argv[1])
+conn.commit()
 
 
 class PowerlineImporter(object):
@@ -51,9 +51,9 @@ class PowerlineImporter(object):
                 linestring = linestring[:-1]
                 query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
                 cur2.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
-                conn2.commit()
             
 
 importer = PowerlineImporter()
 p = OSMParser(concurrency=4, ways_callback=importer.perform)
 p.parse(sys.argv[1])
+conn2.commit()
