@@ -57,6 +57,7 @@ $(document).ready(function(){
                 "zoom"      : map.getZoom() 
             },
             success : function(data){
+                powerlines.clearLayers();
                 for(var i = 0; i < 1000; i++){
                     powerlines.addLayer(L.polyline(data[i], {color: 'red'}));
                 }
