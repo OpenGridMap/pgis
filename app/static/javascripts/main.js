@@ -69,35 +69,19 @@ $(document).ready(function(){
         return JSON.stringify(context, null, 4);
     });
 
-    var mapControlPanel = $('#map-control-panel');
-    var source   = $("#map-control-panel-content").html();
-    var mapControlPanelContentTemplate = Handlebars.compile(source)
+    var source   = $("#marker-popup-template").html();
+    var markerPopupTemplate = Handlebars.compile(source)
         
-    map.on('resize', function () {
-        $('#map').css("height", $(window).height() - mapControlPanel.height()  );
-    });
-
     function bindClickEvent(marker, point){
-        marker.on('click', function(){
-            mapControlPanel.html(mapControlPanelContentTemplate(point));
-            mapControlPanel.slideDown(function(){
-                map.invalidateSize();
-            });
-        });
+       var popup = L.popup()
+                    .setContent(markerPopupTemplate(point))
+       marker.bindPopup(popup);
     }
 
     mapControlPanel.on('click', '.close-panel', function(){
         mapControlPanel.slideUp(function(){
             $('#map').css("height", $(window).height());
         });
-    });
-
-    var editToolbar = new L.EditToolbar.Edit(map, {
-        featureGroup: drawnItems,
-        selectedPathOptions: drawControl.options.edit.selectedPathOptions
-    });
-
-    mapControlPanel.on('click', '.edit-map-entity', function(e){
     });
 
 });

@@ -34,43 +34,12 @@
 <div id="map"></div>
 
 {% raw %}
-<script id="map-control-panel-content" type="text/x-handlebars-template">
+<script id="marker-popup-template" type="text/x-handlebars-template">
         <div class="panel panel-default">
-          <div class="panel-heading">{{ name }}
-            <div class="btn-group pull-right">
-                <button class="btn btn-default btn-xs close-panel">X</button>
-            </div>
-          </div>
+          <div class="panel-heading">{{ name }}</div>
           <div class="panel-body">
-                <form role="form">
-                        {% endraw %}{{ point_form.hidden_tag() }}{% raw %}
-                        <div class="row">
-                                <div class="form-group col-md-6">
-                                        <div>
-                                                <label for="latitude">Latitude:</label>
-                                                <div id="latitude-mask" class="input-mask">{{ latlng.[0] }}</div>
-                                                <input type="text" style="display:none" value="{{ latlng.[0] }}" class="form-control" id="latitude" name="latitude">
-                                        </div>
-                                        <div>
-                                                <label for="longitude">Longitude:</label>
-                                                <div id="longitude-mask" class="input-mask">{{ latlng.[1] }}</div>
-                                                <input style="display:none" type="text" value="{{ latlng.[1] }}" class="form-control" id="longitude" name="longitude" >
-                                        </div>
-                                </div>
-                                <div class="form-group col-md-3">
-                                        <label for="tags">Tags:</label>
-                                        <div class="input-mask">{{ json tags }}</div>
-                                        <textarea style="display: none; font-size: 11px;" class="form-control" id="tags" rows="10">
-                                                {{json tags }}
-                                        </textarea>
-                                </div>
-                        </div>
-                </form>
-                <div>
-                  <button data-id="{{ id }}" class="btn btn-default edit-map-entity">Edit</button>
-                  <button data-id="{{ id }}" class="btn btn-default save-map-entity">Save</button>
-                  <button data-id="{{ id }}" class="btn btn-default cancel-map-entity-edit">Cancel</button>
-                </div>
+                <p><strong>LatLng:</strong> {{ latlng }}</p>
+                <p><strong>Tags:</strong> {{ json tags }}</p>
           </div>
         </div>
 </script>
