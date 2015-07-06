@@ -71,6 +71,20 @@ def points():
 	controller = app.controllers.points_controller.PointsController()
 	return controller.index()
 
+@GisApp.route('/points/edit/<id>')
+@login_required
+@app.permissions.admin_points_edit.require(http_exception=403)
+def points_edit(id):
+	controller = app.controllers.points_controller.PointsController()
+	return controller.edit(id)
+
+@GisApp.route('/points/update/<id>', methods=['POST'])
+@login_required
+@app.permissions.admin_points_update.require(http_exception=403)
+def points_update(id):
+	controller = app.controllers.points_controller.PointsController()
+	return controller.update(id)
+
 @GisApp.route('/powerlines', methods=['GET'])
 def powerlines():
 	controller = app.controllers.powerlines_controller.PowerlinesController()
