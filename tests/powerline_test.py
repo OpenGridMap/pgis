@@ -11,8 +11,8 @@ class MyTest(TestCase):
         GisApp.config['LIVESERVER_PORT'] = 8943
         return GisApp 
 
-    def test_test(self):
+    def test_serialize(self):
         response = self.client.get("/powerlines")
-        self.assertEquals(response.json, dict(success=True))
+        self.assertEquals(response.json, [])
 
  

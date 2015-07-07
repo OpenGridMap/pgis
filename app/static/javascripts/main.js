@@ -5,22 +5,14 @@ $(document).ready(function(){
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		maxZoom: 18
 	}).addTo(map);
-	
+	L.Control.geocoder().addTo(map);
+
 	var markers = new L.MarkerClusterGroup();
 	map.addLayer(markers);
 	var powerlines = new L.LayerGroup();
 	map.addLayer(powerlines);
 	loadMapFragment();
     
-	$.ajax({
-		url : "/powerlines",
-		success : function(data){
-			for(var i = 0; i < data.length; i++){
-				var polyline = L.polyline(data[i], {color: 'red'}).addTo(map);
-			}
-		}
-	});
-
     map.on('moveend', function(){
         loadMapFragment();
     });
@@ -58,7 +50,7 @@ $(document).ready(function(){
             },
             success : function(data){
                 powerlines.clearLayers();
-                for(var i = 0; i < 1000; i++){
+                for(var i = 0; i < data.length; i++){
                     powerlines.addLayer(L.polyline(data[i], {color: 'red'}));
                 }
             }
@@ -77,11 +69,5 @@ $(document).ready(function(){
                     .setContent(markerPopupTemplate(point))
        marker.bindPopup(popup);
     }
-
-    mapControlPanel.on('click', '.close-panel', function(){
-        mapControlPanel.slideUp(function(){
-            $('#map').css("height", $(window).height());
-        });
-    });
 
 });
