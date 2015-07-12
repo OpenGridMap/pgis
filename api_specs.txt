@@ -1,0 +1,6 @@
+1. Create endpoint for submitting point data and point image;
+2. Alter point table to cointain identificator, a sha512 of the submittion data, to merge points after submission.
+3. Merging:
+ - check out all the points with same sha512 identificatior and merge them. store images into sha512 folder before merging, move them into under id folder of the point.  
+4. images will be sent as a base64 encoded string
+5. Authentication
