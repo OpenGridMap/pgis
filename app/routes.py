@@ -71,6 +71,11 @@ def points():
 	controller = app.controllers.points_controller.PointsController()
 	return controller.index()
 
+@GisApp.route('/points/submit', methods=['POST'])
+def points_submit():
+	controller = app.controllers.points_controller.PointsController()
+	return controller.submit()
+
 @GisApp.route('/points/edit/<id>')
 @login_required
 @app.permissions.admin_points_edit.require(http_exception=403)
