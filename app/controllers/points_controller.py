@@ -23,9 +23,9 @@ class PointsController:
             print(request.get_json())
             json_data = request.get_json()
             self.save_image(json_data["submission_id"], json_data["image"])
-            return Response(json.dumps({ "foo" : "bar" }))
+            return Response(json.dumps({ "status" : "ok" })) 
         except Exception as e:
-            return Response(json.dumps({ "status" : "error", "error_message" : str(e) }))
+            return Response(json.dumps({ "status" : "error", "error_message" : str(e) })), 500
 
     def edit(self, id):
         point = app.models.point.Point.query.get(id)
