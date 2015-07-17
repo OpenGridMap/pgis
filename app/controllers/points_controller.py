@@ -20,9 +20,9 @@ class PointsController:
 
     def submit(self):
         try:
-            print(request.get_json())
             json_data = request.get_json()
             self.save_image(json_data["submission_id"], json_data["image"])
+            new_point = app.models.point.Point()
             return Response(json.dumps({ "status" : "ok" })) 
         except Exception as e:
             return Response(json.dumps({ "status" : "error", "error_message" : str(e) })), 500
@@ -44,7 +44,7 @@ class PointsController:
         return 'Error'
 
     def save_image(self,submission_id, encoded_string):
-        directory = "app/submissions/" + submission_id 
+        directory = "app/uploads/submissions/" + submission_id 
         if not os.path.exists(directory):
             os.makedirs(directory)
         fh = open(directory + "/test.png", "wb")
