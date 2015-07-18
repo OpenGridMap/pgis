@@ -11,6 +11,7 @@ import app.models.user
 import app.controllers.application_controller
 import app.controllers.points_controller
 import app.controllers.powerlines_controller
+import app.controllers.submissions_controller
 import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
@@ -71,11 +72,6 @@ def points():
 	controller = app.controllers.points_controller.PointsController()
 	return controller.index()
 
-@GisApp.route('/points/submit', methods=['POST'])
-def points_submit():
-	controller = app.controllers.points_controller.PointsController()
-	return controller.submit()
-
 @GisApp.route('/points/edit/<id>')
 @login_required
 @app.permissions.admin_points_edit.require(http_exception=403)
@@ -129,7 +125,7 @@ def authorized():
         # Tell Flask-Principal the identity changed
         identity_changed.send(current_app._get_current_object(),
               identity=Identity(user.id))
-        return redirect('/admin')
+        # return redirect('/admin')
 
     return jsonify({"data": me.data})
 
@@ -262,6 +258,12 @@ def admin_users_update(id):
 def admin_users_delete(id):
     controller = app.controllers.admin.users_controller.UsersController()
     return controller.delete(id)
+
+@GisApp.route('/submissions/create', methods=['POST'])
+# @login_required
+def submissions_create():
+    controller = app.controllers.submissions_controller.SubmissionsController()
+    return controller.create()
 
 @GisApp.errorhandler(500)
 def internal_error(error):
