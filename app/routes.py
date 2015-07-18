@@ -16,6 +16,7 @@ import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
 import app.controllers.admin.users_controller
+import app.controllers.admin.submissions_controller
 import app.permissions
 
 login_manager = LoginManager()
@@ -264,6 +265,12 @@ def admin_users_delete(id):
 def submissions_create():
     controller = app.controllers.submissions_controller.SubmissionsController()
     return controller.create()
+
+@GisApp.route('/admin/submissions')
+@login_required
+def submissions_index():
+    controller = app.controllers.admin.submissions_controller.SubmissionsController()
+    return controller.index()
 
 @GisApp.errorhandler(500)
 def internal_error(error):
