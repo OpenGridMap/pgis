@@ -14,26 +14,23 @@ class PointsController:
             return Response(json.dumps([]), mimetype='application/json')
         bounds_parts = request.args.get("bounds").split(',')
         points = Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(Point.revised).all()
-#        points = Point.query.all()
+        print (str(Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(Point.revised)))
         points = list(map(lambda point: point.serialize(), points))
         return Response(json.dumps(points),  mimetype='application/json')
 
-    def submit(self):
-        try:
-            json_data = request.get_json()
-            self.save_image(json_data["submission_id"], json_data["image"])
-            new_point = app.models.point.Point()
-            return Response(json.dumps({ "status" : "ok" })) 
-        except Exception as e:
-            return Response(json.dumps({ "status" : "error", "error_message" : str(e) })), 500
-
     def clustered(self):
+        n_clusters = 5
+        if request.args.get('bounds') is None:
+            return Response(json.dumps([]), mimetype='application/json')
+        bounds_parts = request.args.get("bounds").split(',')
+        if request.args.get('zoom'):
+            n_clusters = int(request.args.get('zoom'))
         #TODO this should be cached or precomputed
-        # result = db.engine.execute("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], 5) OVER (), geom FROM point) AS ksub GROUP BY kmeans ORDER BY kmeans;")
-        # clusters = []
-        # for row in result:
-        #      clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
-        clusters = json.loads('[{"count": 99637, "latlng": [50.611594342732, 7.52994136242862]}, {"count": 118230, "latlng": [48.6611079665157, 9.14200484112159]}, {"count": 176850, "latlng": [49.5900390817454, 11.4084571427071]}, {"count": 93929, "latlng": [53.0175792261407, 9.56671923898476]}, {"count": 160259, "latlng": [52.5635166881376, 12.8390297532293]}]')
+        result = db.engine.execute("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], {}) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope({}, {}, {}, {}), point.geom)) AS ksub GROUP BY kmeans ORDER BY kmeans;".format(n_clusters, bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]))
+        clusters = []
+        for row in result:
+             clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
+        # clusters = json.loads('[{"count": 99637, "latlng": [50.611594342732, 7.52994136242862]}, {"count": 118230, "latlng": [48.6611079665157, 9.14200484112159]}, {"count": 176850, "latlng": [49.5900390817454, 11.4084571427071]}, {"count": 93929, "latlng": [53.0175792261407, 9.56671923898476]}, {"count": 160259, "latlng": [52.5635166881376, 12.8390297532293]}]')
 
         return Response(json.dumps(clusters),  mimetype='application/json')
 

@@ -9,6 +9,8 @@ $(document).ready(function(){
 
 	var markers = new L.MarkerClusterGroup();
 	map.addLayer(markers);
+	var clusterGroup = new L.LayerGroup();
+	map.addLayer(clusterGroup);
 	var powerlines = new L.LayerGroup();
 	map.addLayer(powerlines);
 	loadMapFragment();
@@ -50,6 +52,7 @@ $(document).ready(function(){
                 },
                 success : function(data){
                     markers.clearLayers();
+                    clusterGroup.clearLayers();
                     var newMarkers = []
                     markerMap = {};
                     for(var i = 0; i < data.length; i++){
@@ -65,17 +68,20 @@ $(document).ready(function(){
         } else {
             $.ajax({
                 url : "/points/clustered",
+                data : {
+                    "zoom" : map.getZoom(),
+                    "bounds" : map.getBounds().toBBoxString() 
+                },
                 success : function(data){
                     markers.clearLayers();
-                    var newMarkers = []
+                    clusterGroup.clearLayers();
                     for(var i = 0; i < data.length; i++){
                         var marker = new L.Marker(data[i]['latlng'], {
                             icon: iconCreateFunction(data[i])
                         });
                         marker.panelOpen = false;
-                        newMarkers.push(marker);
+                        clusterGroup.addLayer(marker);
                     }			
-                    markers.addLayers(newMarkers);
                 }
             });
         }
