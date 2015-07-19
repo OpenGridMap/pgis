@@ -69,6 +69,19 @@ sudo apt-get install npm
 sudo npm install -g less
 ```
 
+Install kmeans clustering extension for Postgis:
+
+```
+wget http://api.pgxn.org/dist/kmeans/1.1.0/kmeans-1.1.0.zip
+unzip kmeans-1.1.0.zip
+cd kmeans-1.1.0/
+export USE_PGXS=1  # in bash
+
+make
+make install
+psql -f /usr/share/postgresql/[VERSION_NUMBER]/extension/kmeans.sql -U postgres -D postgis
+```
+
 ## Running
 
 With a builting server (not ok for production):
