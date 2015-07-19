@@ -28,7 +28,7 @@ class PointsController:
             return Response(json.dumps({ "status" : "error", "error_message" : str(e) })), 500
 
     def clustered(self):
-        #TODO this should be cached
+        #TODO this should be cached or precomputed
         result = db.engine.execute("SELECT kmeans, count(*), ST_Centroid(ST_Collect(geom)) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], 5) OVER (), geom FROM point) AS ksub GROUP BY kmeans ORDER BY kmeans;")
 
         clusters = []
