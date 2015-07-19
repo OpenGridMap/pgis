@@ -29,11 +29,12 @@ class PointsController:
 
     def clustered(self):
         #TODO this should be cached or precomputed
-        result = db.engine.execute("SELECT kmeans, count(*), ST_Centroid(ST_Collect(geom)) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], 5) OVER (), geom FROM point) AS ksub GROUP BY kmeans ORDER BY kmeans;")
+        # result = db.engine.execute("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], 5) OVER (), geom FROM point) AS ksub GROUP BY kmeans ORDER BY kmeans;")
+        # clusters = []
+        # for row in result:
+        #      clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
+        clusters = json.loads('[{"count": 99637, "latlng": [50.611594342732, 7.52994136242862]}, {"count": 118230, "latlng": [48.6611079665157, 9.14200484112159]}, {"count": 176850, "latlng": [49.5900390817454, 11.4084571427071]}, {"count": 93929, "latlng": [53.0175792261407, 9.56671923898476]}, {"count": 160259, "latlng": [52.5635166881376, 12.8390297532293]}]')
 
-        clusters = []
-        for row in result:
-            clusters.append(list(row))
         return Response(json.dumps(clusters),  mimetype='application/json')
 
     def edit(self, id):

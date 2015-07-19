@@ -18,6 +18,28 @@ $(document).ready(function(){
     });
 
     var markerMap = {};
+    
+    //Adapted from https://github.com/Leaflet/Leaflet.markercluster/issues/217#issuecomment-20963103
+    var iconCreateFunction = function (cluster) {
+
+        var count = cluster.count;
+
+        // cluster icon
+        var c = 'marker-cluster-';
+        if (count < 10) {
+            c += 'small';
+        } else if (count < 100) {
+            c += 'medium';
+        } else {
+            c += 'large';
+        }
+
+        return new L.DivIcon({
+            html: '<div><span>' + count + '</span></div>',
+            className: 'marker-cluster ' + c,
+            iconSize: new L.Point(40, 40)
+        });
+    };
 
 	function loadMapFragment(){
         if(map.getZoom() > 11) {
@@ -36,6 +58,22 @@ $(document).ready(function(){
                         bindClickEvent(marker, data[i]);
                         newMarkers.push(marker);
                         markerMap[data[i].id] = marker;
+                    }			
+                    markers.addLayers(newMarkers);
+                }
+            });
+        } else {
+            $.ajax({
+                url : "/points/clustered",
+                success : function(data){
+                    markers.clearLayers();
+                    var newMarkers = []
+                    for(var i = 0; i < data.length; i++){
+                        var marker = new L.Marker(data[i]['latlng'], {
+                            icon: iconCreateFunction(data[i])
+                        });
+                        marker.panelOpen = false;
+                        newMarkers.push(marker);
                     }			
                     markers.addLayers(newMarkers);
                 }
