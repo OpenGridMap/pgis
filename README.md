@@ -79,7 +79,7 @@ export USE_PGXS=1  # in bash
 
 make
 make install
-psql -f /usr/share/postgresql/[VERSION_NUMBER]/extension/kmeans.sql -U postgres -D postgis
+psql -f /usr/share/postgresql/9.3/extension/kmeans.sql -U postgres -d gis
 ```
 
 ## Running
