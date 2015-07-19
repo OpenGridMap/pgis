@@ -73,6 +73,11 @@ def points():
 	controller = app.controllers.points_controller.PointsController()
 	return controller.index()
 
+@GisApp.route('/points/clustered')
+def points_clustered():
+	controller = app.controllers.points_controller.PointsController()
+	return controller.clustered()
+
 @GisApp.route('/points/edit/<id>')
 @login_required
 @app.permissions.admin_points_edit.require(http_exception=403)

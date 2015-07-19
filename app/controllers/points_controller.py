@@ -27,6 +27,15 @@ class PointsController:
         except Exception as e:
             return Response(json.dumps({ "status" : "error", "error_message" : str(e) })), 500
 
+    def clustered(self):
+        #TODO this should be cached
+        result = db.engine.execute("SELECT kmeans, count(*), ST_Centroid(ST_Collect(geom)) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], 5) OVER (), geom FROM point) AS ksub GROUP BY kmeans ORDER BY kmeans;")
+
+        clusters = []
+        for row in result:
+            clusters.append(list(row))
+        return Response(json.dumps(clusters),  mimetype='application/json')
+
     def edit(self, id):
         point = app.models.point.Point.query.get(id)
         form = app.helpers.point_form.PointForm(None, point) 
