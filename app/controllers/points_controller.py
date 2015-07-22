@@ -14,7 +14,6 @@ class PointsController:
             return Response(json.dumps([]), mimetype='application/json')
         bounds_parts = request.args.get("bounds").split(',')
         points = Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(Point.revised).all()
-        print (str(Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(Point.revised)))
         points = list(map(lambda point: point.serialize(), points))
         return Response(json.dumps(points),  mimetype='application/json')
 
@@ -30,8 +29,6 @@ class PointsController:
         clusters = []
         for row in result:
              clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
-        # clusters = json.loads('[{"count": 99637, "latlng": [50.611594342732, 7.52994136242862]}, {"count": 118230, "latlng": [48.6611079665157, 9.14200484112159]}, {"count": 176850, "latlng": [49.5900390817454, 11.4084571427071]}, {"count": 93929, "latlng": [53.0175792261407, 9.56671923898476]}, {"count": 160259, "latlng": [52.5635166881376, 12.8390297532293]}]')
-
         return Response(json.dumps(clusters),  mimetype='application/json')
 
     def edit(self, id):
