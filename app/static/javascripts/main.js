@@ -14,9 +14,14 @@ $(document).ready(function(){
 	var powerlines = new L.LayerGroup();
 	map.addLayer(powerlines);
 	loadMapFragment();
+
+    var moveEndTimeout;
     
     map.on('moveend', function(){
-        loadMapFragment();
+        window.clearTimeout(moveEndTimeout);
+        moveEndTimeout = window.setTimeout(function() {
+            loadMapFragment();
+        }, 500);
     });
 
     var markerMap = {};
