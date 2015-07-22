@@ -87,10 +87,7 @@ $(document).ready(function(){
                         marker.panelOpen = false;
                         clusterGroup.addLayer(marker);
                         marker.on('click', function(e){
-                            map.setView(e.target.getLatLng());
-                            setTimeout(function(){
-                                map.zoomIn();
-                            }, 500)
+                            map.setView(e.target.getLatLng(), map.getZoom() + 1);
                         });
                     }			
                 }
