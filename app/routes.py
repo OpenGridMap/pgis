@@ -131,7 +131,7 @@ def authorized():
         # Tell Flask-Principal the identity changed
         identity_changed.send(current_app._get_current_object(),
               identity=Identity(user.id))
-        # return redirect('/admin')
+        return redirect('/admin')
 
     return jsonify({"data": me.data})
 

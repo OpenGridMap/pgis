@@ -21,7 +21,7 @@ $(document).ready(function(){
         window.clearTimeout(moveEndTimeout);
         moveEndTimeout = window.setTimeout(function() {
             loadMapFragment();
-        }, 500);
+        }, 1000);
     });
 
     var markerMap = {};
@@ -86,6 +86,12 @@ $(document).ready(function(){
                         });
                         marker.panelOpen = false;
                         clusterGroup.addLayer(marker);
+                        marker.on('click', function(e){
+                            map.setView(e.target.getLatLng());
+                            setTimeout(function(){
+                                map.zoomIn();
+                            }, 500)
+                        });
                     }			
                 }
             });
@@ -117,6 +123,11 @@ $(document).ready(function(){
        var popup = L.popup()
                     .setContent(markerPopupTemplate(point))
        marker.bindPopup(popup);
+    }
+    
+
+    function clusterClickEvent(){
+        
     }
 
 });
