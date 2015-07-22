@@ -18,6 +18,7 @@ class SubmissionsController:
             if submission is None:
                 submission = self.__make_submission(json_data)
                 db.session.add(submission)
+                db.session.flush()
             new_point = self.__make_point(json_data, submission)
             db.session.add(new_point)
             db.session.commit()
