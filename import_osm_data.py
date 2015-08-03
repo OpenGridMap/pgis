@@ -4,15 +4,15 @@ import json
 import sys
 
 try:
-    conn = psycopg2.connect("dbname='osm' user='postgres' host='localhost' password=''")
+    conn = psycopg2.connect("dbname='temp_gis' user='postgres' host='localhost' password=''")
     cur = conn.cursor()
-    conn2 = psycopg2.connect("dbname='gis' user='postgres' host='localhost' password=''")
-    cur2 = conn2.cursor()
 except:
     print "I am unable to connect to the database"
 
 
-class PowerStationImporter(object):
+cur.execute("CREATE TEMP TABLE points ( osmid VARCHAR(80), geom GEOMETRY('POINT') ) ON COMMIT DROP");
+
+class TempPointsImporter(object):
 
     def perform(self, nodes):
         for osmid, tags, coords in nodes:
@@ -20,11 +20,24 @@ class PowerStationImporter(object):
                 query = "INSERT INTO points(osmid, geom) VALUES(%s, %s)"
                 cur.execute(query, (osmid, "POINT({} {})".format(coords[1], coords[0]) )) 
 
-importer = PowerStationImporter()
-p = OSMParser(concurrency=4, nodes_callback=importer.perform)
-p.parse(sys.argv[1])
-conn.commit()
 
+
+temp_points_importer = TempPointsImporter()
+p = OSMParser(concurrency=4, nodes_callback=temp_points_importer.perform)
+p.parse(sys.argv[1])
+
+print("Finished importing to Temp table")
+
+class PowerStationImporter(object):
+
+    counter = 1
+
+    def perform(self, nodes):
+        for osmid, tags, coords in nodes:
+            if 'power' in tags:
+                query = "INSERT INTO point(\"name\", geom, properties) VALUES(%s, %s, %s)"
+                cur.execute(query, ("Point #{}".format(self.counter), "POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags }) )) 
+                self.counter += 1
 
 class PowerlineImporter(object):
 
@@ -50,10 +63,11 @@ class PowerlineImporter(object):
                     linestring += "{} {},".format(node[1], node[2])
                 linestring = linestring[:-1]
                 query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
-                cur2.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
+                cur.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
             
 
-importer = PowerlineImporter()
-p = OSMParser(concurrency=4, ways_callback=importer.perform)
+power_station_importer = PowerStationImporter()
+powerline_importer = PowerlineImporter()
+p = OSMParser(concurrency=4, ways_callback=powerline_importer.perform )
 p.parse(sys.argv[1])
-conn2.commit()
+conn.commit()
