@@ -5,7 +5,6 @@ from sqlalchemy.dialects.postgresql import JSON
 
 class Point(db.Model):
     id       = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), index=True, unique=True)
     geom = db.Column(Geometry('POINT'))
     properties = db.Column(JSON)
     revised = db.Column(db.Boolean)
@@ -13,7 +12,7 @@ class Point(db.Model):
 
     def serialize(self):
         point = self.shape()
-        return { 'id': self.id, 'name': self.name, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}) } 
+        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}) } 
     
     def shape(self):
         return to_shape(self.geom)
