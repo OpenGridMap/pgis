@@ -15,13 +15,9 @@ $(document).ready(function(){
 	map.addLayer(powerlines);
 	loadMapFragment();
 
-    var moveEndTimeout;
-    
+    var loadFragmentDebounced = _.debounce(loadMapFragment, 1000);
     map.on('moveend', function(){
-        window.clearTimeout(moveEndTimeout);
-        moveEndTimeout = window.setTimeout(function() {
-            loadMapFragment();
-        }, 1000);
+      loadFragmentDebounced();
     });
 
     var markerMap = {};
