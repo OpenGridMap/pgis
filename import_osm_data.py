@@ -14,7 +14,7 @@ class PowerStationImporter(object):
     def perform(self, nodes):
         for osmid, tags, coords in nodes:
             if 'power' in tags:
-                query = "INSERT INTO point(geom, properties) VALUES(%s, %s)"
+                query = "INSERT INTO point(geom, properties, revised) VALUES(%s, %s, TRUE)"
                 print("INSERTING {} {}".format(coords[1], coords[0]))
                 cur.execute(query, ("POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags , 'osmid' : osmid}) )) 
 
