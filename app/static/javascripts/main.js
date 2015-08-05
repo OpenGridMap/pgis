@@ -59,7 +59,7 @@ $(document).ready(function(){
                     for(var i = 0; i < data.length; i++){
                         var marker = new L.Marker(data[i]['latlng']);
                         marker.panelOpen = false;
-                        bindClickEvent(marker, data[i]);
+                        bindMarkerPopup(marker, data[i]);
                         newMarkers.push(marker);
                         markerMap[data[i].id] = marker;
                     }			
@@ -99,7 +99,9 @@ $(document).ready(function(){
             success : function(data){
                 powerlines.clearLayers();
                 for(var i = 0; i < data.length; i++){
-                    powerlines.addLayer(L.polyline(data[i], {color: 'red'}));
+                    var polyline = L.polyline(data[i].latlngs, {color: 'red'});
+                    bindPowerlinePopup(polyline, data[i]);
+                    powerlines.addLayer(polyline);
                 }
             }
         });
@@ -110,12 +112,21 @@ $(document).ready(function(){
     });
 
     var source   = $("#marker-popup-template").html();
-    var markerPopupTemplate = Handlebars.compile(source)
+    var markerPopupTemplate = Handlebars.compile(source);
         
-    function bindClickEvent(marker, point){
+    var source   = $("#polyline-popup-template").html();
+    var polylinePopupTemplate = Handlebars.compile(source);
+
+    function bindMarkerPopup(marker, point){
        var popup = L.popup()
-                    .setContent(markerPopupTemplate(point))
+                    .setContent(markerPopupTemplate(point));
        marker.bindPopup(popup);
+    }
+
+    function bindPowerlinePopup(polyline, powerline){
+       var popup = L.popup()
+                    .setContent(polylinePopupTemplate(powerline));
+       polyline.bindPopup(popup);
     }
     
 

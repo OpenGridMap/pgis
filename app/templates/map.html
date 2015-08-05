@@ -45,4 +45,15 @@
         </div>
 </script>
 {% endraw %}
+{% raw %}
+<script id="polyline-popup-template" type="text/x-handlebars-template">
+        <div class="panel panel-default">
+          <div class="panel-heading">Powerline {{ id }}</div>
+          <div class="panel-body">
+                <p><strong>Tags:</strong> {{ json tags }}</p>
+                <p><a href="/powerline/edit/{{id}}"><button class="btn btn-default">Edit</button></a></p>
+          </div>
+        </div>
+</script>
+{% endraw %}
 {% endblock %}

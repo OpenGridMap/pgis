@@ -9,7 +9,7 @@ class Powerline(db.Model):
     properties = db.Column(JSON)
 
     def serialize(self):
-        return list(self.shape().coords)
+        return { "id" : self.id, "latlngs" : list(self.shape().coords), "tags" : self.properties["tags"]  }
 
     def shape(self):
         return to_shape(self.geom)
