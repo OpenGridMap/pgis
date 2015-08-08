@@ -1,13 +1,18 @@
 from flask import Flask
 from flask.ext.assets import Environment, Bundle
+from flask_environments import Environments
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
+import os
 
 # Create app
 GisApp = Flask(__name__)
 Bootstrap(GisApp)
-GisApp.config.from_object('config')
+# GisApp.config.from_object('config')
 db = SQLAlchemy(GisApp)
+
+env = Environments(GisApp) 
+env.from_object('config')
 
 # Assets
 assets = Environment(GisApp)
