@@ -1,14 +1,14 @@
 from flask import Flask
 from app import GisApp
 import unittest
+import os
 from flask.ext.testing import TestCase
+from flask_environments import Environments
 
 class MyTest(TestCase):
 
     def create_app(self):
-        GisApp.config['TESTING'] = True
-        # Default port is 5000
-        GisApp.config['LIVESERVER_PORT'] = 8943
+        env = Environments(GisApp)
         return GisApp 
 
     def test_serialize(self):
