@@ -4,11 +4,12 @@ import app.helpers.point_form
 from app.models.point import Point
 from app.models.submission import Submission
 from geoalchemy2 import Geometry, func
+from flask.ext.login import current_user
 
 class SubmissionsController:
     def index(self):
         page = int(request.args.get('page') or 1) 
-        submissions = Submission.query.filter(Submission.user_id == 1).paginate(page, 20)
+        submissions = Submission.query.paginate(page, 20)
         return render_template('admin/submissions/index.html', submissions=submissions)
 
     def revise(id, self):
