@@ -8,7 +8,7 @@ class Point(db.Model):
     geom = db.Column(Geometry('POINT'))
     properties = db.Column(JSON)
     revised = db.Column(db.Boolean)
-    submission_id = db.Column(db.String)
+    submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
 
     def serialize(self):
         point = self.shape()

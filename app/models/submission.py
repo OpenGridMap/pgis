@@ -7,3 +7,4 @@ class Submission(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     point_data = db.Column(JSON)
     revised = db.Column(db.Boolean)
+    points = db.relationship('Point')

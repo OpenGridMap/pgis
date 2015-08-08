@@ -14,7 +14,7 @@
 			{% for submission in submissions.items %}
 			<tr class="crud_row">
 				<td>{{ submission.submission_id }}</td>
-				<td>{{ submission.count_points }}</td>
+				<td>{{ submission.points | length }}</td>
 				<td class="text-right">
 					<a class="btn btn-primary" href="/admin/submissions/revise/{{submission.submission_id}}">Revise</a> 
 				</td>
