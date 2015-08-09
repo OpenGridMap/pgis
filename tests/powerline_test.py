@@ -8,7 +8,6 @@ from flask_environments import Environments
 class MyTest(TestCase):
 
     def create_app(self):
-        env = Environments(GisApp)
         return GisApp 
 
     def test_serialize(self):
