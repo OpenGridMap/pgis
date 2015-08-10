@@ -17,6 +17,9 @@ class Point(db.Model):
     def shape(self):
         return to_shape(self.geom)
 
+    def images(self):
+        pass
+
     @property
     def latitude(self):
         return self.shape().x

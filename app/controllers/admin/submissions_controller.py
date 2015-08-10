@@ -13,9 +13,11 @@ class SubmissionsController:
         return render_template('admin/submissions/index.html', submissions=submissions)
 
     def revise(self, id):
-        
         submission = Submission.query.get(id)
         return render_template('admin/submissions/revise.html', submission=submission)
+
+    def merge(self, id):
+        pass
 
     def delete(self, id):
         point = Point.query.get(id)
