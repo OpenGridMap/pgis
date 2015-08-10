@@ -272,13 +272,13 @@ def submissions_create():
     return controller.create()
 
 @GisApp.route('/admin/submissions')
-# @login_required
+@login_required
 def submissions_index():
     controller = app.controllers.admin.submissions_controller.SubmissionsController()
     return controller.index()
 
 @GisApp.route('/admin/submissions/revise/<id>')
-# @login_required
+@login_required
 def submissions_revise(id):
     controller = app.controllers.admin.submissions_controller.SubmissionsController()
     return controller.revise(id)

@@ -12,7 +12,8 @@ class SubmissionsController:
         submissions = Submission.query.paginate(page, 20)
         return render_template('admin/submissions/index.html', submissions=submissions)
 
-    def revise(id, self):
+    def revise(self, id):
+        
         submission = Submission.query.get(id)
         return render_template('admin/submissions/revise.html', submission=submission)
 

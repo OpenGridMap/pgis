@@ -3,28 +3,6 @@
 
 <div class="container center-block clearfix">
 	<h3>Edit Point</h3>
-	<form class="col-md-4" action="/admin/points/update/{{point.id}}" method="post" name="edit_point">
-		{{ form.hidden_tag() }}
-
-		<div class="form-group">
-			<label class="control-label" for="point_field_name">Name</label>
-			{{ form.name(class_="form-control ", placeholder="Point #") }}
-		</div>
-		<div class="form-group">
-			<label class="control-label" for="point_field_latitude">Latitude</label>
-			{{ form.latitude(class_="form-control", placeholder="48.1333") }}
-		</div>
-		<div class="form-group">
-			<label class="control-label" for="point_field_longitude">Longitude</label>
-			{{ form.longitude(class_="form-control", placeholder="11.5667") }}
-		</div>
-		<div class="form-group">
-			<label class="control-label" for="point_field_properties">Properties</label>
-			{{ form.properties(class_="form-control json-propeties-textarea", rows="10" ) }}
-			<button type="button" class="btn btn-default btn-xs textarea-json-beautify-button">Beautify</button>
-		</div>
-		<button type="submit" class="btn btn-success">Save</button>
-	</form>
 
 	<div id="map" style="width:500px; height:500px;"></div>
 </div>
@@ -35,8 +13,13 @@
 <script>
 
 	$(document).ready(function(){
-		var marker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}])
-		var map = L.map('map').setView(marker.getLatLng(), 13);
+    var markers = [];
+    {% for point in submission.points %}
+      var marker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}])
+      markers.push(marker);
+    {% endfor %}
+
+		var map = L.map('map').setView([48.11, 11.0], 5);
 		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 			maxZoom: 18
@@ -45,7 +28,9 @@
 		// Initialise the FeatureGroup to store editable layers
 		var drawnItems = new L.FeatureGroup();
 		map.addLayer(drawnItems);
-		drawnItems.addLayer(marker)
+    for(var i = 0; i < markers.length; i++){
+      drawnItems.addLayer(markers[i]);
+    }
 
 		// Initialise the draw control and pass it the FeatureGroup of editable layers
 		var drawControl = new L.Control.Draw({
@@ -63,13 +48,6 @@
 			},
 		});
 		map.addControl(drawControl);
-
-		var latInput = $('#latitude');
-		var lngInput = $('#longitude');
-		marker.on('drag', function(e){
-			latInput.val(e.target.getLatLng().lat)
-			lngInput.val(e.target.getLatLng().lng)
-		});
-	})
+	});
 </script>
 {% endblock %}
