@@ -25,7 +25,7 @@ class PointsController:
         if request.args.get('zoom'):
             n_clusters = int(request.args.get('zoom'))
         #TODO this should be cached or precomputed
-        result = db.engine.execute("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], {}) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope({}, {}, {}, {}), point.geom)) AS ksub GROUP BY kmeans ORDER BY kmeans;".format(n_clusters, bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]))
+        result = db.engine.execute("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], {}) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope({}, {}, {}, {}), point.geom) AND point.revised = TRUE) AS ksub GROUP BY kmeans ORDER BY kmeans;".format(n_clusters, bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]))
         clusters = []
         for row in result:
              clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
