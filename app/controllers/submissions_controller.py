@@ -20,6 +20,9 @@ class SubmissionsController:
                 db.session.flush()
             new_point = self.__make_point(json_data, submission)
             db.session.add(new_point)
+            db.session.flush()
+            self.__save_image(submission.id, new_point.id, json_data['image'])
+
             db.session.commit()
             return Response(json.dumps({ "status" : "ok", "received_data" : json_data, "point" : str(new_point) })) 
         except Exception as e:
@@ -38,16 +41,18 @@ class SubmissionsController:
     def __make_submission(self, data):
         new_submission = Submission()
         new_submission.submission_id = data["submission_id"]
+        new_submission.number_of_points = data["number_of_points"];
         new_submission.user_id = current_user.id 
         new_submission.revised = False;
+
         return new_submission
 
 
-    def __save_image(self,submission_id, encoded_string):
-        directory = "app/uploads/submissions/" + submission_id 
+    def __save_image(self,submission_id, point_id, encoded_string):
+        directory = "app/uploads/submissions/" + str(submission_id)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        fh = open(directory + "/test.png", "wb")
+        fh = open(directory + "/" + str(point_id) + ".png", "wb")
         fh.write(base64.b64decode(encoded_string))
         fh.close()
 

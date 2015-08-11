@@ -2,9 +2,21 @@
 {% block content %}
 
 <div class="container center-block clearfix">
-	<h3>Edit Point</h3>
+	<h3>Revise Submission</h3>
 
-	<div id="map" style="width:500px; height:500px;"></div>
+	<div class="row">
+	  <div class="col-md-7">
+	    <div id="map" style="width:648px; height:648px;"></div>
+	  </div>
+	   <div class="col-md-5">
+	     <p>
+	       Received: {{ submission.points | length }} / {{ submission.number_of_points }} expected points
+	     </p>
+       <p>
+        <a href="/admin/submissions/merge/{{submission.id}}"><button class="btn btn-success">Merge</button></a>
+       </p>
+	   </div>
+	</div>
 </div>
 
 {% endblock %}
