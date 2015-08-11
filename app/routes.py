@@ -283,6 +283,12 @@ def submissions_revise(id):
     controller = app.controllers.admin.submissions_controller.SubmissionsController()
     return controller.revise(id)
 
+@GisApp.route('/admin/submissions/merge/<id>', methods=['POST'])
+@login_required
+def submissions_merge(id):
+    controller = app.controllers.admin.submissions_controller.SubmissionsController()
+    return controller.merge(id)
+
 @GisApp.errorhandler(500)
 def internal_error(error):
     controller = app.controllers.application_controller.ApplicationController()
