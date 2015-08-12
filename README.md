@@ -1,6 +1,8 @@
 Power Grid Information System
 =========================
 
+[![Join the chat at https://gitter.im/OpenGridMap/pgis](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/OpenGridMap/pgis?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## Installation
 
 Install Postgresql and Postgis:
