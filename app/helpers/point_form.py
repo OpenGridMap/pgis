@@ -15,4 +15,5 @@ class PointForm(Form):
     def populate_obj(self, point):
         point.geom          = self.geom 
         point.properties    = json.loads(self.properties.data) if self.properties.data else ""
+        point.revised       = True 
 

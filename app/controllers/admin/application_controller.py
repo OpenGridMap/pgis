@@ -5,4 +5,5 @@ class ApplicationController:
         return render_template('admin/index.html')
 
     def login(self):
+        session["next"] = request.args.get("next")
         return render_template('admin/login.html')
