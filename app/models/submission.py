@@ -9,5 +9,8 @@ class Submission(db.Model):
     revised = db.Column(db.Boolean)
     points = db.relationship('Point')
 
+    def serialize(self):
+        return { 'id': self.id,  "points" : list(map((lambda p: p.serialize()), self.points))} 
+
     def images(self):
         pass

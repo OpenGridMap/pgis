@@ -40,44 +40,50 @@
 {% endblock %}
 {% block scripts %}
 {{super()}}
+{% raw %}
+<script id="marker-popup-template" type="text/x-handlebars-template">
+        <div class="panel panel-default">
+          <div class="panel-heading">Point {{ point.id }}</div>
+          <div class="panel-body">
+                <p><strong>LatLng:</strong> {{ point.latlng }}</p>
+                <p><strong>Photo:</strong><img src="/static/uploads/submissions/{{submission.id}}/{{point.id}}.png" width="50" height="50"/></p>
+                <p><strong>Tags:</strong> {{ json point.tags }}</p>
+          </div>
+        </div>
+</script>
+{% endraw %}
 <script>
+  $(document).ready(function(){
+    Handlebars.registerHelper('json', function(context) {
+      return JSON.stringify(context, null, 4);
+    });
 
-	$(document).ready(function(){
+    var source   = $("#marker-popup-template").html();
+    var markerPopupTemplate = Handlebars.compile(source);
+
     var markers = [];
     {% for point in submission.points %}
-      var marker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}])
-      markers.push(marker);
+    var pointData = {{ point.serialize() | tojson }}
+    var popupData = { submission: {{ submission.serialize() | tojson }}, point : pointData }
+    var popup = markerPopupTemplate(popupData);
+    var marker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}]);
+    marker.bindPopup(popup);
+    markers.push(marker);
     {% endfor %}
 
-		var map = L.map('map').setView([48.11, 11.0], 5);
-		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-			maxZoom: 18
-		}).addTo(map);
+    var map = L.map('map').setView([48.11, 11.0], 5);
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18
+        }).addTo(map);
 
-		// Initialise the FeatureGroup to store editable layers
-		var drawnItems = new L.FeatureGroup();
-		map.addLayer(drawnItems);
+    // Initialise the FeatureGroup to store editable layers
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
     for(var i = 0; i < markers.length; i++){
       drawnItems.addLayer(markers[i]);
     }
-
-		// Initialise the draw control and pass it the FeatureGroup of editable layers
-		var drawControl = new L.Control.Draw({
-			edit: {
-				featureGroup: drawnItems,
-				remove: false
-						    
-			},
-			draw: {
-				polyline: false,
-				polygon: false,
-				circle: false,
-				rectangle: false,
-				marker: false,
-			},
-		});
-		map.addControl(drawControl);
-	});
+    map.fitBounds(drawnItems.getBounds());
+  });
 </script>
 {% endblock %}
