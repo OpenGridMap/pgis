@@ -1,6 +1,23 @@
+var getQueryString = function ( field, url ) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+    var string = reg.exec(href);
+    return string ? string[1] : null;
+};
+
 $(document).ready(function(){
 	L.Icon.Default.imagePath = APP_IMAGES_URL;
-	var map = L.map('map').setView([48.1333, 11.5667], 13);
+
+  var lat = getQueryString("lat");
+  var lng = getQueryString("long");
+  var center = [48.1333, 11.5667];
+  if(lat && lng){
+    center = [lat, lng];
+  }
+
+  var zoom = getQueryString("zoom") || 13;
+
+	var map = L.map('map').setView(center, zoom);
 	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		maxZoom: 18

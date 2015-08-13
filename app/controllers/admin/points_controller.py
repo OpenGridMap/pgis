@@ -27,6 +27,8 @@ class PointsController:
         point = Point.query.get(id)
         form = app.helpers.point_form.PointForm(None, point) 
         form.properties.data = json.dumps(form.properties.data) if form.properties.data else ""
+        if request.args.get("redirect_back"):
+            session["redirect_back"] = True
         return render_template('admin/points/edit.html', form=form, point=point)
     
     def update(self, id):
@@ -36,7 +38,12 @@ class PointsController:
             form.populate_obj(point)
             db.session.add(point)
             db.session.commit()
-            return redirect(url_for('admin_points'))
+            if "redirect_back" in session:
+                del session["redirect_back"]
+                return redirect(url_for('index', lat=point.shape().x, long=point.shape().y,  zoom=18))
+            else:
+                return redirect(url_for('admin_points'))
+
         return 'Error'
 
     def delete(self, id):

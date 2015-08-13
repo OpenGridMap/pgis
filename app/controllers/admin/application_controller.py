@@ -6,4 +6,5 @@ class ApplicationController:
 
     def login(self):
         session["next"] = request.args.get("next")
+        session["redirect_back"] = True if request.args.get("redirect_back") else False
         return render_template('admin/login.html')

@@ -36,7 +36,11 @@ class PowerlinesController:
             form.populate_obj(powerline)
             db.session.add(powerline)
             db.session.commit()
-            return redirect(url_for('admin_powerlines'))
+            if "redirect_back" in session:
+                del session["redirect_back"]
+                return redirect(url_for('index', powerline=powerline.id))
+            else:
+                return redirect(url_for('admin_powerlines'))
         return 'Error'
 
     def delete(self, id):
