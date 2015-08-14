@@ -49,7 +49,7 @@ class SubmissionsController:
 
 
     def __save_image(self,submission_id, point_id, encoded_string):
-        directory = "app/uploads/submissions/" + str(submission_id)
+        directory = "app/static/uploads/submissions/" + str(submission_id)
         if not os.path.exists(directory):
             os.makedirs(directory)
         fh = open(directory + "/" + str(point_id) + ".png", "wb")
