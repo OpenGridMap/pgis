@@ -89,7 +89,7 @@ psql -f /usr/share/postgresql/9.3/extension/kmeans.sql -U postgres -d gis
 With a builting server (not ok for production):
 
 ```
-./run
+./manage runserver
 ```
 
 Or with gunicorn:
