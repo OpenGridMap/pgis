@@ -92,7 +92,7 @@ With a builting server (not ok for production):
 ./manage runserver
 ```
 
-Or with gunicorn:
+for production:
 
 ```
 gunicorn app:GisApp --bind localhost:3000
