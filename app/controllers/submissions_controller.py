@@ -21,7 +21,9 @@ class SubmissionsController:
             new_point = self.__make_point(json_data, submission)
             db.session.add(new_point)
             db.session.flush()
-            self.__save_image(submission.id, new_point.id, json_data['image'])
+
+            if "image" in json_data:
+                self.__save_image(submission.id, new_point.id, json_data['image'])
 
             db.session.commit()
             return Response(json.dumps({ "status" : "ok", "received_data" : json_data, "point" : str(new_point) })) 

@@ -24,7 +24,7 @@
                 <h4 class="modal-title" id="myModalLabel">Fill the resulting point data</h4>
                 <div class="alert alert-info" role="alert">The mid-point has been calculated by default, feel free to change the resulting point coordinates as you wish</div>
               </div>
-              <form action="/admin/submissions/merge_new/{{ submission.id }}">
+              <form action="/admin/submissions/merge_new/{{ submission.id }}" method="POST">
                       <div class="modal-body">
                         {{ form.hidden_tag() }}
                         <div class="form-group">
@@ -43,7 +43,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Merge</button>
+                        <button type="submit" class="btn btn-primary">Merge</button>
                       </div>
               </form>
             </div>

@@ -1,3 +1,4 @@
+import sys, os, traceback, base64, shutil
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
 from app import db
 from app.helpers.point_form import PointForm
@@ -20,7 +21,19 @@ class SubmissionsController:
         mid_point = list(db.engine.execute(query, submission_id=32).first())
         return render_template('admin/submissions/revise.html', submission=submission, form=form, mid_point=mid_point)
 
-    def merge(self, id):
+    def merge_new(self, id):
+        form = PointForm()
+        if form.validate_on_submit():
+            new_point = Point()
+            form.populate_obj(new_point)
+            new_point.submission_id = id
+            db.session.add(new_point)
+            db.session.flush()
+            self.__merge_photos(id, new_point.id)
+            return "TEST"
+        return 'Error'
+
+    def merge_existing(self, id):
         pass
 
     def delete(self, id):
@@ -28,3 +41,15 @@ class SubmissionsController:
         db.session.delete(point)
         db.session.commit()
         return redirect(url_for('admin_points'))
+
+    def __merge_photos(self, submission_id, point_id):
+        dest = "app/static/uploads/points/" + str(point_id)
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+
+        src_dir = "app/static/uploads/submissions/" + str(submission_id)
+        src_files = os.listdir(src_dir)
+        for file_name in src_files:
+            full_file_name = os.path.join(src_dir, file_name)
+            if (os.path.isfile(full_file_name)):
+                shutil.copy(full_file_name, dest)
