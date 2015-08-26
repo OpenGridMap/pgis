@@ -17,12 +17,25 @@ $(document).ready(function(){
 
   var zoom = getQueryString("zoom") || 13;
 
-	var map = L.map('map').setView(center, zoom);
-	L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  var osm_map = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
 		maxZoom: 18
-	}).addTo(map);
+	});
+
+  var satellite_map = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+		maxZoom: 18
+	});
+  var map = L.map('map', {
+    layers: [satellite_map, osm_map] 
+  }).setView(center, zoom);
+
+  var baseMaps = {
+    "Satellite View": satellite_map,
+    "Topological View": osm_map
+  };
 	L.Control.geocoder().addTo(map);
+  L.control.layers(baseMaps).addTo(map);
 
 	var markers = new L.MarkerClusterGroup();
 	map.addLayer(markers);
