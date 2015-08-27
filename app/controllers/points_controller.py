@@ -7,6 +7,7 @@ import base64
 import sys
 import os
 from app import db
+from sqlalchemy.sql import text
 
 class PointsController:
     def index(self):
@@ -25,7 +26,8 @@ class PointsController:
         if request.args.get('zoom'):
             n_clusters = int(request.args.get('zoom'))
         #TODO this should be cached or precomputed
-        result = db.engine.execute("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], {}) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope({}, {}, {}, {}), point.geom) AND point.revised = TRUE) AS ksub GROUP BY kmeans ORDER BY kmeans;".format(n_clusters, bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]))
+        query = text("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], :n_clusters) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope(:bounds_1, :bounds_2, :bounds_3, :bounds_4), point.geom) AND point.revised = TRUE) AS ksub GROUP BY kmeans ORDER BY kmeans;")
+        result = db.engine.execute(query, n_clusters=n_clusters, bounds_1=bounds_parts[1], bounds_2=bounds_parts[0], bounds_3=bounds_parts[3], bounds_4=bounds_parts[2])
         clusters = []
         for row in result:
              clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
