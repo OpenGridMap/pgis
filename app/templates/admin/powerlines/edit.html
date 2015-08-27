@@ -67,12 +67,10 @@
 			var powerline = $(this).val();
 			polyline.setLatLngs(latlngStringToCoords(powerline));
 			map.fitBounds(polyline.getBounds());
-			$('form button').fadeIn();
 		})
 
 		map.on('draw:edited', function(e){
 			$('input[name=latlngs]').val(polylineToString(polyline));
-			$('form button').fadeIn();
 		});
 
 	});

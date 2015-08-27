@@ -5,121 +5,9 @@ var getQueryString = function ( field, url ) {
     return string ? string[1] : null;
 };
 
-L.Control.Button = L.Control.extend({
-  options: {
-    position: 'bottomleft'
-  },
-  initialize: function (options) {
-    this._button = {};
-    this.setButton(options);
-  },
-
-  onAdd: function (map) {
-    this._map = map;
-    var container = L.DomUtil.create('div', 'leaflet-control-button');
-	
-    this._container = container;
-    
-    this._update();
-    return this._container;
-  },
-
-  onRemove: function (map) {
-  },
-
-  setButton: function (options) {
-    var button = {
-      'text': options.text,                 //string
-      'iconUrl': options.iconUrl,           //string
-      'onClick': options.onClick,           //callback function
-      'hideText': !!options.hideText,         //forced bool
-      'maxWidth': options.maxWidth || 70,     //number
-      'doToggle': options.toggle,			//bool
-      'toggleStatus': false					//bool
-    };
-
-    this._button = button;
-    this._update();
-  },
-  
-  getText: function () {
-  	return this._button.text;
-  },
-  
-  getIconUrl: function () {
-  	return this._button.iconUrl;
-  },
-  
-  destroy: function () {
-  	this._button = {};
-  	this._update();
-  },
-  
-  toggle: function (e) {
-  	if(typeof e === 'boolean'){
-  		this._button.toggleStatus = e;
-  	}
-  	else{
-  		this._button.toggleStatus = !this._button.toggleStatus;
-  	}
-  	this._update();
-  },
-  
-  _update: function () {
-    if (!this._map) {
-      return;
-    }
-
-    this._container.innerHTML = '';
-    this._makeButton(this._button);
- 
-  },
-
-  _makeButton: function (button) {
-    var newButton = L.DomUtil.create('div', 'leaflet-buttons-control-button', this._container);
-    if(button.toggleStatus)
-    	L.DomUtil.addClass(newButton,'leaflet-buttons-control-toggleon');
-        
-    var image = L.DomUtil.create('img', 'leaflet-buttons-control-img', newButton);
-    image.setAttribute('src',button.iconUrl);
-    
-    if(button.text !== ''){
-
-      L.DomUtil.create('br','',newButton);  //there must be a better way
-
-      var span = L.DomUtil.create('span', 'leaflet-buttons-control-text', newButton);
-      var text = document.createTextNode(button.text);  //is there an L.DomUtil for this?
-      span.appendChild(text);
-      if(button.hideText)
-        L.DomUtil.addClass(span,'leaflet-buttons-control-text-hide');
-    }
-
-    L.DomEvent
-      .addListener(newButton, 'click', L.DomEvent.stop)
-      .addListener(newButton, 'click', button.onClick,this)
-      .addListener(newButton, 'click', this._clicked,this);
-    L.DomEvent.disableClickPropagation(newButton);
-    return newButton;
-
-  },
-  
-  _clicked: function () {  //'this' refers to button
-  	if(this._button.doToggle){
-  		if(this._button.toggleStatus) {	//currently true, remove class
-  			L.DomUtil.removeClass(this._container.childNodes[0],'leaflet-buttons-control-toggleon');
-  		}
-  		else{
-  			L.DomUtil.addClass(this._container.childNodes[0],'leaflet-buttons-control-toggleon');
-  		}
-  		this.toggle();
-  	}
-  	return;
-  }
-
-});
-
 $(document).ready(function(){
 	L.Icon.Default.imagePath = APP_IMAGES_URL;
+
 
   var lat = getQueryString("lat");
   var lng = getQueryString("long");
@@ -127,6 +15,7 @@ $(document).ready(function(){
   if(lat && lng){
     center = [lat, lng];
   }
+
 
   var zoom = getQueryString("zoom") || 13;
 
@@ -143,6 +32,17 @@ $(document).ready(function(){
     layers: [osm_map] 
   }).setView(center, zoom);
 
+  var bounds = getQueryString("bounds");
+
+  if( bounds) {
+    bounds = bounds.split("%2C");
+    console.log(bounds);
+    map.fitBounds([
+        [bounds[0], bounds[1]],
+        [bounds[2], bounds[3]]
+    ]);
+  }
+
   var baseMaps = {
     "Satellite View": satellite_map,
     "Topological View": osm_map
@@ -150,20 +50,18 @@ $(document).ready(function(){
 	L.Control.geocoder().addTo(map);
   L.control.layers(baseMaps).addTo(map);
 
-  var myButtonOptions = {
-    'text': 'MyButton',  // string
-    'iconUrl': 'images/myButton.png',  // string
-    'onClick': my_button_onClick,  // callback function
-    'hideText': true,  // bool
-    'maxWidth': 30,  // number
-    'doToggle': false,  // bool
-    'toggleStatus': false  // bool
+  var newPointLinkProperties = {
+    'text': 'New Point',  // string
+    'href': '/admin/points/new?redirect_back=true'
   }   
 
-  var myButton = new L.Control.Button(myButtonOptions).addTo(map);
-  function my_button_onClick() {
-    console.log("someone clicked my button");
-  }
+  var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
+
+  var newPowerlineLinkProperties = {
+    'text': 'New Powerline',  // string
+    'href': '/admin/powerlines/new?redirect_back=true'
+  }   
+  var newPowerlineLink = L.control.link_button(newPowerlineLinkProperties).addTo(map);
 
 	var markers = new L.MarkerClusterGroup();
 	map.addLayer(markers);
@@ -290,6 +188,7 @@ $(document).ready(function(){
 
     function clusterClickEvent(){
         
+
     }
 
 });

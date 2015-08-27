@@ -20,13 +20,19 @@ class PowerlinesController:
             form.populate_obj(new_powerline)
             db.session.add(new_powerline)
             db.session.commit()
-            return redirect(url_for('admin_powerlines'))
+            if "redirect_back" in session:
+                del session["redirect_back"]
+                return redirect(url_for('index', bounds=",".join([str(c) for c in list(new_powerline.shape().bounds)]) ))
+            else:
+                return redirect(url_for('admin_powerlines'))
         return 'Error'
 
     def edit(self, id):
         powerline = app.models.powerline.Powerline.query.get(id)
         form = app.helpers.powerline_form.PowerlineForm(None, powerline)
         form.properties.data = json.dumps(form.properties.data) if form.properties.data else ""
+        if request.args.get("redirect_back"):
+            session["redirect_back"] = True
         return render_template('admin/powerlines/edit.html', form=form, powerline=powerline)
 
     def update(self, id):
@@ -38,7 +44,7 @@ class PowerlinesController:
             db.session.commit()
             if "redirect_back" in session:
                 del session["redirect_back"]
-                return redirect(url_for('index', powerline=powerline.id))
+                return redirect(url_for('index', bounds=",".join([str(c) for c in list(powerline.shape().bounds)]) ))
             else:
                 return redirect(url_for('admin_powerlines'))
         return 'Error'

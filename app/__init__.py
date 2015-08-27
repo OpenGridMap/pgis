@@ -16,7 +16,7 @@ env.from_object('config')
 
 # Assets
 assets = Environment(GisApp)
-js = Bundle('javascripts/leaflet-src.js', 'javascripts/main.js', 'javascripts/leaflet.markercluster-src.js','javascripts/leaflet.draw-src.js', 'javascripts/handlebars-v3.0.3.js', 'javascripts/Control.Geocoder.js', 'javascripts/underscore-min.js',
+js = Bundle('javascripts/leaflet-src.js',  'javascripts/leaflet.markercluster-src.js','javascripts/handlebars-v3.0.3.js', 'javascripts/Control.Geocoder.js','javascripts/Control.LinkButton.js','javascripts/underscore-min.js', 'javascripts/main.js',
             filters='jsmin', output='gen/packed.js')
 
 admin_js = Bundle('javascripts/leaflet-src.js', 'javascripts/jquery-2.1.3.min.js', 'javascripts/admin_main.js', 'javascripts/leaflet.draw-src.js','javascripts/handlebars-v3.0.3.js','javascripts/underscore-min.js',

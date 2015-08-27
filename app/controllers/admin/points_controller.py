@@ -11,6 +11,8 @@ class PointsController:
 
     def new(self):
         form = app.helpers.point_form.PointForm() 
+        if request.args.get("redirect_back"):
+            session["redirect_back"] = True
         return render_template('admin/points/new.html', form=form)
 
     def create(self):
@@ -20,7 +22,11 @@ class PointsController:
             form.populate_obj(new_point)
             db.session.add(new_point)
             db.session.commit()
-            return redirect(url_for('admin_points'))
+            if "redirect_back" in session:
+                del session["redirect_back"]
+                return redirect(url_for('index', lat=new_point.shape().x, long=new_point.shape().y,  zoom=18))
+            else:
+                return redirect(url_for('admin_points'))
         return 'Error'
     
     def edit(self, id):
