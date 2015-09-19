@@ -14,9 +14,8 @@ class SubmissionsController:
 
     def create(self):
         
-
         try:
-            json_data = request.get_json()
+            json_data = request.get_json(force=True)
 
             email = self.__validate_token(json_data["id_token"])
             if email is None:
