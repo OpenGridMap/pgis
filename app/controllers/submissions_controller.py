@@ -7,15 +7,24 @@ from app import db
 from app.models.point import Point
 from app.models.submission import Submission
 from flask.ext.login import current_user
+from httplib2 import Http
 
 class SubmissionsController:
 
     def create(self):
+        
+
         try:
             json_data = request.get_json()
-            submission = Submission.query.filter(Submission.user_id == current_user.id, Submission.submission_id == int(json_data['submission_id'])).first()
+
+            email = self.__validate_token(json_data["id_token"])
+            if email is None:
+                return "Invalid Id Token", 400
+            user = app.models.user.User.query.filter_by(email=email).first()
+
+            submission = Submission.query.filter(Submission.user_id == user.id, Submission.submission_id == int(json_data['submission_id'])).first()
             if submission is None:
-                submission = self.__make_submission(json_data)
+                submission = self.__make_submission(json_data, user)
                 db.session.add(submission)
                 db.session.flush()
             new_point = self.__make_point(json_data, submission)
@@ -40,11 +49,11 @@ class SubmissionsController:
         new_point.submission_id = submission.id 
         return new_point
 
-    def __make_submission(self, data):
+    def __make_submission(self, data, user):
         new_submission = Submission()
         new_submission.submission_id = data["submission_id"]
         new_submission.number_of_points = data["number_of_points"];
-        new_submission.user_id = current_user.id 
+        new_submission.user_id = user.id 
         new_submission.revised = False;
 
         return new_submission
@@ -57,5 +66,35 @@ class SubmissionsController:
         fh = open(directory + "/" + str(point_id) + ".png", "wb")
         fh.write(base64.b64decode(encoded_string))
         fh.close()
+
+    def __validate_token(self, id_token):
+        '''Verifies that an access-token is valid and
+        meant for this app.
+
+        Returns None on fail, and an e-mail on success'''
+        h = Http()
+        resp, cont = h.request("https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=" + id_token, "GET")
+
+        if not resp['status'] == '200':
+            return None
+
+        try:
+            data = json.loads(cont)
+        except TypeError:
+            # Running this in Python3
+            # httplib2 returns byte objects
+            data = json.loads(cont.decode())
+
+
+        if(data['audience'] != GisApp.config.get('GOOGLE_CLIENT_ID')):
+            raise
+
+        if(data['issued_to'] != "498377614550-ocmo2vu3euufkmekbqvf5kdpjo9el02c.apps.googleusercontent.com"):
+            raise
+
+        if(data['expires_in'] <= 0):
+            raise
+
+        return data['email']
 
 
