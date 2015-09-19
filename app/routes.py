@@ -106,6 +106,16 @@ def admin_login():
 def admin_do_login():
     return google.authorize(callback=url_for('authorized', _external=True))
 
+@GisApp.route('/admin/login_app')
+def admin_login_app():
+    access_token = request.args.get("access_token")
+    if access_token is None:
+        return "No access token provided", 400
+
+    session["google_token"] = access_token 
+
+    return "OK"
+
 @GisApp.route("/admin/logout")
 @login_required
 def admin_logout():
