@@ -113,8 +113,18 @@ def admin_login_app():
         return "No access token provided", 400
 
     session["google_token"] = access_token 
+    me = google.get('userinfo')
+    user = app.models.user.User.query.filter_by(email=me.data['email']).first()
 
-    return "OK"
+    if user is None:
+        return 'Your user is not part of a system'
+    else:
+        login_user(user)        
+        # Tell Flask-Principal the identity changed
+        identity_changed.send(current_app._get_current_object(),
+              identity=Identity(user.id))
+
+        return "OK"
 
 @GisApp.route("/admin/logout")
 @login_required
