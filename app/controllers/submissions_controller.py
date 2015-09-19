@@ -1,3 +1,4 @@
+from app import GisApp
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
 from geoalchemy2 import Geometry, func
 from geoalchemy2.functions import GenericFunction
@@ -21,6 +22,8 @@ class SubmissionsController:
             if email is None:
                 return "Invalid Id Token", 400
             user = app.models.user.User.query.filter_by(email=email).first()
+            if user is None:
+                return "user is not part of the system", 401
 
             submission = Submission.query.filter(Submission.user_id == user.id, Submission.submission_id == int(json_data['submission_id'])).first()
             if submission is None:
