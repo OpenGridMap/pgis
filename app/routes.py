@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, abort, session, url_for, req
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_oauthlib.client import OAuth
 from flask.ext.principal import Principal, Permission, ActionNeed, identity_loaded, UserNeed, identity_changed, Identity, AnonymousIdentity
+from httplib2 import Http
 
 
 from app import GisApp, db
@@ -112,9 +113,13 @@ def admin_login_app():
     if access_token is None:
         return "No access token provided", 400
 
-    session["google_token"] = access_token 
-    me = google.get('userinfo')
-    user = app.models.user.User.query.filter_by(email=me.data['email']).first()
+    email = validate_token(access_token)
+
+    if email is None:
+        return "Invalid Id Token", 400
+    
+
+    user = app.models.user.User.query.filter_by(email=email).first()
 
     if user is None:
         return 'Your user is not part of a system'
@@ -141,6 +146,7 @@ def authorized():
             request.args['error_description']
         )
     session['google_token'] = (resp['access_token'], '')
+    
     me = google.get('userinfo')
     user = app.models.user.User.query.filter_by(email=me.data['email']).first()
 
@@ -334,3 +340,33 @@ def internal_error(error):
 def internal_error(error):
     controller = app.controllers.application_controller.ApplicationController()
     return controller.page403() 
+
+def validate_token(id_token):
+    '''Verifies that an access-token is valid and
+    meant for this app.
+
+    Returns None on fail, and an e-mail on success'''
+    h = Http()
+    resp, cont = h.request("https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=" + id_token, "GET")
+
+    if not resp['status'] == '200':
+        return None
+
+    try:
+        data = json.loads(cont)
+    except TypeError:
+        # Running this in Python3
+        # httplib2 returns byte objects
+        data = json.loads(cont.decode())
+
+       
+    if(data['audience'] != GisApp.config.get('GOOGLE_CLIENT_ID')):
+        raise
+
+    if(data['issued_to'] != "498377614550-ocmo2vu3euufkmekbqvf5kdpjo9el02c.apps.googleusercontent.com"):
+        raise
+
+    if(data['expires_in'] <= 0):
+        raise
+
+    return data['email']
