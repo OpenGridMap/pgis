@@ -296,7 +296,6 @@ def admin_users_delete(id):
     return controller.delete(id)
 
 @GisApp.route('/submissions/create', methods=['POST'])
-@login_required
 def submissions_create():
     controller = app.controllers.submissions_controller.SubmissionsController()
     return controller.create()
