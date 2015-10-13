@@ -91,7 +91,7 @@ class SubmissionsController:
         if(data['audience'] != GisApp.config.get('GOOGLE_CLIENT_ID')):
             raise
 
-        if(data['issued_to'] != "498377614550-ocmo2vu3euufkmekbqvf5kdpjo9el02c.apps.googleusercontent.com"):
+        if(data['issued_to'] != "498377614550-8k5gt5hgp13fveqia1md2qjjr6a99qqr.apps.googleusercontent.com"):
             raise
 
         if(data['expires_in'] <= 0):
