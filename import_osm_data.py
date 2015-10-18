@@ -46,7 +46,7 @@ class PowerlineImporter(object):
                 try:
                     cur.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
                 except psycopg2.InternalError as e:
-                    print("ERROR: {}".format(e.strerror))
+                    print("ERROR: {}".format(e))
             
 
 power_station_importer = PowerStationImporter()
