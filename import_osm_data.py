@@ -43,7 +43,10 @@ class PowerlineImporter(object):
                 linestring = linestring[:-1]
                 print("INSERTING {}".format(linestring))
                 query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
-                cur.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
+                try:
+                    cur.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
+                except psycopg2.InternalError as e:
+                    print("ERROR: {}".format(e.strerror))
             
 
 power_station_importer = PowerStationImporter()
