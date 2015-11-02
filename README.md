@@ -86,7 +86,7 @@ psql -f /usr/share/postgresql/9.3/extension/kmeans.sql -U postgres -d gis
 
 ## Running
 
-With a builting server (not ok for production):
+With a built-in server (not ok for production):
 
 ```
 ./manage runserver
