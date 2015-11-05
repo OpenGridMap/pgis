@@ -9,6 +9,7 @@ from app.models.point import Point
 from app.models.submission import Submission
 from flask.ext.login import current_user
 from httplib2 import Http
+from flask.ext.hashing import Hashing
 
 class SubmissionsController:
 
@@ -35,9 +36,13 @@ class SubmissionsController:
 
             if "image" in json_data:
                 self.__save_image(submission.id, new_point.id, json_data['image'])
-
             db.session.commit()
-            return Response(json.dumps({ "status" : "ok", "received_data" : json_data, "point" : str(new_point) })) 
+
+            hashing = Hashing(GisApp)
+            json_data_dump = json.dumps(json_data)
+            json_data_hash = hashing.hash_value(json_data_dump, '')
+
+            return Response(json.dumps({ "status" : "ok", "received_data" : json_data_hash, "point" : str(new_point) }))
         except Exception as e:
             return Response(json.dumps({ "status" : "error", "error_message" : str(e), "trace" : traceback.format_exc() })), 500
 
@@ -47,16 +52,16 @@ class SubmissionsController:
         new_point = Point()
         new_point.geom = "POINT({} {})".format(data["point"]["latitude"], data["point"]["longitude"])
         new_point.properties = data["point"]["properties"]
-        new_point.revised = False;
+        new_point.revised = False
         new_point.submission_id = submission.id 
         return new_point
 
     def __make_submission(self, data, user):
         new_submission = Submission()
         new_submission.submission_id = data["submission_id"]
-        new_submission.number_of_points = data["number_of_points"];
+        new_submission.number_of_points = data["number_of_points"]
         new_submission.user_id = user.id 
-        new_submission.revised = False;
+        new_submission.revised = False
 
         return new_submission
 
@@ -70,6 +75,7 @@ class SubmissionsController:
         fh.close()
 
     def __validate_token(self, id_token):
+
         '''Verifies that an access-token is valid and
         meant for this app.
 
