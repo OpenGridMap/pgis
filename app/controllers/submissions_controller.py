@@ -4,6 +4,7 @@ from geoalchemy2 import Geometry, func
 from geoalchemy2.functions import GenericFunction
 import app.helpers.point_form
 import sys, os, traceback, base64
+import hashlib
 from app import db
 from app.models.point import Point
 from app.models.submission import Submission
@@ -16,7 +17,8 @@ class SubmissionsController:
     def create(self):
         
         try:
-            json_data = request.get_json(force=True)
+            json_packet = request.get_json(force=True)
+            json_data = json_packet["data_packet"]
 
             email = self.__validate_token(json_data["id_token"])
             if email is None:
@@ -40,7 +42,10 @@ class SubmissionsController:
 
             hashing = Hashing(GisApp)
             json_data_dump = json.dumps(json_data)
-            json_data_hash = hashing.hash_value(json_data_dump, '')
+            # json_data_hash = hashing.hash_value(json_data_dump, '')
+            json_data_hash = hashlib.sha256(json_data_dump)
+            print("sended hash: " + json_packet["hash"])
+            print(" calculated hash: " + json_data_hash)
 
             return Response(json.dumps({ "status" : "ok", "received_data" : json_data_hash, "point" : str(new_point) }))
         except Exception as e:
