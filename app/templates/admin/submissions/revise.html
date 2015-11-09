@@ -18,8 +18,8 @@
            <!-- pictures -->
        <div id="pictures">
            {% for point in submission.points %}
-               <div>
-                   <a href="/static/uploads/submissions/{{ point.submission_id }}/{{ point.id }}.png"><img src="/static/uploads/submissions/{{submission.id}}/{{point.id}}.png" style="max-width: 350px; max-height: 350px;"></a>
+               <div style="margin-bottom: 4px;">
+                   <a href="/static/uploads/submissions/{{ point.submission_id }}/{{ point.id }}.png"><img src="/static/uploads/submissions/{{submission.id}}/{{point.id}}.png" target="_blank" style="max-width: 350px; max-height: 350px;"></a>
                    <br />Point ID: {{ point.id }}
                    <br />Latitude: {{ point.latitude }}
                    <br />Longtitude: {{ point.longitude }}
