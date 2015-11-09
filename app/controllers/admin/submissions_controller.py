@@ -18,7 +18,7 @@ class SubmissionsController:
         form = PointForm() 
         submission = Submission.query.get(id)
         query = text("SELECT ST_X(ST_CENTROID(ST_COLLECT(geom))), ST_Y(ST_CENTROID(ST_COLLECT(geom))) FROM point WHERE submission_id=:submission_id")
-        mid_point = list(db.engine.execute(query, submission_id=32).first())
+        mid_point = list(db.engine.execute(query, submission_id=id).first())
         return render_template('admin/submissions/revise.html', submission=submission, form=form, mid_point=mid_point)
 
     def merge_new(self, id):
