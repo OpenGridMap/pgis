@@ -28,9 +28,10 @@ class SubmissionsController:
             form.populate_obj(new_point)
             new_point.submission_id = id
             db.session.add(new_point)
-            db.session.flush()
+            db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True}, synchronize_session=False)
+            db.session.commit()
             self.__merge_photos(id, new_point.id)
-            return "TEST"
+            return redirect(url_for('submissions_index'))
         return 'Error'
 
     def merge_existing(self, id):
