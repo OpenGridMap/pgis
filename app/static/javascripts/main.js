@@ -32,6 +32,11 @@ $(document).ready(function(){
     layers: [osm_map] 
   }).setView(center, zoom);
 
+  var loadingControl = L.Control.loading({
+      separate: true
+  });
+  map.addControl(loadingControl);
+
   var bounds = getQueryString("bounds");
 
   if( bounds) {
@@ -102,6 +107,7 @@ $(document).ready(function(){
 
 	function loadMapFragment(){
         if(map.getZoom() > 11) {
+            map.fireEvent("dataloading");
             $.ajax({
                 url : "/points",
                 data: {
@@ -120,9 +126,11 @@ $(document).ready(function(){
                         markerMap[data[i].id] = marker;
                     }			
                     markers.addLayers(newMarkers);
+                    map.fireEvent("dataload");
                 }
             });
         } else {
+            map.fireEvent("dataloading");
             $.ajax({
                 url : "/points/clustered",
                 data : {
@@ -141,11 +149,13 @@ $(document).ready(function(){
                         marker.on('click', function(e){
                             map.setView(e.target.getLatLng(), map.getZoom() + 1);
                         });
-                    }			
+                    }
+                    map.fireEvent("dataload");
                 }
             });
         }
 
+        map.fireEvent("dataloading");
         $.ajax({
             url : "/powerlines",
             data : {
@@ -159,6 +169,7 @@ $(document).ready(function(){
                     bindPowerlinePopup(polyline, data[i]);
                     powerlines.addLayer(polyline);
                 }
+                map.fireEvent("dataload");
             }
         });
     }
