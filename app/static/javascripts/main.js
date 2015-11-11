@@ -37,6 +37,20 @@ $(document).ready(function(){
   });
   map.addControl(loadingControl);
 
+  // points and powerlines has to be loaded. So dataload should only be fired, if both, points and powerlines are loaded
+  var elementsToLoad = 0;
+  var showLoadingIndicator = function () {
+      elementsToLoad =+ 1;
+      map.fireEvent("dataloading");
+
+  };
+  var hideLoadingIndicator = function () {
+      elementsToLoad =- 1;
+      if (elementsToLoad < 1) {
+          map.fireEvent("dataload");
+      }
+  };
+
   var bounds = getQueryString("bounds");
 
   if( bounds) {
@@ -107,7 +121,7 @@ $(document).ready(function(){
 
 	function loadMapFragment(){
         if(map.getZoom() > 11) {
-            map.fireEvent("dataloading");
+            showLoadingIndicator();
             $.ajax({
                 url : "/points",
                 data: {
@@ -126,11 +140,11 @@ $(document).ready(function(){
                         markerMap[data[i].id] = marker;
                     }			
                     markers.addLayers(newMarkers);
-                    map.fireEvent("dataload");
+                    hideLoadingIndicator();
                 }
             });
         } else {
-            map.fireEvent("dataloading");
+            showLoadingIndicator();
             $.ajax({
                 url : "/points/clustered",
                 data : {
@@ -150,12 +164,12 @@ $(document).ready(function(){
                             map.setView(e.target.getLatLng(), map.getZoom() + 1);
                         });
                     }
-                    map.fireEvent("dataload");
+                    hideLoadingIndicator();
                 }
             });
         }
 
-        map.fireEvent("dataloading");
+        showLoadingIndicator();
         $.ajax({
             url : "/powerlines",
             data : {
@@ -169,7 +183,7 @@ $(document).ready(function(){
                     bindPowerlinePopup(polyline, data[i]);
                     powerlines.addLayer(polyline);
                 }
-                map.fireEvent("dataload");
+                hideLoadingIndicator();
             }
         });
     }
