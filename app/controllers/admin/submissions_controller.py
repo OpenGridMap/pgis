@@ -19,6 +19,7 @@ class SubmissionsController:
         return render_template('admin/submissions/index.html', submissions=submissions)
 
     def revise(self, id):
+        flask_resize.Resize(GisApp)
         form = PointForm() 
         submission = Submission.query.get(id)
         query = text("SELECT ST_X(ST_CENTROID(ST_COLLECT(geom))), ST_Y(ST_CENTROID(ST_COLLECT(geom))) FROM point WHERE submission_id=:submission_id")
