@@ -1,3 +1,4 @@
+from app import GisApp
 import sys, os, traceback, base64, shutil
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
 from app import db
@@ -7,6 +8,9 @@ from app.models.submission import Submission
 from geoalchemy2 import Geometry, func
 from flask.ext.login import current_user
 from sqlalchemy.sql import text
+GisApp.config['RESIZE_URL'] = 'http://vmjacobsen39.informatik.tu-muenchen.de/static/uploads'
+GisApp.config['RESIZE_ROOT'] = 'app/static/uploads/'
+import flask_resize
 
 class SubmissionsController:
     def index(self):

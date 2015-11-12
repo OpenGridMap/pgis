@@ -23,7 +23,16 @@
 	</form>
 
 	<div id="map" style="width:500px; height:500px;"></div>
-
+<!-- pictures -->
+    {% if point.submission != None %}
+       <div id="pictures">
+           {% for point in submission.points %}
+               <div style="margin-bottom: 4px;">
+                   <a href="/static/uploads/submissions/{{ point.submission_id }}/{{ point.id }}.png"><img src="/static/uploads/submissions/{{point.submission_id}}/{{point.id}}.png" target="_blank" style="max-width: 350px; max-height: 350px;"></a>
+               </div>
+           {% endfor %}
+       </div>
+{% endif %}
 
 
 
