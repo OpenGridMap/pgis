@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/OpenGridMap/pgis.png?label=ready&title=Ready)](https://waffle.io/OpenGridMap/pgis)
 Power Grid Information System
 =========================
 
