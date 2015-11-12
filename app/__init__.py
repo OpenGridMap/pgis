@@ -24,7 +24,7 @@ admin_js = Bundle('javascripts/leaflet-src.js', 'javascripts/jquery-2.1.3.min.js
 assets.register('application_js', js)
 assets.register('admin_application_js', admin_js)
 
-less = Bundle('stylesheets/leaflet.css', 'stylesheets/main.less.css', 'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css','stylesheets/leaflet.draw.css', 'stylesheets/Control.Geocoder.css', 'stylesheets/Control.Loading.css',
+less = Bundle('stylesheets/leaflet.css', 'stylesheets/main.less.css', 'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css','stylesheets/leaflet.draw.css', 'stylesheets/Control.Geocoder.css', 'stylesheets/Control.Loading.css', 'stylesheets/Control.LinkButton.css',
               filters='less,cssmin', output='gen/packed.css')
 admin_less = Bundle('stylesheets/leaflet.css', 'stylesheets/admin_main.less.css','stylesheets/leaflet.draw.css',
               filters='less,cssmin', output='gen/admin_packed.css')
