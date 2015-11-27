@@ -11,5 +11,5 @@ class PowerlineForm(Form):
     def populate_obj(self, obj):
         geometry = "LINESTRING({})".format(self.latlngs.data)
         obj.geom = geometry
-        obj.properties = json.loads(self.properties.data) if self.properties.data else ""
+        obj.properties = json.loads(self.properties.data) if self.properties.data else {"tags":{}}
         return self 
