@@ -43,9 +43,7 @@ class SubmissionsController:
             hashing = Hashing(GisApp)
             json_data_dump = json.dumps(json_data)
             # json_data_hash = hashing.hash_value(json_data_dump, '')
-            json_data_hash = hashlib.sha256(json_data_dump)
-            print("sended hash: " + json_packet["hash"])
-            print(" calculated hash: " + json_data_hash)
+            # json_data_hash = hashlib.sha256(json_data_dump)
 
             return Response(json.dumps({ "status" : "ok", "received_data" : json_data_hash, "point" : str(new_point) }))
         except Exception as e:
