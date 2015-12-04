@@ -58,14 +58,14 @@ $(document).ready(function(){
   var newPointLinkProperties = {
     'text': 'New Point',  // string
     'href': '/admin/points/new?redirect_back=true'
-  }   
+  };
 
   var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
 
   var newPowerlineLinkProperties = {
     'text': 'New Powerline',  // string
     'href': '/admin/powerlines/new?redirect_back=true'
-  }   
+  };
   var newPowerlineLink = L.control.link_button(newPowerlineLinkProperties).addTo(map);
 
 	var markers = new L.MarkerClusterGroup();
@@ -74,6 +74,12 @@ $(document).ready(function(){
 	map.addLayer(clusterGroup);
 	var powerlines = new L.LayerGroup();
 	map.addLayer(powerlines);
+    // adding sidebar
+    var sidebar = L.control.sidebar('sidebar', {
+        position: 'left'
+    });
+    map.addControl(sidebar);
+
 	loadMapFragment();
 
     var loadFragmentDebounced = _.debounce(loadMapFragment, 1000);
@@ -119,13 +125,16 @@ $(document).ready(function(){
                     var newMarkers = []
                     markerMap = {};
                     for(var i = 0; i < data.length; i++){
-                        var marker = new L.Marker(data[i]['latlng']);
-                        marker.panelOpen = false;
-                        bindMarkerPopup(marker, data[i]);
+                        var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
+                        marker.data = data[i];
                         newMarkers.push(marker);
                         markerMap[data[i].id] = marker;
                     }			
                     markers.addLayers(newMarkers);
+                    function onMarkerClick(e) {
+                       sidebar.setContent(getPointSidebarContent(e.target.data));
+                       sidebar.toggle();
+                    }
                     map.fireEvent("dataload");
                 }
             });
@@ -178,16 +187,20 @@ $(document).ready(function(){
         return JSON.stringify(context, null, 4);
     });
 
-    var source   = $("#marker-popup-template").html();
-    var markerPopupTemplate = Handlebars.compile(source);
+    var source   = $("#marker-sidebar-template").html();
+    var markerSidebarTemplate = Handlebars.compile(source);
         
     var source   = $("#polyline-popup-template").html();
     var polylinePopupTemplate = Handlebars.compile(source);
 
-    function bindMarkerPopup(marker, point){
+    /* function bindMarkerPopup(marker, point){
        var popup = L.popup()
                     .setContent(markerPopupTemplate(point));
        marker.bindPopup(popup);
+    } */
+
+    function getPointSidebarContent(pointdata){
+        return markerSidebarTemplate(pointdata);
     }
 
     function bindPowerlinePopup(polyline, powerline){

@@ -32,17 +32,14 @@
 {% block content %}
 <div id="map-control-panel"></div>
 <div id="map"></div>
+<div id="sidebar"></div>
 
 {% raw %}
-<script id="marker-popup-template" type="text/x-handlebars-template">
-        <div class="panel panel-default">
-          <div class="panel-heading">Point {{ id }}</div>
-          <div class="panel-body">
-                <p><strong>LatLng:</strong> {{ latlng }}</p>
+<script id="marker-sidebar-template" type="text/x-handlebars-template">
+        <div><h1>Point {{  id }}</h1></div>
+        <div><p><strong>LatLng:</strong> {{ latlng }}</p>
                 <p><strong>Tags:</strong> {{ json tags }}</p>
-                <p><a href="/admin/points/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p>
-          </div>
-        </div>
+                <p><a href="/admin/points/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p></div>
 </script>
 {% endraw %}
 {% raw %}
