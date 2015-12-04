@@ -62,11 +62,6 @@ $(document).ready(function(){
 
   var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
 
-  var newPowerlineLinkProperties = {
-    'text': 'New Powerline',  // string
-    'href': '/admin/powerlines/new?redirect_back=true'
-  };
-  var newPowerlineLink = L.control.link_button(newPowerlineLinkProperties).addTo(map);
 
 	var markers = new L.MarkerClusterGroup();
 	map.addLayer(markers);
