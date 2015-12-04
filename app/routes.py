@@ -312,7 +312,13 @@ def submissions_revise(id):
     controller = app.controllers.admin.submissions_controller.SubmissionsController()
     return controller.revise(id)
 
-@GisApp.route('/admin/submissions/merge_new/<id>', methods=["POST"])
+@GisApp.route('/admin/submissions/accept_submission/<id>', methods=["POST"])
+@login_required
+def submissions_accept_submission(id):
+    controller = app.controllers.admin.submissions_controller.SubmissionsController()
+    return controller.accept_submission(id)
+
+@GisApp.route('/admin/submissions/merge_new/<id>', methods=["POST"]) # is not used at the moment
 @login_required
 def submissions_merge_new(id):
     controller = app.controllers.admin.submissions_controller.SubmissionsController()

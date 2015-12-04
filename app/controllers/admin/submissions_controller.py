@@ -26,7 +26,18 @@ class SubmissionsController:
         mid_point = list(db.engine.execute(query, submission_id=id).first())
         return render_template('admin/submissions/revise.html', submission=submission, form=form, mid_point=mid_point)
 
-    def merge_new(self, id):
+    def accept_submission(self, id):
+        form = PointForm()
+        if form.validate_on_submit():
+            point = db.session.query(Point).filter(Point.submission_id == id).first()
+            form.populate_obj(point)
+            db.session.add(point)
+            db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True}, synchronize_session=False)
+            db.session.commit()
+            return redirect(url_for('submissions_index'))
+        return 'Error'
+
+    def merge_new(self, id): # working, but not used at the moment
         form = PointForm()
         if form.validate_on_submit():
             new_point = Point()
