@@ -133,7 +133,9 @@ $(document).ready(function(){
                     markers.addLayers(newMarkers);
                     function onMarkerClick(e) {
                        sidebar.setContent(getPointSidebarContent(e.target.data));
-                       sidebar.toggle();
+                       if (!sidebar.isVisible()) {
+                           sidebar.show()
+                       }
                     }
                     map.fireEvent("dataload");
                 }
