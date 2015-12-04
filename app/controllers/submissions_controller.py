@@ -25,7 +25,9 @@ class SubmissionsController:
                 return "Invalid Id Token", 400
             user = app.models.user.User.query.filter_by(email=email).first()
             if user is None:
-                return "user is not part of the system", 401
+                user = app.models.user.User(email=email, action_permissions={})
+                db.session.add(user)
+                db.session.commit()
 
             submission = Submission.query.filter(Submission.user_id == user.id, Submission.submission_id == int(json_data['submission_id'])).first()
             if submission is None:
@@ -78,7 +80,6 @@ class SubmissionsController:
         fh.close()
 
     def __validate_token(self, id_token):
-
         '''Verifies that an access-token is valid and
         meant for this app.
 
