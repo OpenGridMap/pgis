@@ -41,11 +41,11 @@ class SubmissionsController:
             db.session.commit()
 
             hashing = Hashing(GisApp)
-            json_data_dump = json.dumps(json_data)
+            # json_data_dump = json.dumps(json_data)
             # json_data_hash = hashing.hash_value(json_data_dump, '')
             # json_data_hash = hashlib.sha256(json_data_dump)
 
-            return Response(json.dumps({ "status" : "ok", "received_data" : json_data_hash, "point" : str(new_point) }))
+            return Response(json.dumps({ "status" : "ok", "received_data" : "json_data_hash", "point" : str(new_point) }))
         except Exception as e:
             return Response(json.dumps({ "status" : "error", "error_message" : str(e), "trace" : traceback.format_exc() })), 500
 
