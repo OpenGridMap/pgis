@@ -78,7 +78,7 @@ class SubmissionsController:
         fh = open(directory + "/" + str(point_id) + ".png", "wb")
         fh.write(base64.b64decode(encoded_string))
         fh.close()
-        return "static/submissions/" + str(submission_id) + "/" + str(point_id) + ".png"
+        return "static/uploads/submissions/" + str(submission_id) + "/" + str(point_id) + ".png"
 
     def __validate_token(self, id_token):
         '''Verifies that an access-token is valid and
