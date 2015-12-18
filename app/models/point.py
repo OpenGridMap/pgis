@@ -9,10 +9,11 @@ class Point(db.Model):
     properties = db.Column(JSON)
     revised = db.Column(db.Boolean)
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
+    image = db.Column(db.String)
 
     def serialize(self):
         point = self.shape()
-        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}) } 
+        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}), 'image' : self.image }
     
     def shape(self):
         return to_shape(self.geom)

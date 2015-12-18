@@ -39,7 +39,7 @@ class SubmissionsController:
             db.session.flush()
 
             if "image" in json_data:
-                self.__save_image(submission.id, new_point.id, json_data['image'])
+                new_point.image = self.__save_image(submission.id, new_point.id, json_data['image'])
             db.session.commit()
 
             hashing = Hashing(GisApp)
@@ -78,6 +78,7 @@ class SubmissionsController:
         fh = open(directory + "/" + str(point_id) + ".png", "wb")
         fh.write(base64.b64decode(encoded_string))
         fh.close()
+        return "static/submissions/" + str(submission_id) + "/" + str(point_id) + ".png"
 
     def __validate_token(self, id_token):
         '''Verifies that an access-token is valid and
