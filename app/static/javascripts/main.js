@@ -61,9 +61,6 @@ $(document).ready(function(){
   };
 
   var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
-    newPointLink.on('click', function(e){
-        map.setView(e.target.getLatLng(), map.getZoom() + 1);
-    });
 
 
 	var markers = new L.MarkerClusterGroup();
