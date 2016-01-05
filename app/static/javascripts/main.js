@@ -57,10 +57,13 @@ $(document).ready(function(){
 
   var newPointLinkProperties = {
     'text': 'New Point',  // string
-    'href': '/admin/points/new?redirect_back=true'
+    'onclick': function() { window.location.href = '/admin/points/new?redirect_back=true&lat=' + map.getBounds().getCenter().lat + '&long=' + map.getBounds().getCenter().lng + '&zoom=' + map.getZoom(); }
   };
 
   var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
+    newPointLink.on('click', function(e){
+        map.setView(e.target.getLatLng(), map.getZoom() + 1);
+    });
 
 
 	var markers = new L.MarkerClusterGroup();

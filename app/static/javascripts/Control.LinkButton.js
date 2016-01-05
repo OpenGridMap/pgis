@@ -11,7 +11,8 @@ L.Control.LinkButton = L.Control.extend({
     // happens after added to map
     var container = L.DomUtil.create('div', 'link-button-container');
     this.link = L.DomUtil.create('a', 'link', container);
-    this.link.href = this.options.href || "";
+    this.link.href = this.options.href || "#";
+    this.link.onclick = this.options.onclick || "";
     this.link.innerHTML = this.options.text || "No Text???";
     return container;
   },
