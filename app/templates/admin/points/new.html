@@ -39,6 +39,14 @@
 	$(document).ready(function(){
 		L.Icon.Default.imagePath = APP_IMAGES_URL;
 
+        var lat = getQueryString("lat");
+        var lng = getQueryString("long");
+        var center = [48.1333, 11.5667];
+        if(lat && lng){
+            center = [lat, lng];
+        }
+        var zoom = getQueryString("zoom") || 9;
+
 		var latInput = $('#latitude');
 		var lngInput = $('#longitude');
 		var updateInputsOnMove = false;
