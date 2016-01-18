@@ -20,8 +20,11 @@ class SubmissionsController:
 
     def revise(self, id):
         flask_resize.Resize(GisApp)
-        form = PointForm() 
+        #form = PointForm()
         submission = Submission.query.get(id)
+        point = db.session.query(Point).filter(Point.submission_id == id).first()
+        form = PointForm(None, point)
+        form.properties.data = json.dumps(form.properties.data) if form.properties.data else ""
         query = text("SELECT ST_X(ST_CENTROID(ST_COLLECT(geom))), ST_Y(ST_CENTROID(ST_COLLECT(geom))) FROM point WHERE submission_id=:submission_id")
         mid_point = list(db.engine.execute(query, submission_id=id).first())
         return render_template('admin/submissions/revise.html', submission=submission, form=form, mid_point=mid_point)
