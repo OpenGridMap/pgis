@@ -38,8 +38,11 @@ class SubmissionsController:
             db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True}, synchronize_session=False)
             db.session.commit()
             if request.form.get('btn') == 'accept_go_next':
-                submission = db.session.query(Submission).first()
-                return redirect(url_for('submissions_revise', id=submission.id))
+                submission = db.session.query(Submission).filter(Submission.revised == False).first()
+                if submission is not None:
+                    return redirect(url_for('submissions_revise', id=submission.id))
+                else:
+                    return redirect(url_for('submissions_index'))
             else:
                 return redirect(url_for('submissions_index'))
         return 'Error'
