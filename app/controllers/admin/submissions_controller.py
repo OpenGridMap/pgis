@@ -62,6 +62,7 @@ class SubmissionsController:
 
     def delete(self, id):
         submission = Submission.query.get(id)
+        shutil.rmtree("app/static/uploads/submissions/" + str(submission.id), ignore_errors=True)
         db.session.query(Point).filter(Point.submission_id == id).delete()
         db.session.delete(submission)
         db.session.commit()
