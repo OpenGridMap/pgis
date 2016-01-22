@@ -336,6 +336,13 @@ def submissions_merge(id):
     controller = app.controllers.admin.submissions_controller.SubmissionsController()
     return controller.merge(id)
 
+@GisApp.route('/admin/submissions/delete/<id>', methods=['GET'])
+@login_required
+@app.permissions.admin_points_delete.require(http_exception=403)
+def submissions_delete(id):
+    controller = app.controllers.admin.submissions_controller.SubmissionsController()
+    return controller.delete(id)
+
 @GisApp.errorhandler(500)
 def internal_error(error):
     controller = app.controllers.application_controller.ApplicationController()

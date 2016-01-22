@@ -57,10 +57,11 @@ class SubmissionsController:
         pass
 
     def delete(self, id):
-        point = Point.query.get(id)
-        db.session.delete(point)
+        submission = Submission.query.get(id)
+        db.session.query(Point).filter(Point.submission_id == id).delete()
+        db.session.delete(submission)
         db.session.commit()
-        return redirect(url_for('admin_points'))
+        return redirect(url_for('submissions_index'))
 
     def __merge_photos(self, submission_id, point_id):
         dest = "app/static/uploads/points/" + str(point_id)
