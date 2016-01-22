@@ -14,7 +14,7 @@ import flask_resize
 
 class SubmissionsController:
     def index(self):
-        page = int(request.args.get('page') or 1) 
+        page = int(request.args.get('page') or 1)
         submissions = Submission.query.filter(Submission.revised == False).paginate(page, 20)
         return render_template('admin/submissions/index.html', submissions=submissions)
 
@@ -37,7 +37,11 @@ class SubmissionsController:
             db.session.add(point)
             db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True}, synchronize_session=False)
             db.session.commit()
-            return redirect(url_for('submissions_index'))
+            if request.form.get('btn') == 'accept_go_next':
+                submission = db.session.query(Submission).first()
+                return redirect(url_for('submissions_revise', id=submission.id))
+            else:
+                return redirect(url_for('submissions_index'))
         return 'Error'
 
     def merge_new(self, id): # working, but not used at the moment
