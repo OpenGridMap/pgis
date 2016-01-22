@@ -19,6 +19,10 @@
 					<a class="btn btn-primary" href="/admin/submissions/revise/{{submission.id}}">Revise</a> 
 				</td>
 			</tr>
+            {% else %}
+            <tr>
+                <td colspan="2" class="text-center"><em>No unrevised submissions</em></td>
+            </tr>
 			{% endfor %}
 		</tbody>
 	</table>	
