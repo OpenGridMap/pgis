@@ -15,7 +15,7 @@ import flask_resize
 class SubmissionsController:
     def index(self):
         page = int(request.args.get('page') or 1)
-        submissions = Submission.query.filter(Submission.revised == False).paginate(page, 20)
+        submissions = Submission.query.filter(Submission.revised == False).order_by(Submission.id).paginate(page, 20)
         return render_template('admin/submissions/index.html', submissions=submissions)
 
     def revise(self, id):
