@@ -8,6 +8,7 @@ class Point(db.Model):
     geom = db.Column(Geometry('POINT'))
     properties = db.Column(JSON)
     revised = db.Column(db.Boolean)
+    approved = db.Column(db.Boolean)
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
     image = db.Column(db.String)
 

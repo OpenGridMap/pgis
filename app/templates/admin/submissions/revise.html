@@ -58,14 +58,16 @@
                       <div class="modal-footer">
                         <button type="button" class="btn btn-danger pull-left" data-toggle="modal"
                                 data-target="#deleteModalForm">
-                            <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> Delete
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <a class="btn btn-primary" href="/admin/submissions/reject/{{submission.id}}">
+                           Reject</a>
                         <button type="submit" name="btn" value="accept_go_overview" class="btn btn-primary">
-                            Accept submission
+                            Accept
                         </button>
                         <button type="submit" name="btn" value="accept_go_next" class="btn btn-primary">
-                            Accept and go to next submission
+                            Accept and go to next
                         </button>
                       </div>
               </form>

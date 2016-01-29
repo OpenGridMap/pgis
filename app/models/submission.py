@@ -7,6 +7,7 @@ class Submission(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     number_of_points = db.Column(db.Integer)
     revised = db.Column(db.Boolean)
+    approved = db.Column(db.Boolean)
     points = db.relationship('Point')
 
     def serialize(self):

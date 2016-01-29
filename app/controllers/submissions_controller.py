@@ -58,6 +58,7 @@ class SubmissionsController:
         new_point.geom = "POINT({} {})".format(data["point"]["latitude"], data["point"]["longitude"])
         new_point.properties = data["point"]["properties"]
         new_point.revised = False
+        new_point.approved = False
         new_point.submission_id = submission.id 
         return new_point
 
@@ -67,6 +68,7 @@ class SubmissionsController:
         new_submission.number_of_points = data["number_of_points"]
         new_submission.user_id = user.id 
         new_submission.revised = False
+        new_submission.approved = False
 
         return new_submission
 

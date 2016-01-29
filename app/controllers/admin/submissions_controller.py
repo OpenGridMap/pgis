@@ -35,7 +35,7 @@ class SubmissionsController:
             point = db.session.query(Point).filter(Point.submission_id == id).first()
             form.populate_obj(point)
             db.session.add(point)
-            db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True}, synchronize_session=False)
+            db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True, Submission.approved: True}, synchronize_session=False)
             db.session.commit()
             if request.form.get('btn') == 'accept_go_next':
                 submission = db.session.query(Submission).filter(Submission.revised == False).first()
@@ -46,6 +46,15 @@ class SubmissionsController:
             else:
                 return redirect(url_for('submissions_index'))
         return 'Error'
+
+    def reject_submission(self, id):
+        db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True, Submission.approved: False}, synchronize_session=False)
+        db.session.query(Point).filter(Point.submission_id == id).update({Point.revised: True, Point.approved: False}, synchronize_session=False)
+        submission = db.session.query(Submission).filter(Submission.revised == False).first()
+        if submission is not None:
+            return redirect(url_for('submissions_revise', id=submission.id))
+        else:
+            return redirect(url_for('submissions_index'))
 
     def merge_new(self, id): # working, but not used at the moment
         form = PointForm()

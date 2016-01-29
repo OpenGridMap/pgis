@@ -6,7 +6,7 @@ from app.models.point import Point
 class PointsController:
     def index(self):
         page = int(request.args.get('page') or 1) 
-        points = Point.query.filter(Point.revised).paginate(page, 20)
+        points = Point.query.filter(Point.approved).paginate(page, 20)
         return render_template('admin/points/index.html', points=points)
 
     def new(self):
