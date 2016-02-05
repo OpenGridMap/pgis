@@ -118,8 +118,9 @@
           <div class="panel-heading">Point {{ id }}</div>
           <div class="panel-body">
                 <p><strong>LatLng:</strong> {{ latlng }}</p>
-                <p><strong>Photo:</strong> <a href="/static/uploads/submissions/{{submission.id}}/{{point.id}}.png"
-                                             target="_blank">Open photo in new tab</a></p>
+                {{#if image}}
+                    <p><strong>Photo:</strong> <a href="/{{ image }}" target="_blank">Open photo in new tab</a></p>
+                {{/if}}
                 <p><strong>Tags:</strong> {{ json tags }}</p>
           </div>
         </div>
