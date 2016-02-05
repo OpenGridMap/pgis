@@ -26,7 +26,7 @@ assets.register('admin_application_js', admin_js)
 
 less = Bundle('stylesheets/leaflet.css', 'stylesheets/main.less.css', 'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css','stylesheets/leaflet.draw.css', 'stylesheets/Control.Geocoder.css','stylesheets/L.Control.Sidebar.css', 'stylesheets/Control.Loading.css', 'stylesheets/Control.LinkButton.css',
               filters='less,cssmin', output='gen/packed.css')
-admin_less = Bundle('stylesheets/leaflet.css', 'stylesheets/admin_main.less.css','stylesheets/leaflet.draw.css',
+admin_less = Bundle('stylesheets/leaflet.css', 'stylesheets/admin_main.less.css','stylesheets/leaflet.draw.css', 'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css',
               filters='less,cssmin', output='gen/admin_packed.css')
 
 assets.register('application_css', less)

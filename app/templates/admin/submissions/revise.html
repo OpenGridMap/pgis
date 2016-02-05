@@ -144,7 +144,8 @@
     var pointData = {{ point.serialize() | tojson }}
     var popupData = { submission: {{ submission.serialize() | tojson }}, point : pointData }
     var popup = newMarkerPopupTemplate(popupData);
-    var newMarker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}], {icon: redIcon});
+    // set zIndexOffset to set the new marker on top of any other markers or cluster groups
+    var newMarker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}], {icon: redIcon, zIndexOffset: 1000});
     newMarker.bindPopup(popup);
     newMarkers.push(newMarker);
     {% endfor %}
