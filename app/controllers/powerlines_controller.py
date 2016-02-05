@@ -12,8 +12,14 @@ class PowerlinesController:
 
         powerlines = []
 
-        if int(zoom) < 9:
-            powerlines = Powerline.query.filter(func.ST_Intersects(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Powerline.geom)).filter(func.ST_Length(func.ST_GeographyFromText(func.ST_AsText(Powerline.geom))) > 8000 * (10 - zoom)).all()
+        if int(zoom) < 12:
+            if int(zoom) < 8:
+                # min_lenth is a multiplicator to reduce the number of shown powerlines based on their length and
+                # zoom level
+                min_length = 15000
+            else:
+                min_length = 10000
+            powerlines = Powerline.query.filter(func.ST_Intersects(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Powerline.geom)).filter(func.ST_Length(func.ST_GeographyFromText(func.ST_AsText(Powerline.geom))) > min_length * (10 - zoom)).all()
         else:
             powerlines = Powerline.query.filter(func.ST_Intersects(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Powerline.geom)).all()
 
