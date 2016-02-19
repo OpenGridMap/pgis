@@ -10,17 +10,13 @@ class Point(db.Model):
     revised = db.Column(db.Boolean)
     approved = db.Column(db.Boolean)
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
-    image = db.Column(db.String)
+    pictures = db.relationship('Picture')
 
     def serialize(self):
-        point = self.shape()
-        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}), 'image' : self.image }
+        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}), 'pictures' : list(map((lambda p: p.serialize()), self.pictures)) }
     
     def shape(self):
         return to_shape(self.geom)
-
-    def images(self):
-        pass
 
     @property
     def latitude(self):

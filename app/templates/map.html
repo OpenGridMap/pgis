@@ -39,9 +39,9 @@
         <div class="sidebar"><h1>Point {{  id }}</h1></div>
         <div><p><strong>LatLng:</strong> {{ latlng }}</p>
                 <p><strong>Tags:</strong> {{ json tags }}</p>
-                {{#if image}}
-                    <img src="{{ image }}">
-                {{/if}}
+                {{#each pictures}}
+                    <img src="{{ this.filepath }}">
+                {{/each}}
                 <p><a href="/admin/points/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p></div>
 </script>
 {% endraw %}

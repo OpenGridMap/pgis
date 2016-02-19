@@ -8,6 +8,7 @@ import hashlib
 from app import db
 from app.models.point import Point
 from app.models.submission import Submission
+from app.models.picture import Picture
 from flask.ext.login import current_user
 from httplib2 import Http
 from flask.ext.hashing import Hashing
@@ -39,7 +40,9 @@ class SubmissionsController:
             db.session.flush()
 
             if "image" in json_data:
-                new_point.image = self.__save_image(submission.id, new_point.id, json_data['image'])
+                new_picture = self.__make_picture(submission.id, new_point.id, user.id)
+                new_picture.filepath = self.__save_image(submission.id, new_point.id, json_data['image'])
+                db.session.add(new_picture)
             db.session.commit()
 
             hashing = Hashing(GisApp)
@@ -69,8 +72,15 @@ class SubmissionsController:
         new_submission.user_id = user.id 
         new_submission.revised = False
         new_submission.approved = False
-
         return new_submission
+
+    def __make_picture(self, submission_id, point_id, user_id):
+        new_picture = Picture()
+        new_picture.point_id = point_id
+        new_picture.submission_id = submission_id
+        new_picture.user_id = user_id
+        return new_picture
+
 
 
     def __save_image(self,submission_id, point_id, encoded_string):
@@ -111,5 +121,3 @@ class SubmissionsController:
             raise
 
         return data['email']
-
-
