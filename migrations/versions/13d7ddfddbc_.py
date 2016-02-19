@@ -30,5 +30,3 @@ def upgrade():
 
 def downgrade():
     op.drop_table('submission')
-    op.drop_index(op.f('ix_submission_submission_id'), table_name='submission')
-    op.drop_index(op.f('ix_submission_user_id'), table_name='submission')
