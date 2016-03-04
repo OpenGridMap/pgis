@@ -19,7 +19,6 @@
 	</style>
 {% endblock %}
 {% block scripts %}
-        <script src="{{url_for('static', filename='javascripts/jquery-2.1.3.min.js')}}"></script>
         {{super()}}
 	<script>
 		APP_IMAGES_URL = "{{ url_for('static', filename='images')}}"
