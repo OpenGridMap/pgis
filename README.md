@@ -15,7 +15,7 @@ Power Grid Information System
     sudo apt-get install postgresql-9.3-postgis-2.1
     sudo apt-get install postgresql-server-dev-9.3
     ```
-  * Mac
+  * OS X
   
     Easiest way is to download and install the [postregapp](http://postgresapp.com/). Download [PostgreSQL 9.3 with PostGIS 2.1](https://github.com/PostgresApp/PostgresApp/releases/download/9.3.10.0/Postgres-9.3.10.0.zip) and copy the app to your `/Applications` folder.
   
@@ -30,14 +30,18 @@ Power Grid Information System
   ```
   <b>Note:</b> Mac users who have downloaded the postgres.app might have to mind the username passed with `-u` in the command above. The user `postgres`(which is default in many postgres installations) might not be present. The postgres.app will create an user with the same username as a your OS X's username as default user. So use your OS X's username instead of `postgres`
 
-Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
-
-```
-wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-chmod +x Miniconda3-latest-Linux-x86_64.sh
-./Miniconda3-latest-Linux-x86_64.sh 
-```
-follow the instructions of the installation process.
+3. Miniconda 
+  Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
+ * Ubuntu
+  ````
+  wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  chmod +x Miniconda3-latest-Linux-x86_64.sh
+  ./Miniconda3-latest-Linux-x86_64.sh 
+  ````
+   follow the instructions of the installation process.
+ * OS X
+   
+  Download the [Anaconda3-2.3.0-MacOSX-x86_64.pkg](https://repo.continuum.io/archive/Anaconda3-2.3.0-MacOSX-x86_64.pkg) installer from https://repo.continuum.io/archive/index.html which contains the correct python version(which is 3.4) we use for the project.
 
 Create a virtual environment for the project:
 
