@@ -33,15 +33,18 @@ Power Grid Information System
 3. Miniconda 
   Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
  * Ubuntu
-  ````
-  wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-  chmod +x Miniconda3-latest-Linux-x86_64.sh
-  ./Miniconda3-latest-Linux-x86_64.sh 
-  ````
-   follow the instructions of the installation process.
+    
+    ````
+    wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    chmod +x Miniconda3-latest-Linux-x86_64.sh
+    ./Miniconda3-latest-Linux-x86_64.sh 
+    ````
+    
+    follow the instructions of the installation process.
+
  * OS X
    
-  Download the [Anaconda3-2.3.0-MacOSX-x86_64.pkg](https://repo.continuum.io/archive/Anaconda3-2.3.0-MacOSX-x86_64.pkg) installer from https://repo.continuum.io/archive/index.html which contains the correct python version(which is 3.4) we use for the project.
+    Download and run the [Anaconda3-2.3.0-MacOSX-x86_64.pkg](https://repo.continuum.io/archive/Anaconda3-2.3.0-MacOSX-x86_64.pkg) installer from https://repo.continuum.io/archive/index.html which contains the correct python version(which is 3.4) we use for the project.
 
 Create a virtual environment for the project:
 
