@@ -46,58 +46,58 @@ Power Grid Information System
    
     Download and run the [Anaconda3-2.3.0-MacOSX-x86_64.pkg](https://repo.continuum.io/archive/Anaconda3-2.3.0-MacOSX-x86_64.pkg) installer from https://repo.continuum.io/archive/index.html which contains the correct python version(which is 3.4) we use for the project.
 
-Create a virtual environment for the project:
+4. Create a virtual environment for the project:
 
-```
-conda create -n pgisenv anaconda python=3.4.1
-```
+   ````
+   conda create -n pgisenv anaconda python=3.4.1
+   ````
 
-Clone the repository:
+5. Clone the repository:
 
-```
-git clone git@github.com:OpenGridMap/pgis.git
-cd pgis/
-```
+   ````
+   git clone git@github.com:OpenGridMap/pgis.git
+   cd pgis/
+   ````
 
-Activate virtual environment:
+6. Activate virtual environment:
 
-```
-source activate pgisenv
-```
+   ````
+   source activate pgisenv
+   ````
 
-Install Python dependencies:
+7. Install Python dependencies:
 
-```
-pip install -r requirements.txt
-```
+   ````
+   pip install -r requirements.txt
+   ````
 
-Run migrations:
+8. Run migrations:
 
-```
-./manage db upgrade
-```
+   ````
+   ./manage db upgrade
+   ````
 
-Install nodejs, npm (Used by less asset compiler) and less:
+9. Install nodejs, npm (Used by less asset compiler) and less:
 
-```
-sudo apt-get install nodejs
-ln -s /usr/bin/nodejs /usr/bin/node
-sudo apt-get install npm
-sudo npm install -g less
-```
+   ````
+   sudo apt-get install nodejs
+   ln -s /usr/bin/nodejs /usr/bin/node
+   sudo apt-get install npm
+   sudo npm install -g less
+   ````
 
-Install kmeans clustering extension for Postgis:
+8. Install kmeans clustering extension for Postgis:
 
-```
-wget http://api.pgxn.org/dist/kmeans/1.1.0/kmeans-1.1.0.zip
-unzip kmeans-1.1.0.zip
-cd kmeans-1.1.0/
-export USE_PGXS=1  # in bash
-
-make
-make install
-psql -f /usr/share/postgresql/9.3/extension/kmeans.sql -U postgres -d gis
-```
+   ````
+   wget http://api.pgxn.org/dist/kmeans/1.1.0/kmeans-1.1.0.zip
+   unzip kmeans-1.1.0.zip
+   cd kmeans-1.1.0/
+   export USE_PGXS=1  # in bash
+   
+   make
+   make install
+   psql -f /usr/share/postgresql/9.3/extension/kmeans.sql -U postgres -d gis
+   ````
 
 ## Running
 
