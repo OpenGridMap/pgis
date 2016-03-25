@@ -118,3 +118,16 @@ gunicorn app:GisApp --bind localhost:3000
 ```
 nosetests tests
 ```
+
+## Troubleshooting Installation - On OS X
+
+* During `pip install -r requirements.txt`
+   * `Library not loaded: libcrypto.1.0.0.dylib` while installing cryptography
+        * in the active bash session, do `export DYLD_LIBRARY_PATH=$HOME/anaconda/lib` and re-run the command in then same bash session.
+        * If you use a different bash session, the environmental variable will be lost. If you want this to be present in any future bash session, add the `export` line to your `.bashrc` or `.bash_profile` file.
+   * `Error: could not invoke ['llvm-config', '--version']`
+     * you need to install `llvmpy` on your conda env. According to the requirement.txt file, you need the version 0.12.7. You can install it with `conda install -c https://conda.anaconda.org/sklam llvmpy=0.12.7`.
+     * From the command, you install `llvmpy` from sklam's repo instead of the usual anaconda's repo. You could also install from anaconda directly by `conda install llvmpy=0.12.7`. I installed sklam`s version because the other failed.
+   * `Error: pg_config executable not found.`
+     * Check the `postgresql` installation on your host computer. Find the `pg_config` executable path and append it to your `PATH` environmental variable.
+     * If you have downlaoded and use `postgres.app` on your mac as in the installation instructions section, locate the `pg_config` executable in `/Applications/Postgres.app/Contents/Versions/<your version>/bin` and update your PATH environmental variable.
