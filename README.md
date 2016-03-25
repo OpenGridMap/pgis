@@ -131,3 +131,9 @@ nosetests tests
    * `Error: pg_config executable not found.`
      * Check the `postgresql` installation on your host computer. Find the `pg_config` executable path and append it to your `PATH` environmental variable.
      * If you have downlaoded and use `postgres.app` on your mac as in the installation instructions section, locate the `pg_config` executable in `/Applications/Postgres.app/Contents/Versions/<your version>/bin` and update your PATH environmental variable.
+   * `ValueError: unknown locale: UTF-8`
+     * Follow the instructions [http://conda.pydata.org/docs/troubleshooting.html#unknown-locale](http://conda.pydata.org/docs/troubleshooting.html#unknown-locale)
+   * `ld: library not found for -lhdf5`
+     * you need to set an environment variable for this too. Do `export HDF5_DIR=$HOME/anaconda/lib` in the current bash session and re-run the command in then same bash session.
+     * If you use a different bash session, the environmental variable will be lost. If you want this to be present in any future bash session, add the `export` line to your `.bashrc` or `.bash_profile` file.
+   *  
