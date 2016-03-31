@@ -136,4 +136,7 @@ nosetests tests
    * `ld: library not found for -lhdf5`
      * you need to set an environment variable for this too. Do `export HDF5_DIR=$HOME/anaconda/lib` in the current bash session and re-run the command in then same bash session.
      * If you use a different bash session, the environmental variable will be lost. If you want this to be present in any future bash session, add the `export` line to your `.bashrc` or `.bash_profile` file.
-   *  
+   *  `error: no member named 'f_tstate' in 'struct _frame'`
+     *  Check which package was being tried to be installed while this error happened, it might be Cython. check the version for that package from `requirement.txt` file and do `conda install cython=0.211`. Change the package name and version based on your need.
+   * `Found existing installation: Sphinx 1.3.1` or `Cannot remove entries from nonexistent file /Users/Munna/anaconda/lib/python3.4/site-packages/easy-install.pth`
+     * This happens when there is a Sphinx installation already, find the version that is needed from the required from requirements.txt file and install that using `conda install sphinx=<version>`
