@@ -143,3 +143,10 @@ nosetests tests
      *  Check which package was being tried to be installed while this error happened, it might be Cython. check the version for that package from `requirement.txt` file and do `conda install cython=0.211`. Change the package name and version based on your need.
    * `Found existing installation: Sphinx 1.3.1` or `Cannot remove entries from nonexistent file /Users/Munna/anaconda/lib/python3.4/site-packages/easy-install.pth`
      * This happens when there is a Sphinx installation already, find the version that is needed from the required from requirements.txt file and install that using `conda install sphinx=<version>`
+ * During `./manage db migrate`
+   * `ImportError: No module named 'flask_resize'`
+     * Do `pip install flask-resize`
+   * `Library not loaded`
+     * Run the following
+       * `sudo ln -s ~/anaconda/lib/libcrypto.1.0.0.dylib /usr/local/lib/`  (try /usr/lib, if it says operation not permitted even with sudo, do /usr/local/lib) 
+       * `sudo ln -s ~/anaconda/lib/libssl.1.0.0.dylib /usr/local/lib/` (try /usr/lib, if it says operation not permitted even with sudo, do /usr/local/lib)
