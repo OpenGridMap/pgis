@@ -31,6 +31,9 @@ $(document).ready(function(){
   var map = L.map('map', {
     layers: [osm_map] 
   }).setView(center, zoom);
+  if (!lat && !lng) {
+    map.locate({setView : true});
+  }
 
   var loadingControl = L.Control.loading({
       separate: true
