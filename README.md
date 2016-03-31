@@ -122,6 +122,9 @@ nosetests tests
 ## Troubleshooting Installation - On OS X
 
 * During `pip install -r requirements.txt`
+   *  Generic:
+     *  If you face any issue during this stage, the best thing to do is to match the error to those that are below. If you do not find instructions about it here, your best move should be to find which library or package is failing and try to install it seperately.
+       *  Find the version required from the `requirements.txt` of that library/package that is failing and install it with `conda install <package>=<version>`
    * `Library not loaded: libcrypto.1.0.0.dylib` while installing cryptography
         * in the active bash session, do `export DYLD_LIBRARY_PATH=$HOME/anaconda/lib` and re-run the command in then same bash session.
         * If you use a different bash session, the environmental variable will be lost. If you want this to be present in any future bash session, add the `export` line to your `.bashrc` or `.bash_profile` file.
