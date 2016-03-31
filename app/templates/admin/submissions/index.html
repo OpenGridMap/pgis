@@ -2,6 +2,17 @@
 {% block content %}
 
 <div class="container">
+    <div class="dropdown pull-right">
+        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Filter submissions
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="submissionFilterMenu">
+            <li><a href="/admin/submissions?filter=1">Not revised</a></li>
+            <li><a href="/admin/submissions?filter=2">Revised but not approved</a></li>
+            <li><a href="/admin/submissions?filter=3">Revised and approved</a></li>
+        </ul>
+    </div>
 	<table class="table table-striped table-hover">
 		<thead>
 			<tr>
@@ -21,7 +32,7 @@
 			</tr>
             {% else %}
             <tr>
-                <td colspan="2" class="text-center"><em>No unrevised submissions</em></td>
+                <td colspan="2" class="text-center"><em>No matching submissions</em></td>
             </tr>
 			{% endfor %}
 		</tbody>
@@ -35,7 +46,7 @@
 		{% endif %}
 
 		{% if submissions.has_next %}
-			<li class="next"><a href="{{ url_for('submissions_index', page=submissions.next_num)  }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+			<li class="next"><a href="{{ url_for('submissions_index', page=submissions.next_num, filter=submission_filter)  }}">Next <span aria-hidden="true">&rarr;</span></a></li>
 		{% else %}
 			<li class="next disabled"><a href="#">Next <span aria-hidden="true">&rarr;</span></a>
 		{% endif %}

@@ -17,8 +17,17 @@ import flask_resize
 class SubmissionsController:
     def index(self):
         page = int(request.args.get('page') or 1)
-        submissions = Submission.query.filter(Submission.revised == False).order_by(Submission.id).paginate(page, 20)
-        return render_template('admin/submissions/index.html', submissions=submissions)
+        submission_filter = int(request.args.get('filter') or 1)
+        # revised true, approved false
+        if (submission_filter == 2):
+            submissions = Submission.query.filter(Submission.revised == True, Submission.approved == False).order_by(Submission.id).paginate(page, 20)
+        # revised true, approved true
+        elif(submission_filter == 3):
+            submissions = Submission.query.filter(Submission.revised == True, Submission.approved == True).order_by(Submission.id).paginate(page, 20)
+        # revised false, approved false
+        else:
+            submissions = Submission.query.filter(Submission.revised == False).order_by(Submission.id).paginate(page, 20)
+        return render_template('admin/submissions/index.html', submissions=submissions, submission_filter=submission_filter)
 
     def revise(self, id):
         flask_resize.Resize(GisApp)
