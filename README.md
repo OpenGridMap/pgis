@@ -6,22 +6,29 @@ Power Grid Information System
 
 ## Installation
 
-Install Postgresql and Postgis:
+1. Install PostgreSQL and PostGIS:
 
-```
-sudo apt-get install postgresql-9.3
-sudo apt-get install postgresql-9.3-postgis-2.1
-sudo apt-get install postgresql-server-dev-9.3
-```
+  * Ubuntu:
+  
+    ```
+    sudo apt-get install postgresql-9.3
+    sudo apt-get install postgresql-9.3-postgis-2.1
+    sudo apt-get install postgresql-server-dev-9.3
+    ```
+  * Mac
+  
+    Easiest way is to download and install the [postregapp](http://postgresapp.com/). Download [PostgreSQL 9.3 with PostGIS 2.1](https://github.com/PostgresApp/PostgresApp/releases/download/9.3.10.0/Postgres-9.3.10.0.zip) and copy the app to your `/Applications` folder.
+  
 
-create database and enable postgis:
-
-```
-sudo -u postgres psql
-> CREATE DATABASE gis;
-> \connect gis
-> CREATE EXTENSION postgis;
-```
+2. Create database and enable postgis:
+  
+  ```
+  sudo -u postgres psql
+  > CREATE DATABASE gis;
+  > \connect gis
+  > CREATE EXTENSION postgis;
+  ```
+  <b>Note:</b> Mac users who have downloaded the postgres.app might have to mind the username passed with `-u` in the command above. The user `postgres`(which is default in many postgres installations) might not be present. The postgres.app will create an user with the same username as a your OS X's username as default user. So use your OS X's username instead of `postgres`
 
 Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
 
