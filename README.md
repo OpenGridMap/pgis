@@ -102,13 +102,13 @@ Power Grid Information System
     ````
   * OS X
     *  Download and unzip [http://api.pgxn.org/dist/kmeans/1.1.0/kmeans-1.1.0.zip](http://api.pgxn.org/dist/kmeans/1.1.0/kmeans-1.1.0.zip) then
-     ````
-     cd kmeans-1.1.0/
-     export USE_PGXS=1  # in bash
-     
-     make
-     make install  # note the output and find the location where the kmeans.sql extension is being installed
-     ````
+       ````
+       cd kmeans-1.1.0/
+       export USE_PGXS=1  # in bash
+       
+       make
+       make install  # note the output and find the location where the kmeans.sql extension is being installed
+       ````
     * From `make install` note the location where the `kmeans.sql` extension is being installed. If you have installed postgres via the `postgres.app`, the installation location is most likely to be `/Applications/Postgres.app/Contents/Versions/<your version>/share/postgresql/extension/`.
     * With the location, run the command below -> `psql -f /Applications/Postgres.app/Contents/Versions/<your version>/share/postgresql/extension/kmeans.sql -U postgres -d gis`. Note: `postgres` is the username passed to the `-U` option. Use the right username based on your postgres installation.
     
