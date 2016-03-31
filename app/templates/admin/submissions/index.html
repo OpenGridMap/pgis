@@ -40,7 +40,7 @@
 	<nav>
         <ul class="pager">
 		{% if submissions.has_prev %}
-			<li class="previous"><a href="{{ url_for('submissions_index', page=submissions.prev_num)  }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+			<li class="previous"><a href="{{ url_for('submissions_index', page=submissions.prev_num, filter=submission_filter)  }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
 		{% else %}
 			<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Prev</a>
 		{% endif %}
