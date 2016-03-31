@@ -1,6 +1,17 @@
 {% extends 'admin/base.html' %}
 {% block content %}
-
+<script>
+merge_active = false;
+function toggle_merge_active() {
+  if (merge_active) {
+    merge_active = false;
+    $('#merge_btn').removeClass('btn-success').addClass('btn-default');
+  } else {
+    merge_active = true;
+    $('#merge_btn').removeClass('btn-default').addClass('btn-success');
+  }
+}
+</script>
 <div class="container center-block clearfix">
 	<h3>Revise Submission</h3>
 
@@ -9,22 +20,23 @@
 	    <div id="map" style="width:648px; height:648px;"></div>
 	  </div>
 	   <div class="col-md-5">
-	     <p>
-	       Received: {{ submission.points | length }} / {{ submission.number_of_points }} expected points
-	     </p>
-       <p>
-        <button class="btn btn-success" data-toggle="modal" data-target="#reviseModalForm">Revise point</button>
-        <!-- <button class="btn btn-default" data-toggle="modal" data-target="#mergeModalForm">Merge Into Existing Point</button> -->
-           <!-- pictures -->
-       <div id="pictures">
-           {% for point in submission.points %}
-               <div style="margin-bottom: 4px;">
-                   <a href="/static/uploads/submissions/{{ point.submission_id }}/{{ point.id }}.png"><img src="{{ ("submissions/" ~ point.submission_id ~ "/" ~ point.id ~ ".png")|resize('350x350', placeholder=true) }}" target="_blank" style="max-width: 350px; max-height: 350px;"></a>
-                   <br />Point ID: {{ point.id }}
-                   <br />Latitude: {{ point.latitude }}
-                   <br />Longtitude: {{ point.longitude }}
-               </div>
+         {% if submission_merged %}
+           <p>
+             This is a merged submission. No further editing possible
+           </p>
+         {% else %}
+           <button class="btn btn-primary" data-toggle="modal" data-target="#reviseModalForm">Revise point</button>
+           <button id="merge_btn" class="btn btn-default" onclick="toggle_merge_active()">Merge Into existing Point</button>
+         {% endif %}
+         <!-- pictures -->
+         <div id="pictures">
+           <br />Point ID: {{ point.id }}
+           <br />Latitude: {{ point.latitude }}
+           <br />Longtitude: {{ point.longitude }}
+           {% for picture in point.pictures %}
+             <a href="/{{ picture.filepath }}"><img src="/{{ picture.filepath }}" target="_blank" style="max-width: 350px; max-height: 350px;"></a>
            {% endfor %}
+         </div>
        </div>
 
         <!-- Modal -->
@@ -75,6 +87,72 @@
           </div>
         </div>
 
+
+
+
+
+
+       <div class="modal fade" id="mergeModalForm" tabindex="-1" role="dialog" aria-labelledby="mergeModal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="mergeModal">Merge new point with old point <span id="old_point_number"></span></h4>
+              </div>
+              <form action="/admin/submissions/merge/{{ submission.id }}" method="POST">
+                      <div class="modal-body">
+                        {{ form.merge_with() }}
+                        <div class="row">
+                          <div class="col-md-6">
+                            <p>Old Point:</p>
+                            <b>Latitude:</b> <span id="old_point_lat"></span><br>
+                            <b>Longitude:</b> <span id="old_point_lng"></span>
+                            <b>Properties:</b>
+                            <p id="old_point_properties"></p>
+                          </div>
+                          <div class="col-md-6">
+                            <p>New Point:</p>
+                            <b>Latitude:</b> {{ mid_point[0] }}<br>
+                            <b>Longidude:</b> {{ mid_point[1] }}<br>
+                            <b>Properties:</b>
+                            <p>{{ form.properties.data }}</p>
+                          </div>
+                        </div>
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                          <label class="control-label" for="point_field_latitude">Latitude</label>
+                          {{ form.latitude(class_="form-control", value=mid_point[0]) }}
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label" for="point_field_longitude">Longitude</label>
+                          {{ form.longitude(class_="form-control", value=mid_point[1]) }}
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label" for="point_field_properties">Properties (of new point, please edit if necessary</label>
+                          {{ form.properties(class_="form-control json-propeties-textarea", rows="10" ) }}
+                          <button type="button" class="btn btn-default btn-xs textarea-json-beautify-button">Beautify</button>
+                        </div>
+                        <p>
+                            Possible power_element_tags:<br /> "Transfomer", "Substation", "Generator", "PV or Wind Farm", "Other"
+                        </p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Merge</button>
+                      </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+
        <div class="modal fade" id="deleteModalForm" tabindex="-1" role="dialog" aria-labelledby="deleteModal">
            <div class="modal-dialog" role="document">
                <div class="modal-content">
@@ -93,7 +171,7 @@
                </div>
            </div>
        </div>
-       </p>
+       <!--</p>-->
 	   </div>
 	</div>
 </div>
@@ -117,19 +195,26 @@
         <div class="panel panel-default">
           <div class="panel-heading">Point {{ id }}</div>
           <div class="panel-body">
-                <p><strong>LatLng:</strong> {{ latlng }}</p>
-                {{#if image}}
-                    <p><strong>Photo:</strong> <a href="/{{ image }}" target="_blank">Open photo in new tab</a></p>
-                {{/if}}
-                <p><strong>Tags:</strong> {{ json tags }}</p>
+            <p><strong>LatLng:</strong> {{ latlng }}</p>
+            {{#if pictures}}
+              {{#each pictures}}
+                <p><strong>Photo {{ add_one @key }}:</strong> <a href="/{{ this.filepath }}" target="_blank">Open photo in new tab</a></p>
+              {{/each}}
+            {{/if}}
+            <p><strong>Properties:</strong> {{ json properties }}</p>
           </div>
         </div>
 </script>
 {% endraw %}
 <script>
   $(document).ready(function(){
+
     Handlebars.registerHelper('json', function(context) {
       return JSON.stringify(context, null, 4);
+    });
+
+    Handlebars.registerHelper('add_one', function(context) {
+      return context + 1;
     });
 
     var source = $("#new-marker-popup-template").html();
@@ -140,15 +225,13 @@
 
     var redIcon = new L.Icon.Default({iconUrl: '/static/images/marker-icon-red-2x.png'});
     var newMarkers = [];
-    {% for point in submission.points %}
-    var pointData = {{ point.serialize() | tojson }}
-    var popupData = { submission: {{ submission.serialize() | tojson }}, point : pointData }
+    var pointData = {{ point.serialize() | tojson }};
+    var popupData = { submission: {{ submission.serialize() | tojson }}, point : pointData };
     var popup = newMarkerPopupTemplate(popupData);
     // set zIndexOffset to set the new marker on top of any other markers or cluster groups
     var newMarker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}], {icon: redIcon, zIndexOffset: 1000});
     newMarker.bindPopup(popup);
     newMarkers.push(newMarker);
-    {% endfor %}
 
     var map = L.map('map').setView([48.11, 11.0], 5);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -181,7 +264,7 @@
     function loadMapFragment(){
       if(map.getZoom() > 11) {
         $.ajax({
-          url : "/points",
+          url : "/points/with_properties",
           data: {
             "bounds" : map.getBounds().toBBoxString()
           },
@@ -190,8 +273,23 @@
             clusterGroup.clearLayers();
             for(var i = 0; i < data.length; i++){
               var marker = new L.Marker(data[i]['latlng']);
-              var popup = markerPopupTemplate(data[i]);
+              var popup = L.popup().setContent(markerPopupTemplate(data[i]));
+              // popup.setLatLng(marker.getLatLng());
+              marker.point_id = data[i]['id'];
+              marker.properties = data[i]['properties'];
               marker.bindPopup(popup);
+              marker.on('click', function(e){
+                if (merge_active) {
+                  $('#mergeModalForm').modal('toggle');
+                  $('.modal-body #old_point_lng').html(e.latlng.lng);
+                  $('.modal-body #old_point_lat').html(e.latlng.lat);
+                  $('.modal-body #old_point_properties').html(JSON.stringify(e.target.properties, null, 1));
+                  $('.modal-body #merge_with').val(e.target.point_id);
+                  $('.modal-title #old_point_number').html(e.target.point_id);
+                } else {
+                  // popup.setLatLng(e.latlng).openOn(map);
+                }
+              });
               markers.addLayer(marker);
             }
           }

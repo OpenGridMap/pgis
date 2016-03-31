@@ -74,6 +74,11 @@ def points():
 	controller = app.controllers.points_controller.PointsController()
 	return controller.index()
 
+@GisApp.route('/points/with_properties')
+def points_with_properties():
+	controller = app.controllers.points_controller.PointsController()
+	return controller.with_properties()
+
 @GisApp.route('/points/clustered')
 def points_clustered():
 	controller = app.controllers.points_controller.PointsController()

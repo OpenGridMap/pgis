@@ -33,6 +33,14 @@ class PointsController:
              clusters.append({ 'count' : row[1], 'latlng': [float(row[2]), float(row[3])] })
         return Response(json.dumps(clusters),  mimetype='application/json')
 
+    def with_properties(self):
+        if request.args.get('bounds') is None:
+            return Response(json.dumps([]), mimetype='application/json')
+        bounds_parts = request.args.get("bounds").split(',')
+        points = Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(Point.approved).all()
+        points = list(map(lambda point: point.serialize_with_properties(), points))
+        return Response(json.dumps(points),  mimetype='application/json')
+
     def edit(self, id):
         point = app.models.point.Point.query.get(id)
         form = app.helpers.point_form.PointForm(None, point) 

@@ -1,9 +1,10 @@
 from flask import json
 from flask.ext.wtf import Form
-from wtforms import StringField, FloatField, TextAreaField
+from wtforms import StringField, FloatField, TextAreaField, HiddenField
 from wtforms.validators import DataRequired
 
 class PointForm(Form):
+    merge_with    = HiddenField('merge_with', default=None)
     latitude	= FloatField('latitude', validators=[DataRequired()])
     longitude	= FloatField('longitude', validators=[DataRequired()])
     properties  = TextAreaField('properties') 

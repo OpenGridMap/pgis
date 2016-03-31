@@ -5,9 +5,11 @@ from app import db
 from app.helpers.point_form import PointForm
 from app.models.point import Point
 from app.models.submission import Submission
+from app.models.picture import Picture
 from geoalchemy2 import Geometry, func
 from flask.ext.login import current_user
 from sqlalchemy.sql import text
+from sqlalchemy import or_
 GisApp.config['RESIZE_URL'] = 'http://vmjacobsen39.informatik.tu-muenchen.de/static/uploads'
 GisApp.config['RESIZE_ROOT'] = 'app/static/uploads/'
 import flask_resize
@@ -22,12 +24,18 @@ class SubmissionsController:
         flask_resize.Resize(GisApp)
         #form = PointForm()
         submission = Submission.query.get(id)
-        point = db.session.query(Point).filter(Point.submission_id == id).first()
+        submission_merged = False
+        try:
+            point = db.session.query(Point).filter(Point.submission_id == id).one()
+        except:
+            point = db.session.query(Point).filter(Point.submission_id == id, Point.merged_to == None).one()
+            submission_merged = True
+
         form = PointForm(None, point)
         form.properties.data = json.dumps(form.properties.data) if form.properties.data else ""
         query = text("SELECT ST_X(ST_CENTROID(ST_COLLECT(geom))), ST_Y(ST_CENTROID(ST_COLLECT(geom))) FROM point WHERE submission_id=:submission_id")
         mid_point = list(db.engine.execute(query, submission_id=id).first())
-        return render_template('admin/submissions/revise.html', submission=submission, form=form, mid_point=mid_point)
+        return render_template('admin/submissions/revise.html', submission=submission, form=form, point=point, mid_point=mid_point, submission_merged=submission_merged)
 
     def accept_submission(self, id):
         form = PointForm()
@@ -56,21 +64,47 @@ class SubmissionsController:
         else:
             return redirect(url_for('submissions_index'))
 
-    def merge_new(self, id): # working, but not used at the moment
+    def merge(self, id):
         form = PointForm()
         if form.validate_on_submit():
+
+            # original point before merging process, submitted by app
+            submitted_point = db.session.query(Point).filter(Point.submission_id == id).one()
+
             new_point = Point()
-            form.populate_obj(new_point)
+            form.populate_obj((new_point))
             new_point.submission_id = id
             db.session.add(new_point)
-            db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True}, synchronize_session=False)
             db.session.commit()
-            self.__merge_photos(id, new_point.id)
+
+            # get old point because submission_id is needed for copying pictures if there is a submission_id
+            old_point = Point.query.get(form.merge_with.data)
+
+
+            # set merged_to in old point and set the visibility to false
+            db.session.query(Point).filter(Point.id == form.merge_with.data)\
+                .update({Point.merged_to: new_point.id, Point.approved: False}, synchronize_session=False)
+
+            submitted_point.revised = True
+            submitted_point.merged_to = new_point.id
+            db.session.add(submitted_point)
+
+            #db.session.query(Picture)\
+            #    .filter(or_(Picture.point_id == submitted_point, Picture.point_id == form.merge_with.data))\
+            #    .update({Picture.point_id: new_point.id}, synchronize_session=False)
+            db.session.query(Submission).filter(Submission.id == id)\
+                .update({Submission.revised: True, Submission.approved: True}, synchronize_session=False)
+            db.session.commit()
+            # copy the necessary rows in picture table and adapt them
+            query = text("INSERT INTO picture ( point_id, submission_id, user_id, filepath) SELECT :new_point_id, "
+            ":new_point_submission_id, user_id, "
+            "'static/uploads/submissions/' || :new_point_submission_id || '/' || point_id || '.png' "
+            "FROM picture WHERE point_id = :submitted_point_id or point_id = :old_point_id;")
+            db.engine.execute(query, new_point_id=new_point.id, new_point_submission_id=new_point.submission_id, submitted_point_id=submitted_point.id, old_point_id=form.merge_with.data)
+
+            self.__merge_photos(old_point.submission_id, new_point.submission_id)
             return redirect(url_for('submissions_index'))
         return 'Error'
-
-    def merge_existing(self, id):
-        pass
 
     def delete(self, id):
         submission = Submission.query.get(id)
@@ -80,14 +114,20 @@ class SubmissionsController:
         db.session.commit()
         return redirect(url_for('submissions_index'))
 
-    def __merge_photos(self, submission_id, point_id):
-        dest = "app/static/uploads/points/" + str(point_id)
+    # copying pictures from merged point to new point
+    def __merge_photos(self, source_submission, destination_submission):
+        dest = "app/static/uploads/submissions/" + str(destination_submission)
         if not os.path.exists(dest):
             os.makedirs(dest)
+        # copy pictures from old point
+        src_dir = "app/static/uploads/submissions/" + str(source_submission)
+        try:
+            src_files = os.listdir(src_dir)
+            for file_name in src_files:
+                full_file_name = os.path.join(src_dir, file_name)
+                if (os.path.isfile(full_file_name)):
+                    shutil.copy(full_file_name, dest)
+        # points imported from OpenStreetMap have no pictures. This points throw a FileNotFoundError
+        except FileNotFoundError:
+            pass
 
-        src_dir = "app/static/uploads/submissions/" + str(submission_id)
-        src_files = os.listdir(src_dir)
-        for file_name in src_files:
-            full_file_name = os.path.join(src_dir, file_name)
-            if (os.path.isfile(full_file_name)):
-                shutil.copy(full_file_name, dest)
