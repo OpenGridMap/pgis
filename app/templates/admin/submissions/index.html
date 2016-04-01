@@ -40,14 +40,18 @@
 	<nav>
         <ul class="pager">
 		{% if submissions.has_prev %}
-			<li class="previous"><a href="{{ url_for('submissions_index', page=submissions.prev_num, filter=submission_filter)  }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+            <li class="previous"><a href="{{ url_for('submissions_index', page=1, filter=submission_filter) }}">First</a></li>
+			<li class="previous"><a href="{{ url_for('submissions_index', page=submissions.prev_num, filter=submission_filter) }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
 		{% else %}
+            <li class="previous disabled"><a href="#">First</a></li>
 			<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Prev</a>
 		{% endif %}
-
+            <li>Page {{ submissions.page }} / {{ submissions.pages }} ({{ submissions.total }} submissions total)</li>
 		{% if submissions.has_next %}
-			<li class="next"><a href="{{ url_for('submissions_index', page=submissions.next_num, filter=submission_filter)  }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+            <li class="next"><a href="{{ url_for('submissions_index', page=submissions.pages, filter=submission_filter) }}">Last</a></li>
+			<li class="next"><a href="{{ url_for('submissions_index', page=submissions.next_num, filter=submission_filter) }}">Next <span aria-hidden="true">&rarr;</span></a></li>
 		{% else %}
+            <li class="next disabled"><a href="#">Last</a></li>
 			<li class="next disabled"><a href="#">Next <span aria-hidden="true">&rarr;</span></a>
 		{% endif %}
 
