@@ -20,6 +20,9 @@
 		</div>
 		<button type="submit" class="btn btn-success">Save</button>
         <a class="btn btn-danger" href="/admin/points/delete/{{point.id}}">Delete</a>
+        {% if point.submission_id != None %}
+            <a class="btn btn btn-default" href="/admin/submissions/revise/{{point.submission_id}}">Go to submission</a>
+        {% endif %}
 	</form>
 
 	<div id="map" style="width:500px; height:500px;"></div>
