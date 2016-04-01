@@ -36,6 +36,8 @@ class SubmissionsController:
         submission_merged = False
         try:
             point = db.session.query(Point).filter(Point.submission_id == id).one()
+            if (point.merged_to != None):
+                submission_merged = True;
         except:
             point = db.session.query(Point).filter(Point.submission_id == id, Point.merged_to == None).one()
             submission_merged = True
