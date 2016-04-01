@@ -98,6 +98,7 @@ class SubmissionsController:
 
             submitted_point.revised = True
             submitted_point.merged_to = new_point.id
+            submitted_point.approved = False # set approved to False, also if the point was approved already
             db.session.add(submitted_point)
 
             #db.session.query(Picture)\
