@@ -31,16 +31,16 @@
 	<nav>
 		<ul class="pager">
 		{% if points.has_prev %}
-            <li class="previous"><a href="{{ url_for('admin_points', page=1)  }}">First</a></li>
-			<li class="previous"><a href="{{ url_for('admin_points', page=points.prev_num)  }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
+            <li class="previous"><a href="{{ url_for('admin_points', page=1) }}">First</a></li>
+			<li class="previous"><a href="{{ url_for('admin_points', page=points.prev_num) }}"><span aria-hidden="true">&larr;</span> Prev</a></li>
 		{% else %}
             <li class="previous disabled"><a href="#">First</a></li>
 			<li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Prev</a>	
 		{% endif %}
             <li>Page {{ points.page }} / {{ points.pages }} ({{ points.total }} points total)</li>
 		{% if points.has_next %}
-            <li class="next"><a href="{{ url_for('admin_points', page=points.pages)  }}">Last</a></li>
-			<li class="next"><a href="{{ url_for('admin_points', page=points.next_num)  }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+            <li class="next"><a href="{{ url_for('admin_points', page=points.pages) }}">Last</a></li>
+			<li class="next"><a href="{{ url_for('admin_points', page=points.next_num) }}">Next <span aria-hidden="true">&rarr;</span></a></li>
 		{% else %}
             <li class="next disabled"><a href="#">Last</a></li>
 			<li class="next disabled"><a href="#">Next <span aria-hidden="true">&rarr;</span></a>	
