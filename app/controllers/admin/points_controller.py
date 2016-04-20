@@ -2,6 +2,8 @@ from flask import render_template, flash, redirect, abort, session, url_for, req
 from app import db
 import app.helpers.point_form
 from app.models.point import Point
+from app.models.submission import Submission
+from app.models.picture import Picture
 
 class PointsController:
     def index(self):
@@ -54,6 +56,10 @@ class PointsController:
 
     def delete(self, id):
         point = Point.query.get(id)
+        submission = Submission.query.get(point.submission_id)
+        db.session.query(Picture).filter(Picture.point_id == point.id).delete()
         db.session.delete(point)
+        if submission != None and db.session.query(Point).filter(Point.submission_id == submission.id).count == 0:
+            db.session.query(Submission).filter(Submission.id == point.submission_id).delete()
         db.session.commit()
         return redirect(url_for('admin_points'))
