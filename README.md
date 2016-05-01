@@ -140,6 +140,64 @@ gunicorn app:GisApp --bind localhost:3000
 nosetests tests
 ```
 
+## Import OSM data
+
+* Download OSM data file from [http://download.geofabrik.de/](http://download.geofabrik.de/). 
+* `import_osm_data.py` script is used to import the data. However, it needs to run with Python 2.* not Python 3. So deactivate the virtual environment from ananconda that we installed(it has Python 3) and run with the default Python on your host machine. To verify whether you have the right version, run `python --version` and see of it is Python 2.
+* Once you have right python version you will need to install few dependancies to run this import script.
+  *  [Protocol Buffers](https://developers.google.com/protocol-buffers/)
+     * On Ubuntu:
+   
+
+        ````bash
+        sudo apt-get install -y python-pip python-dev
+        wget https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.tar.gz
+        tar xvfz protobuf-2.6.0.tar.gz
+        cd protobuf-2.6.0
+        sudo ./configure
+        sudo make install
+        ````
+     * OS X
+     
+       Haven't really tested this command. Please let us know if this doesn't work
+       
+       ````bash
+       brew install protobuf
+       ````
+  * Python libraries: `imposm.parser`and `psycopg2`. Installed using `pip`.
+    
+     > <b>Note:</b> On Ubuntu, you may possibly face the following error while running these commands:
+     >
+     >  ````
+     >   protoc: error while loading shared libraries: libprotoc.so.9: cannot open shared object file: No such file or directory`
+     >  ````
+     >  To overcome this, do the following before running the command that caused the error. 
+     >
+     >  ````bash
+     >  export LD_LIBRARY_PATH=/usr/local/lib`
+     >  ````
+
+     The commands to install the libraries/packages is same on both OS X and Ubuntu.
+
+     ````bash
+     pip install imposm.parser
+     pip install psycopg2
+     ````
+     If you get any `Permissions Erorr`, try to use the `--user`(see below) to install only for the active user.
+
+     ````bash
+     pip install --user imposm.parser # Only if you have Permission Error 
+     pip install --user psycopg2 # Only if you have Permission Error 
+     ````
+* Import
+
+  Once you have the above steps completed, you may import the data from the OSM data files(`*.pbf`):
+
+    ````bash
+    cd pgis
+    python import_osm_data.py europe-latest.osm.pbf
+    ````
+
 ## Troubleshooting Installation - On OS X
 
 * During `pip install -r requirements.txt`
