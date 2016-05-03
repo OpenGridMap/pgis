@@ -7,14 +7,14 @@ try:
     conn = psycopg2.connect("dbname='gis' user='postgres' host='localhost' password=''")
     cur = conn.cursor()
 except:
-    print "I am unable to connect to the database"
+    print("I am unable to connect to the database")
 
 class PowerStationImporter(object):
 
     def perform(self, nodes):
         for osmid, tags, coords in nodes:
             if 'power' in tags:
-                query = "INSERT INTO point(geom, properties, revised) VALUES(%s, %s, TRUE)"
+                query = "INSERT INTO point(geom, properties, revised, approved) VALUES(%s, %s, TRUE, TRUE)"
                 print("INSERTING {} {}".format(coords[1], coords[0]))
                 cur.execute(query, ("POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags , 'osmid' : osmid}) )) 
 
