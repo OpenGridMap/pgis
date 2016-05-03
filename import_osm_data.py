@@ -16,7 +16,7 @@ class PowerStationImporter(object):
             if 'power' in tags:
                 query = "INSERT INTO point(geom, properties, revised, approved) VALUES(%s, %s, TRUE, TRUE)"
                 print("INSERTING {} {}".format(coords[1], coords[0]))
-                cur.execute(query, ("POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags , 'osmid' : osmid}) )) 
+                cur.execute(query, ("POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags , 'osmid' : osmid}) ))
 
 class PowerlineImporter(object):
 
@@ -33,8 +33,11 @@ class PowerlineImporter(object):
                         flag = True
                     else:
                         nodes.append(node)
-                    
+
                 if flag:
+                    break
+
+                if len(nodes) < 2:
                     break
 
                 linestring = ""
@@ -43,11 +46,8 @@ class PowerlineImporter(object):
                 linestring = linestring[:-1]
                 print("INSERTING {}".format(linestring))
                 query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
-                try:
-                    cur.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ]) 
-                except psycopg2.InternalError as e:
-                    print("ERROR: {}".format(e))
-            
+                cur.execute(query, ['LINESTRING({})'.format(linestring), json.dumps({ "tags": tags, "refs": refs }) ])
+
 
 power_station_importer = PowerStationImporter()
 powerline_importer = PowerlineImporter()
