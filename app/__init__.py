@@ -3,6 +3,8 @@ from flask.ext.assets import Environment, Bundle
 from flask_environments import Environments
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
+from app.js_assets import non_admin_js_files, admin_js_files
+from app.css_assets import non_admin_css_files, admin_css_files
 
 # for using a current jQuery version from cdn instead of jQuery 1
 from flask_bootstrap import WebCDN
@@ -20,16 +22,15 @@ GisApp.extensions['bootstrap']['cdns']['jquery'] = WebCDN(
 # GisApp.config.from_object('config')
 db = SQLAlchemy(GisApp)
 
-env = Environments(GisApp) 
+env = Environments(GisApp)
 env.from_object('config')
 
 # Assets
 assets = Environment(GisApp)
-js = Bundle('javascripts/leaflet-src.js', 'javascripts/leaflet.markercluster-src.js','javascripts/handlebars-v3.0.3.js', 'javascripts/Control.Geocoder.js','javascripts/Control.LinkButton.js','javascripts/underscore-min.js','javascripts/L.Control.Sidebar.js', 'javascripts/Control.Loading.js', 'javascripts/main.js',
-            filters='jsmin', output='gen/packed.js')
 
-admin_js = Bundle('javascripts/leaflet-src.js', 'javascripts/admin_main.js', 'javascripts/leaflet.draw-src.js','javascripts/handlebars-v3.0.3.js','javascripts/underscore-min.js', 'javascripts/leaflet.markercluster-src.js',
-            filters='jsmin', output='gen/admin_packed.js')
+js = Bundle(*non_admin_js_files, filters='jsmin', output='gen/packed.js')
+admin_js = Bundle(*admin_js_files, filters='jsmin', output='gen/admin_packed.js')
+
 assets.register('application_js', js)
 assets.register('admin_application_js', admin_js)
 
