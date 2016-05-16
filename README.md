@@ -58,26 +58,33 @@ Power Grid Information System
    git clone git@github.com:OpenGridMap/pgis.git
    cd pgis/
    ````
+   
+6. Copy `config.py.example` to `config.py` and edit to match your machine's configuration:
 
-6. Activate virtual environment:
+   ````console
+   cp config.py.example config.py
+   ````
+   Now, edit `config.py` to match your machine's configuration.
+
+7. Activate virtual environment:
 
    ````
    source activate pgisenv
    ````
 
-7. Install Python dependencies:
+8. Install Python dependencies:
 
    ````
    pip install -r requirements.txt
    ````
 
-8. Run migrations:
+9. Run migrations:
 
    ````
    ./manage db upgrade
    ````
 
-9. Install nodejs, npm (Used by less asset compiler) and less:
+10. Install nodejs, npm (Used by less asset compiler) and less:
 
    ````
    sudo apt-get install nodejs
@@ -86,7 +93,7 @@ Power Grid Information System
    sudo npm install -g less
    ````
 
-8. Install kmeans clustering extension for Postgis: 
+11. Install kmeans clustering extension for Postgis: 
 
   * Ubuntu:
 
