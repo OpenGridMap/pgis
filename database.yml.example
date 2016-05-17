@@ -1,0 +1,17 @@
+development:
+  user: postgres
+  host: localhost
+  port: 5432
+  database: gis
+
+test:
+  user: postgres
+  host: localhost
+  port: 5432
+  database: gis
+
+production:
+  user: postgres
+  host: localhost
+  port: 5432
+  database: gis

@@ -1,6 +1,17 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+import yaml
+
+# read database configuraion from database.yml
+if os.path.isfile('database.yml'):
+    with open('database.yml', 'r') as f:
+        db_config = yaml.load(f)
+else:
+    raise Exception("Database configuration not found. "\
+                    "Copy +database.yml.example+ as +database.yml+ "\
+                    "and update the configuration to match your system's.")
+
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -12,14 +23,24 @@ class Config(object):
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 
+database_uri = "postgresql://{0}@{1}:{2}/{3}"
 
 class Development(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres@localhost:5432/gis'
+    SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['development']['user'],
+                                                  db_config['development']['host'],
+                                                  db_config['development']['port'],
+                                                  db_config['development']['database'])
 
 class Production(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres@localhost:5432/gis'
+    SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['production']['user'],
+                                                  db_config['production']['host'],
+                                                  db_config['production']['port'],
+                                                  db_config['production']['database'])
 
 class Test(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres@localhost:5432/test_gis'
+    SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['test']['user'],
+                                                  db_config['test']['host'],
+                                                  db_config['test']['port'],
+                                                  db_config['test']['database'])

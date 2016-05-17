@@ -9,19 +9,19 @@ Power Grid Information System
 1. Install PostgreSQL and PostGIS:
 
   * Ubuntu:
-  
+
     ```
     sudo apt-get install postgresql-9.3
     sudo apt-get install postgresql-9.3-postgis-2.1
     sudo apt-get install postgresql-server-dev-9.3
     ```
   * OS X
-  
+
     Easiest way is to download and install the [postregapp](http://postgresapp.com/). Download [PostgreSQL 9.3 with PostGIS 2.1](https://github.com/PostgresApp/PostgresApp/releases/download/9.3.10.0/Postgres-9.3.10.0.zip) and copy the app to your `/Applications` folder.
-  
+
 
 2. Create database and enable postgis:
-  
+
   ```
   sudo -u postgres psql
   > CREATE DATABASE gis;
@@ -30,20 +30,20 @@ Power Grid Information System
   ```
   <b>Note:</b> Mac users who have downloaded the postgres.app might have to mind the username passed with `-u` in the command above. The user `postgres`(which is default in many postgres installations) might not be present. The postgres.app will create an user with the same username as a your OS X's username as default user. So use your OS X's username instead of `postgres`
 
-3. Miniconda 
+3. Miniconda
   Download and install miniconda package, containing conda package manager and Anaconda distribution of Python. (Use Python version 3.4)
  * Ubuntu
-    
+
     ````
     wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
     chmod +x Miniconda3-latest-Linux-x86_64.sh
-    ./Miniconda3-latest-Linux-x86_64.sh 
+    ./Miniconda3-latest-Linux-x86_64.sh
     ````
-    
+
     follow the instructions of the installation process.
 
  * OS X
-   
+
     Download and run the [Anaconda3-2.3.0-MacOSX-x86_64.pkg](https://repo.continuum.io/archive/Anaconda3-2.3.0-MacOSX-x86_64.pkg) installer from https://repo.continuum.io/archive/index.html which contains the correct python version(which is 3.4) we use for the project.
 
 4. Create a virtual environment for the project:
@@ -59,25 +59,32 @@ Power Grid Information System
    cd pgis/
    ````
 
-6. Activate virtual environment:
+6. Setup datanase: Copy `database.yml.example` to `database.yml` and edit to match your machine's configuration:
+
+   ````console
+   cp database.yml.example database.yml
+   ````
+   Now, edit `database.yml` to match your machine's configuration.
+
+7. Activate virtual environment:
 
    ````
    source activate pgisenv
    ````
 
-7. Install Python dependencies:
+8. Install Python dependencies:
 
    ````
    pip install -r requirements.txt
    ````
 
-8. Run migrations:
+9. Run migrations:
 
    ````
    ./manage db upgrade
    ````
 
-9. Install nodejs, npm (Used by less asset compiler) and less:
+10. Install nodejs, npm (Used by less asset compiler) and less:
 
    ````
    sudo apt-get install nodejs
@@ -86,7 +93,7 @@ Power Grid Information System
    sudo npm install -g less
    ````
 
-8. Install kmeans clustering extension for Postgis: 
+11. Install kmeans clustering extension for Postgis:
 
   * Ubuntu:
 
@@ -95,7 +102,7 @@ Power Grid Information System
     unzip kmeans-1.1.0.zip
     cd kmeans-1.1.0/
     export USE_PGXS=1  # in bash
-    
+
     make
     make install
     psql -f /usr/share/postgresql/9.3/extension/kmeans.sql -U postgres -d gis
@@ -105,20 +112,20 @@ Power Grid Information System
        ````
        cd kmeans-1.1.0/
        export USE_PGXS=1  # in bash
-       
+
        make
        make install  # note the output and find the location where the kmeans.sql extension is being installed
        ````
     * From `make install` note the location where the `kmeans.sql` extension is being installed. If you have installed postgres via the `postgres.app`, the installation location is most likely to be `/Applications/Postgres.app/Contents/Versions/<your version>/share/postgresql/extension/`.
-    * With the location, run the command below 
- 
-       ```` 
+    * With the location, run the command below
+
+       ````
        psql -f /Applications/Postgres.app/Contents/Versions/<yourVersion>/share/postgresql/extension/kmeans.sql -U postgres -d gis
        ````
 
        Note: `postgres` is the username passed to the `-U` option. Use the right username based on your postgres installation.
-    
-  
+
+
 
 ## Running
 
@@ -169,5 +176,5 @@ nosetests tests
      * Do `pip install flask-resize`
    * `Library not loaded`
      * Run the following
-       * `sudo ln -s ~/anaconda/lib/libcrypto.1.0.0.dylib /usr/local/lib/`  (try /usr/lib, if it says operation not permitted even with sudo, do /usr/local/lib) 
+       * `sudo ln -s ~/anaconda/lib/libcrypto.1.0.0.dylib /usr/local/lib/`  (try /usr/lib, if it says operation not permitted even with sudo, do /usr/local/lib)
        * `sudo ln -s ~/anaconda/lib/libssl.1.0.0.dylib /usr/local/lib/` (try /usr/lib, if it says operation not permitted even with sudo, do /usr/local/lib)

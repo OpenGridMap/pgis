@@ -6,3 +6,4 @@ __init__.pyc
 *.swp
 *.swo
 tags
+database.yml
