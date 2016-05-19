@@ -69,6 +69,11 @@ def index():
 	controller = app.controllers.application_controller.ApplicationController()
 	return controller.index()
 
+@GisApp.route('/submissions')
+def aubmissions():
+	controller = app.controllers.submissions_controller.SubmissionsController()
+	return controller.index()
+
 @GisApp.route('/points')
 def points():
 	controller = app.controllers.points_controller.PointsController()

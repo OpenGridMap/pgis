@@ -7,6 +7,7 @@ class User(db.Model):
     password            = db.Column(db.String) 
     authenticated       = db.Column(db.Boolean, default=False) 
     action_permissions  = db.Column(JSON)
+    submission = db.relationship('Submission', back_populates='user')
 
     def is_authenticated(self):
         return True

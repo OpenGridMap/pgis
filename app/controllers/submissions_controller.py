@@ -12,8 +12,18 @@ from app.models.picture import Picture
 from flask.ext.login import current_user
 from httplib2 import Http
 from flask.ext.hashing import Hashing
+from sqlalchemy.orm import contains_eager
 
 class SubmissionsController:
+
+    def index(self):
+        submissions = db.session.query(Submission).\
+            join(Submission.points).outerjoin(Point.pictures).\
+            filter(Point.merged_to == None, Submission.revised).\
+            options(contains_eager(Submission.points).contains_eager(Point.pictures)).\
+            all()
+        submissions = list(map(lambda submission: submission.serialize(), submissions))
+        return Response(json.dumps(submissions),  mimetype='application/json')
 
     def create(self):
         
