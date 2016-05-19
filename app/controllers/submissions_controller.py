@@ -21,7 +21,10 @@ class SubmissionsController:
             json_packet = request.get_json(force=True)
             json_data = json_packet["data_packet"]
 
-            email = self.__validate_token(json_data["id_token"])
+            if "id_token" in json_data:
+                email = self.__validate_id_token(json_data["id_token"])
+            elif "access_token" in json_data:
+                email = self.__validate_id_token(json_data["access_token"])
             if email is None:
                 return "Invalid Id Token", 400
             user = app.models.user.User.query.filter_by(email=email).first()
@@ -92,8 +95,8 @@ class SubmissionsController:
         fh.close()
         return "static/uploads/submissions/" + str(submission_id) + "/" + str(point_id) + ".png"
 
-    def __validate_token(self, id_token):
-        '''Verifies that an access-token is valid and
+    def __validate_id_token(self, id_token):
+        '''Verifies that an id-token is valid and
         meant for this app.
 
         Returns None on fail, and an e-mail on success'''
@@ -114,7 +117,38 @@ class SubmissionsController:
         if(data['audience'] != GisApp.config.get('GOOGLE_CLIENT_ID')):
             raise
 
-        if(data['issued_to'] not in ["498377614550-8k5gt5hgp13fveqia1md2qjjr6a99qqr.apps.googleusercontent.com", "498377614550-i7b06cjlssr1g9549o46djrkhks6jktl.apps.googleusercontent.com", "271653534564-dc97mvagb3m59abrqk4hcaqnfl57c1vn.apps.googleusercontent.com"]):
+        if(data['issued_to'] not in ["498377614550-8k5gt5hgp13fveqia1md2qjjr6a99qqr.apps.googleusercontent.com", "498377614550-i7b06cjlssr1g9549o46djrkhks6jktl.apps.googleusercontent.com"]):
+            raise
+
+        if(data['expires_in'] <= 0):
+            raise
+
+        return data['email']
+
+
+    def __validate_access_token(self, access_token):
+        '''Verifies that an access-token is valid and
+        meant for this app.
+
+        Returns None on fail, and an e-mail on success'''
+        h = Http()
+        resp, cont = h.request("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + access_token, "GET")
+
+        if not resp['status'] == '200':
+            return None
+
+        try:
+            data = json.loads(cont)
+        except TypeError:
+            # Running this in Python3
+            # httplib2 returns byte objects
+            data = json.loads(cont.decode())
+
+
+        if(data['audience'] != "271653534564-dc97mvagb3m59abrqk4hcaqnfl57c1vn.apps.googleusercontent.com"):
+            raise
+
+        if(data['issued_to'] != "271653534564-dc97mvagb3m59abrqk4hcaqnfl57c1vn.apps.googleusercontent.com"):
             raise
 
         if(data['expires_in'] <= 0):
