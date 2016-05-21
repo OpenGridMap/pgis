@@ -34,7 +34,7 @@ class SubmissionsController:
             if "id_token" in json_data:
                 email = self.__validate_id_token(json_data["id_token"])
             elif "access_token" in json_data:
-                email = self.__validate_id_token(json_data["access_token"])
+                email = self.__validate_access_token(json_data["access_token"])
             if email is None:
                 return "Invalid Id Token", 400
             user = app.models.user.User.query.filter_by(email=email).first()
