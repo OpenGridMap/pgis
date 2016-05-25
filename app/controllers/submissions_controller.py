@@ -21,7 +21,7 @@ class SubmissionsController:
         submissions = db.session.query(Submission).\
             join(Submission.points).outerjoin(Point.pictures).join(Submission.user).\
             filter(Point.merged_to == None, Submission.revised).\
-            options(contains_eager(Submission.points).contains_eager(Point.pictures).contains_eager(User.submissions)).\
+            options(contains_eager(Submission.points).contains_eager(Point.pictures)).\
             all()
         submissions = list(map(lambda submission: submission.serialize_for_mobileapp(), submissions))
         return Response(json.dumps(submissions),  mimetype='application/json')
