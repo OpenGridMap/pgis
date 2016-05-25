@@ -9,6 +9,7 @@ from app import db
 from app.models.point import Point
 from app.models.submission import Submission
 from app.models.picture import Picture
+from app.models.user import User
 from flask.ext.login import current_user
 from httplib2 import Http
 from flask.ext.hashing import Hashing
@@ -18,11 +19,11 @@ class SubmissionsController:
 
     def index(self):
         submissions = db.session.query(Submission).\
-            join(Submission.points).outerjoin(Point.pictures).\
+            join(Submission.points).outerjoin(Point.pictures).join(Submission.user).\
             filter(Point.merged_to == None, Submission.revised).\
-            options(contains_eager(Submission.points).contains_eager(Point.pictures)).\
+            options(contains_eager(Submission.points).contains_eager(Point.pictures).contains_eager(User.submissions)).\
             all()
-        submissions = list(map(lambda submission: submission.serialize(), submissions))
+        submissions = list(map(lambda submission: submission.serialize_for_mobileapp(), submissions))
         return Response(json.dumps(submissions),  mimetype='application/json')
 
     def create(self):

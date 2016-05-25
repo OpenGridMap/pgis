@@ -72,7 +72,9 @@ def index():
 @GisApp.route('/submissions')
 def aubmissions():
 	controller = app.controllers.submissions_controller.SubmissionsController()
-	return controller.index()
+    response = controller.index()
+	response.headers['Access-Control-Allow-Origin'] = '*'
+	return response
 
 @GisApp.route('/points')
 def points():
