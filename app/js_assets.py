@@ -10,6 +10,7 @@ non_admin_js_files = common_js_files + [
     'javascripts/underscore-min.js',
     'javascripts/L.Control.Sidebar.js',
     'javascripts/Control.Loading.js',
+    'javascripts/Map.SelectArea.min.js',
     'javascripts/main.js'
 ]
 
