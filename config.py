@@ -23,17 +23,19 @@ class Config(object):
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 
-database_uri = "postgresql://{0}@{1}:{2}/{3}"
+database_uri = "postgresql://{0}:{1}@{2}:{3}/{4}"
 
 class Development(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['development']['user'],
+                                                  db_config['development']['password'],
                                                   db_config['development']['host'],
                                                   db_config['development']['port'],
                                                   db_config['development']['database'])
 
 class Production(Config):
     SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['production']['user'],
+                                                  db_config['production']['password'],
                                                   db_config['production']['host'],
                                                   db_config['production']['port'],
                                                   db_config['production']['database'])
@@ -41,6 +43,7 @@ class Production(Config):
 class Test(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['test']['user'],
+                                                  db_config['test']['password'],
                                                   db_config['test']['host'],
                                                   db_config['test']['port'],
                                                   db_config['test']['database'])
