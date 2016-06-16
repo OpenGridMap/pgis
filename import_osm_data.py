@@ -35,10 +35,10 @@ class PowerlineImporter(object):
                         nodes.append(node)
 
                 if flag:
-                    break
+                    continue
 
                 if len(nodes) < 2:
-                    break
+                    continue
 
                 linestring = ""
                 for node in nodes:
