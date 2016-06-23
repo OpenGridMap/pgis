@@ -6,7 +6,7 @@ function PgisMap() {
   this.zoom              = MiscHelpers.getQueryString("zoom") || 13;
   this.bounds            = undefined;
   this.center            = undefined;
-  this.map               = undefined; // Leadlet's map object
+  this.map               = undefined; // Leaflet's map object
   this.baseLayersControl = undefined;
   this.baseLayer         = undefined;
   this.linkButtons       = {}
