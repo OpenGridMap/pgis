@@ -16,12 +16,6 @@ var MapHelpers = {
     );
 
     polyline.bindPopup(popup);
-
-    polyline.on("click", function(e){
-      console.log(e);
-      console.log(powerline);
-      console.log(JSON.stringify(powerline));
-    })
   },
 
   getOsmTile: function (){

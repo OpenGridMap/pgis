@@ -120,7 +120,6 @@ function PgisMap() {
   this.setMoveEndListener = function() {
     var _this = this;
     this.map.on('moveend', function() {
-      console.log(_this);
       _this.debouncedDataLoad();
     });
   };
