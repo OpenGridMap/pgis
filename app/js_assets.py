@@ -1,19 +1,25 @@
 common_js_files = [
-    'javascripts/leaflet-src.js',
-    'javascripts/handlebars-v3.0.3.js',
-    'javascripts/underscore-min.js',
-    'javascripts/leaflet.markercluster-src.js'
+    'javascripts/libraries/leaflet-src.js',
+    'javascripts/libraries/handlebars-v3.0.3.js',
+    'javascripts/libraries/underscore-min.js',
+    'javascripts/libraries/leaflet.markercluster-src.js',
+    'javascripts/helpers/misc-helpers.js',
+    'javascripts/helpers/handlebars.js'
 ]
+
 non_admin_js_files = common_js_files + [
-    'javascripts/Control.Geocoder.js',
-    'javascripts/Control.LinkButton.js',
-    'javascripts/underscore-min.js',
-    'javascripts/L.Control.Sidebar.js',
-    'javascripts/Control.Loading.js',
-    'javascripts/main.js'
+    'javascripts/libraries/Control.Geocoder.js',
+    'javascripts/libraries/Control.LinkButton.js',
+    'javascripts/libraries/underscore-min.js',
+    'javascripts/libraries/L.Control.Sidebar.js',
+    'javascripts/libraries/Control.Loading.js',
+    'javascripts/libraries/Map.SelectArea.min.js',
+    'javascripts/non-admin/pgis-map.js',
+    'javascripts/non-admin/map-helpers.js',
+    'javascripts/non-admin/main.js'
 ]
 
 admin_js_files = common_js_files + [
     'javascripts/admin_main.js',
-    'javascripts/leaflet.draw-src.js',
+    'javascripts/libraries/leaflet.draw-src.js',
 ]
