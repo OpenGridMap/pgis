@@ -46,25 +46,16 @@ function basicDraw() {
     layer: new L.LayerGroup()
   });
 
-  var loadFragmentDebounced = _.debounce(loadDataForMapFragment, 1000);
-  loadFragmentDebounced(
-    pgisMap.map,
-    pgisMap.markerLayers.markers,
-    pgisMap.markerLayers.clusterGroup,
-    pgisMap.markerLayers.powerlinesLayerGroup
-  );
-
-  map.on('moveend', function(){
-    loadFragmentDebounced(
-      pgisMap.map,
-      pgisMap.markerLayers.markers,
-      pgisMap.markerLayers.clusterGroup,
-      pgisMap.markerLayers.powerlinesLayerGroup
+  pgisMap.dataLoader = function() {
+    loadDataForMapFragment(
+      this.map,
+      this.markerLayers.markers,
+      this.markerLayers.clusterGroup,
+      this.markerLayers.powerlinesLayerGroup
     );
-  });
+  }
 
-  var markerMap = {};
-
+  pgisMap.dataLoader();
 }
 
 function loadDataForMapFragment(map, markers, clusterGroup, powerlinesLayerGroup){

@@ -48,7 +48,5 @@ var MapHelpers = {
           minZoom: 8
         }
     );
-  },
-
-  addLinkButtonToMap: function() {}
+  }
 };

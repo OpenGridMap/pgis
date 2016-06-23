@@ -16,7 +16,6 @@ function PgisMap() {
 
   this.createMap = function(baseLayer) {
     L.Icon.Default.imagePath = APP_IMAGES_URL;
-
     this.baseLayer = baseLayer;
 
     if(this.lat && this.lng){
@@ -42,7 +41,7 @@ function PgisMap() {
     }
 
     this.addDefaultControlsToMap();
-    // this.setMoveEndListener();
+    this.setMoveEndListener();
   };
 
   this.addDefaultControlsToMap = function() {
@@ -119,17 +118,29 @@ function PgisMap() {
   };
 
   this.setMoveEndListener = function() {
-    map.on('moveend', function(){
-      loadFragmentDebounced(map, markers, clusterGroup, powerlinesLayerGroup);
+    var _this = this;
+    this.map.on('moveend', function() {
+      console.log(_this);
+      _this.debouncedDataLoad();
     });
-  }
+  };
 
-  this.loadData = function() {
+  this.dataLoader = function() {
+    // Override this function to load the data.
+    throw("PgisMap#dataLoader: This function needs to be overriden");
+  };
+
+  this.callDataLoader = function() {
+    // DO NOT OVERRIDE THIS FUNCTION
+
+    // This function gets called from _.debounce
+    // We pass this function to _.debounce instead of +this.dataLoader+
+    //   because _.debounce call wouldn't pick up overrides on the
+    //   function that is passed to it.
+    //   So, if we keep this function as an mediating function the overridden
+    //   +dataLoader+ gets called.
     this.dataLoader();
   }
 
-  this.dataLoader = function(){
-    //Override this function
-    throw("This function needs to be overriden");
-  }
+  this.debouncedDataLoad = _.debounce(this.callDataLoader, 1000);
 };
