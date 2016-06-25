@@ -9,6 +9,7 @@ function PgisMap() {
   this.map               = undefined; // Leaflet's map object
   this.baseLayersControl = undefined;
   this.baseLayer         = undefined;
+  this.sidebar           = undefined;
   this.linkButtons       = {}
   // Add any kind of marker layers to this.markerLayers
   //   e.g: L.MarkerClusterGroup(), L.LayerGroup() etc.
@@ -49,13 +50,13 @@ function PgisMap() {
       separate: true
     })
 
-    var sidebar = L.control.sidebar('sidebar', {
+    this.sidebar = L.control.sidebar('sidebar', {
       position: 'right'
     });
 
     this.map.addControl(loadingControl);
     this.map.addControl(L.Control.geocoder());
-    this.map.addControl(sidebar);
+    this.map.addControl(this.sidebar);
   };
 
   this.addBaseMaps = function(baseMaps) {

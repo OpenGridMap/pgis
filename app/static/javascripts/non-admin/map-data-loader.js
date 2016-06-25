@@ -1,5 +1,7 @@
 var MapDataLoader = {
-  loadDataForMapFragment: function(map, markers, clusterGroup, powerlinesLayerGroup){
+  loadDataForMapFragment: function(pgisMap, markers, clusterGroup, powerlinesLayerGroup){
+    var map = pgisMap.map;
+
     if(map.getZoom() > 11) {
       map.fireEvent("dataloading");
       $.ajax({
@@ -8,8 +10,10 @@ var MapDataLoader = {
           "bounds" : map.getBounds().toBBoxString()
         },
         success : function(data){
+          // Clear both layers that plot points!
           markers.clearLayers();
           clusterGroup.clearLayers();
+
           var newMarkers = []
           markerMap = {};
           for(var i = 0; i < data.length; i++){
@@ -19,10 +23,11 @@ var MapDataLoader = {
             markerMap[data[i].id] = marker;
           }
           markers.addLayers(newMarkers);
+
           function onMarkerClick(e) {
-            sidebar.setContent(MapHelpers.getPointSidebarContent(e.target.data));
-            if (!sidebar.isVisible()) {
-              sidebar.show()
+            pgisMap.sidebar.setContent(MapHelpers.getPointSidebarContent(e.target.data));
+            if (!pgisMap.sidebar.isVisible()) {
+              pgisMap.sidebar.show()
             }
           }
           map.fireEvent("dataload");
@@ -37,8 +42,10 @@ var MapDataLoader = {
           "bounds" : map.getBounds().toBBoxString()
         },
         success : function(data){
+          // Clear both layers that plot points!
           markers.clearLayers();
           clusterGroup.clearLayers();
+
           for(var i = 0; i < data.length; i++){
             var marker = new L.Marker(data[i]['latlng'], {
               icon: createClusterIcon(data[i])

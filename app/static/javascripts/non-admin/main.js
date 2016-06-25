@@ -47,7 +47,7 @@ $(document).ready(function(){
 
   pgisMap.dataLoader = function() {
     MapDataLoader.loadDataForMapFragment(
-      this.map,
+      this,
       this.markerLayers.markers,
       this.markerLayers.clusterGroup,
       this.markerLayers.powerlinesLayerGroup
