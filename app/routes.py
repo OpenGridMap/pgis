@@ -14,6 +14,7 @@ import app.controllers.application_controller
 import app.controllers.points_controller
 import app.controllers.powerlines_controller
 import app.controllers.submissions_controller
+import app.controllers.relations_controller
 import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
@@ -137,6 +138,12 @@ def points_update(id):
 @GisApp.route('/powerlines', methods=['GET'])
 def powerlines():
     controller = app.controllers.powerlines_controller.PowerlinesController()
+    return controller.index()
+
+
+@GisApp.route('/relations')
+def relations():
+    controller = app.controllers.relations_controller.RelationsController()
     return controller.index()
 
 
