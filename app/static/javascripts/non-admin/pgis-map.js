@@ -7,13 +7,14 @@ function PgisMap() {
   this.bounds            = undefined;
   this.center            = undefined;
   this.map               = undefined; // Leaflet's map object
-  this.baseLayersControl = undefined;
+  this.layerControl      = undefined;
   this.baseLayer         = undefined;
   this.sidebar           = undefined;
   this.linkButtons       = {}
   // Add any kind of marker layers to this.markerLayers
   //   e.g: L.MarkerClusterGroup(), L.LayerGroup() etc.
   this.markerLayers      = {};
+  this.overlayLayers     = {};
 
   this.createMap = function(baseLayer) {
     L.Icon.Default.imagePath = APP_IMAGES_URL;
@@ -22,7 +23,8 @@ function PgisMap() {
     if(this.lat && this.lng){
       this.center = [this.lat, this.lng];
     } else {
-      this.center = [48.1333, 11.5667];
+      // this.center = [48.1333, 11.5667];
+      this.center = [50.151097188604574, 12.053203582763672];
     }
 
     this.map = L.map('map', {
@@ -60,9 +62,40 @@ function PgisMap() {
   };
 
   this.addBaseMaps = function(baseMaps) {
-    this.baseLayersControl = L.control.layers(baseMaps);
-    this.map.addControl(this.baseLayersControl);
+    this.layerControl = L.control.layers(baseMaps);
+    this.map.addControl(this.layerControl);
   };
+
+  this.addOverlayLayer = function(toBeAddedOverlayLayer) {
+    // Pass layer in format:
+    // {
+    //    name: 'Relations',
+    //    layer: new L.LayerGroup()
+    //    ref: 'relations'
+    // }
+    //
+    // This gets added to +this.overlayLayers so that it can be
+    //  access with the +ref+ attribute. E.g., this.overlayLayers.relations
+
+    overlayLayer = {};
+    overlayLayer[toBeAddedOverlayLayer.ref] = {
+      name: toBeAddedOverlayLayer.name,
+      layer: toBeAddedOverlayLayer.layer
+    };
+
+    if(_.has(this.overlayLayers, toBeAddedOverlayLayer.ref)) {
+      throw("Overlay Layer with ref: "
+              + toBeAddedOverlayLayer.ref
+              + " already exits");
+    } else {
+      _.extend(this.overlayLayers, overlayLayer);
+
+      this.layerControl.addOverlay(
+        toBeAddedOverlayLayer.layer,
+        toBeAddedOverlayLayer.name
+      )
+    }
+  }
 
   this.addMarkerLayer = function(toBeAddedMarkerLayer) {
     /*
