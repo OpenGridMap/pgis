@@ -45,3 +45,5 @@ assets.register('admin_application_css', admin_less)
 # Load Routes
 from app import routes
 
+# Load Jinja2 template filters
+from app.helpers import template_filters

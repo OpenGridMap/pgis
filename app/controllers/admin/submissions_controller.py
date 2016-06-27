@@ -5,14 +5,21 @@ from app import db
 from app.helpers.point_form import PointForm
 from app.models.point import Point
 from app.models.submission import Submission
+from app.models.user import User
 from app.models.picture import Picture
 from geoalchemy2 import Geometry, func
 from flask.ext.login import current_user
 from sqlalchemy.sql import text
 from sqlalchemy import or_
+from enum import Enum
 GisApp.config['RESIZE_URL'] = 'http://vmjacobsen39.informatik.tu-muenchen.de/static/uploads'
 GisApp.config['RESIZE_ROOT'] = 'app/static/uploads/'
 import flask_resize
+
+# Predefined activity points
+class Activity(Enum):
+    new_point = 1
+    revise_submission = 1 # revise submission not implemented at moment
 
 class SubmissionsController:
     def index(self):
@@ -54,7 +61,14 @@ class SubmissionsController:
             point = db.session.query(Point).filter(Point.submission_id == id).first()
             form.populate_obj(point)
             db.session.add(point)
-            db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True, Submission.approved: True}, synchronize_session=False)
+            db.session.query(Submission).filter(Submission.id == id)\
+                .update({Submission.revised: True, Submission.approved: True}, synchronize_session=False)
+
+            # add activity points for submitter
+            user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
+            db.session.query(User).filter(User.id == user_id)\
+                .update({User.activity_points: User.activity_points + Activity.new_point.value}, synchronize_session=False)
+
             db.session.commit()
             if request.form.get('btn') == 'accept_go_next':
                 submission = db.session.query(Submission).filter(Submission.revised == False).first()
@@ -106,6 +120,12 @@ class SubmissionsController:
             #    .update({Picture.point_id: new_point.id}, synchronize_session=False)
             db.session.query(Submission).filter(Submission.id == id)\
                 .update({Submission.revised: True, Submission.approved: True}, synchronize_session=False)
+            user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
+
+            # Add activity points for submitter
+            db.session.query(User).filter(User.id == user_id)\
+                .update({User.activity_points: User.activity_points + Activity.new_point.value}, synchronize_session=False)
+
             db.session.commit()
             # copy the necessary rows in picture table and adapt them
             query = text("INSERT INTO picture ( point_id, submission_id, user_id, filepath) SELECT :new_point_id, "
@@ -142,4 +162,5 @@ class SubmissionsController:
         # points imported from OpenStreetMap have no pictures. This points throw a FileNotFoundError
         except FileNotFoundError:
             pass
+
 

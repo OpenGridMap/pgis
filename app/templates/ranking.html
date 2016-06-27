@@ -1,0 +1,26 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+    <h1>Top 10 rankings</h1>
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr>
+				<td>User</td>
+				<td>Points</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for user in users.items %}
+			<tr class="crud_row">
+				<td>{{ user.email|email_to_username }}</td>
+				<td>{{ user.activity_points }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+</div>
+
+{% endblock %}

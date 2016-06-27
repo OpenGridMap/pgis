@@ -1,0 +1,18 @@
+{% extends 'admin/base.html' %}
+{% block content %}
+    <div class="container">
+      <h1 class="h1">Welcome to your profile</h1>
+      <h2 class="h2">Your points</h2>
+      <span>Your Points: {{ user.activity_points  }}<br>
+      Your rank: {{ ranking }}</span>
+      <div>
+       {% if pictures %}
+         <h2 class="h2">Your uploaded pictures</h2>
+              {% for picture in pictures %}
+             <a href="/{{ picture.filepath }}"><img src="/{{ picture.filepath }}" target="_blank" style="max-width: 350px; max-height: 350px;"></a>
+              {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+{% endblock %}

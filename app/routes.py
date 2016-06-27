@@ -20,6 +20,9 @@ import app.controllers.admin.powerlines_controller
 import app.controllers.admin.users_controller
 import app.controllers.admin.submissions_controller
 import app.permissions
+import app.controllers.ranking_controller
+import app.controllers.userprofile_controller
+import app.controllers.bonus_system_controller
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
@@ -70,6 +73,23 @@ def index():
     controller = app.controllers.application_controller.ApplicationController()
     return controller.index()
 
+@GisApp.route('/userprofile')
+def userprofile():
+    controller = app.controllers.userprofile_controller.UserprofileController()
+    response = controller.index()
+    return controller.index()
+
+@GisApp.route('/ranking')
+def ranking():
+    controller = app.controllers.ranking_controller.RankingController()
+    response = controller.index()
+    return controller.index()
+
+@GisApp.route('/bonus_system')
+def activity_points():
+    controller = app.controllers.bonus_system_controller.BonusSystemController()
+    response = controller.index()
+    return controller.index()
 
 @GisApp.route('/submissions')
 def aubmissions():
