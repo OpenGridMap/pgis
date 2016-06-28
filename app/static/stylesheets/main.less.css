@@ -2,7 +2,7 @@
 	width: 100%;
 
 	thead td{
-		font-weight: bold;	
+		font-weight: bold;
 	}
 }
 
@@ -17,13 +17,21 @@
   .save-map-entity {
     display:none;
   }
-  
+
   .cancel-map-entity-edit {
     display:none;
   }
 }
 
 #sidebar img{
-        margin-bottom: 3px;
-        width: 100%;
-    }
+  margin-bottom: 3px;
+  width: 100%;
+}
+
+.default.marker-cluster {
+  background-color: red;
+}
+
+.highlighted.marker-cluster {
+  background-color: blue;
+}
