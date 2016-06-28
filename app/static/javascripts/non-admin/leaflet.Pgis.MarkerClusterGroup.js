@@ -15,6 +15,8 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
     //  option while initializing. It is changed dynamically depending on
     //  +defaultIconCssClasses+ and +highlightIconCssClasses+.
     clusterIconCssClasses: undefined
+    // TODO: May be +clusterIconCssClasses+ could be made a property on
+    //  the PgisMarkerClusterGroup rather than being in the +options+
   },
 
   addedLayers: [],
