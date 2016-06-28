@@ -12,7 +12,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for user in users.items %}
+			{% for user in users %}
 			<tr class="crud_row">
 				<td>{{ user.email|email_to_username }}</td>
 				<td>{{ user.activity_points }}</td>
