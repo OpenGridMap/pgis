@@ -74,6 +74,7 @@ def index():
     return controller.index()
 
 @GisApp.route('/userprofile')
+@login_required
 def userprofile():
     controller = app.controllers.userprofile_controller.UserprofileController()
     response = controller.index()

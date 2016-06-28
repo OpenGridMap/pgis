@@ -30,6 +30,26 @@ $(document).ready(function(){
   // var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
   pgisMap.addLinkButton(newPointLinkProperties);
 
+  var rankingTableLinkProperties = {
+    ref: 'ranking',
+    text: 'Top 10 Ranking',
+    onclick: function() {
+      window.location.href = '/ranking';
+    }
+  };
+
+  pgisMap.addLinkButton(rankingTableLinkProperties);
+
+  var userProfileLinkProperties = {
+    ref: 'userprofile',
+    text: 'Your Profile',
+    onclick: function() {
+      window.location.href = '/userprofile';
+    }
+  };
+
+  pgisMap.addLinkButton(userProfileLinkProperties);
+
   pgisMap.addMarkerLayer({
     name: 'markers',
     layer: new L.MarkerClusterGroup()
