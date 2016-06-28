@@ -217,20 +217,24 @@ $(document).ready(function(){
       relationFeatureLayer.addLayer(polyline);
     });
 
-    var markers = [];
+    var markersLayer =  new L.PgisMarkerClusterGroup();
+
+    var markers = []
     _.each(points, function(point){
       var marker = new L.Marker(point.latlng)
-      // marker.setStyle(defaultStyle)
+      marker.setIcon(markersLayer.getMarkerDefaultIcon())
       markers.push(marker);
     });
-    relationFeatureLayer.addLayers(markers);
-
+    markersLayer.addLayers(markers);
+    relationFeatureLayer.addLayer(markersLayer);
 
     relationFeatureLayer.on("mouseover", function(e){
+      markersLayer.addHighlightStyle();
       e.target.setStyle(highlightedStyle);
     });
 
     relationFeatureLayer.on("mouseout", function(e){
+      markersLayer.removeHighlightStyle();
       e.target.setStyle(defaultStyle);
     });
 
