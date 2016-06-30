@@ -86,6 +86,10 @@ $(document).ready(function(){
   pgisMap.map.addEventListener("overlayadd", function(target, layerName){
     // TODO: Do this only if it is a Relations layr
     // if (target.name == 'Relations') {
+    //
+
+      ApiService.fetchRelationsData(_pgisMap);
+
       points = [{
         "id": 234934,
         "latlng": [50.1443037, 12.0362751],
