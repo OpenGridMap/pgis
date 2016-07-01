@@ -65,7 +65,7 @@ class Relation(db.Model):
                    r.properties AS rel_prop
                 FROM powerline p
             JOIN power_relation_members m
-                ON p.id = m.member_id
+                ON p.id = m.member_id AND m.member_type = 'way'
             JOIN power_relations r
                 ON r.id = m.power_relation_id
             WHERE ST_Intersects(
@@ -116,7 +116,7 @@ class Relation(db.Model):
                    ST_Y(p.geom) AS p_y, r.properties AS rel_prop
                 FROM point p
             JOIN power_relation_members m
-                ON p.id = m.member_id
+                ON p.id = m.member_id AND m.member_type = 'node'
             JOIN power_relations r
                 ON r.id = m.power_relation_id
             WHERE ST_Contains(
