@@ -57,7 +57,6 @@ var MapDataLoader = {
           // Clear both layers that plot points!
           markers.clearLayers();
           clusterGroup.clearLayers();
-          console.log(data);
 
           for(var i = 0; i < data.length; i++){
             var marker = new L.Marker(data[i]['latlng'], {

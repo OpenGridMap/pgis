@@ -1,5 +1,5 @@
 var ApiService = {
-  fetchRelationsData: function(pgisMap) {
+  fetchRelationsData: function(pgisMap, successCallback) {
     var map = pgisMap.map;
 
     map.fireEvent("dataloading");
@@ -10,7 +10,8 @@ var ApiService = {
         "bounds": map.getBounds().toBBoxString()
       },
       success: function(data) {
-        console.log(data);
+        successCallback(data)
+        map.fireEvent("dataload");
       }
     })
   }
