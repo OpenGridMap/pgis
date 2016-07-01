@@ -23,12 +23,12 @@ class Relation(db.Model):
         #         e.g: {65: {id: 65, points: [], powerlines: [], properties: []}}
 
         point_rows = Relation.relations_and_points_in_bounds(
-            point_bounds_parts,
+            bounds,
             False
         )
 
         pl_relations = Relation.relations_and_powerlines_in_bounds(
-            powerline_bountparts,
+            bounds,
             True
         )
 
