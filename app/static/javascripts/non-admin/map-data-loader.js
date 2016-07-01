@@ -1,5 +1,8 @@
+// Will make more sense to rename this as MapDataHandler.
+//  It fetches the data and plots it on the map.
+
 var MapDataLoader = {
-  loadDataForMapFragment: function(pgisMap, markers, clusterGroup, powerlinesLayerGroup){
+  loadBaseMapDataForMapFragment: function(pgisMap, markers, clusterGroup, powerlinesLayerGroup){
     var map = pgisMap.map;
     var unverifiedIcon = L.icon({
       iconUrl: 'static/images/marker-unverified-icon-2x.png',
@@ -91,6 +94,70 @@ var MapDataLoader = {
         map.fireEvent("dataload");
       }
     });
-  }
+  },
 
+  fetchAndPlotRelations: function(pgisMap) {
+    ApiService.fetchRelationsData(pgisMap, function(data){
+
+      relations = data;
+
+      pgisMap.overlayLayers.relations.layer.clearLayers();
+
+      _.each(relations, function(relation){
+        var relationFeatureLayer = L.featureGroup();
+        relationFeatureLayer.osm_properties = relation.properties;
+
+        _.each(relation.powerlines, function(line){
+          var polyline = L.polyline(line.latlngs);
+          polyline.data = polyline.properties;
+          polyline.setStyle({ color: 'red' });
+
+          relationFeatureLayer.addLayer(polyline);
+        });
+
+        var markersLayer =  new L.PgisMarkerClusterGroup();
+
+        var markers = []
+        _.each(relation.points, function(point){
+          var marker = new L.Marker(point.latlng)
+          marker.data = point.properties;
+          marker.setIcon(markersLayer.getMarkerDefaultIcon())
+          markers.push(marker);
+        });
+        markersLayer.addLayers(markers);
+        relationFeatureLayer.addLayer(markersLayer);
+
+        markersLayer.on("clustermouseover", function(e){
+          markersLayer.addHighlightStyle();
+        })
+
+        markersLayer.on("clustermouseout", function(e){
+          markersLayer.removeHighlightStyle();
+        })
+
+        relationFeatureLayer.on("mouseover", function(e) {
+          markersLayer.addHighlightStyle();
+          e.target.setStyle({ color: "blue" });
+        });
+
+        relationFeatureLayer.on("mouseout", function(e) {
+          markersLayer.removeHighlightStyle();
+          e.target.setStyle({ color: "red" });
+        });
+
+
+        relationFeatureLayer.on('click', function(e) {
+          pgisMap.sidebar.setContent(
+            MapHelpers.getRelationSidebarContent(e.target.osm_properties)
+          );
+
+          if (!pgisMap.sidebar.isVisible()) {
+            pgisMap.sidebar.show()
+          }
+        })
+
+        pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
+      });
+    });
+  }
 }

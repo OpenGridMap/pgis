@@ -27,7 +27,6 @@ $(document).ready(function(){
     }
   };
 
-  // var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
   pgisMap.addLinkButton(newPointLinkProperties);
 
   var rankingTableLinkProperties = {
@@ -69,9 +68,9 @@ $(document).ready(function(){
 
   pgisMap.baseMapDataLoader = function() {
     if (_.contains(_pgisMap.selectedOverlayLayers, "Relations")) {
-      console.log("Not loading base data because relations are selected");
+      MapDataLoader.fetchAndPlotRelations(_pgisMap);
     } else {
-      MapDataLoader.loadDataForMapFragment(
+      MapDataLoader.loadBaseMapDataForMapFragment(
         this,
         this.markerLayers.markers,
         this.markerLayers.clusterGroup,
@@ -93,63 +92,11 @@ $(document).ready(function(){
   pgisMap.onOverlayAdd  = function(layer) {
     // TODO: Do this only if it is a Relations layr
     // if (target.name == 'Relations') {
-    //
+
     _.each(_pgisMap.markerLayers, function(layer){
       layer.clearLayers();
     });
 
-    var defaultStyle = {
-      color: "red"
-    }
-    var highlightedStyle = {
-      color: "blue"
-    }
-
-    ApiService.fetchRelationsData(_pgisMap, function(data){
-
-      relations = data;
-
-      _.each(relations, function(relation){
-        var relationFeatureLayer = L.featureGroup();
-
-        _.each(relation.powerlines, function(line){
-          var polyline = L.polyline(line.latlngs);
-          polyline.setStyle(defaultStyle);
-
-          relationFeatureLayer.addLayer(polyline);
-        });
-
-        var markersLayer =  new L.PgisMarkerClusterGroup();
-
-        var markers = []
-        _.each(relation.points, function(point){
-          var marker = new L.Marker(point.latlng)
-          marker.setIcon(markersLayer.getMarkerDefaultIcon())
-          markers.push(marker);
-        });
-        markersLayer.addLayers(markers);
-        relationFeatureLayer.addLayer(markersLayer);
-
-        markersLayer.on("clustermouseover", function(e){
-          markersLayer.addHighlightStyle();
-        })
-
-        markersLayer.on("clustermouseout", function(e){
-          markersLayer.removeHighlightStyle();
-        })
-
-        relationFeatureLayer.on("mouseover", function(e){
-          markersLayer.addHighlightStyle();
-          e.target.setStyle(highlightedStyle);
-        });
-
-        relationFeatureLayer.on("mouseout", function(e){
-          markersLayer.removeHighlightStyle();
-          e.target.setStyle(defaultStyle);
-        });
-
-        pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
-      });
-    });
+    MapDataLoader.fetchAndPlotRelations(_pgisMap);
   };
 });

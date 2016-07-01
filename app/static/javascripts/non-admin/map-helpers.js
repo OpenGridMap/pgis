@@ -5,7 +5,12 @@ var MapHelpers = {
 
     return markerSidebarTemplate(pointdata);
   },
+  getRelationSidebarContent: function(relationProperties){
+    var source   = $("#relation-sidebar-template").html();
+    var relationSidebarTemplate = Handlebars.compile(source);
 
+    return relationSidebarTemplate(relationProperties);
+  },
   // Binds a the popup to a powerline
   bindPowerlinePopup: function(polyline, powerline){
     var source   = $("#polyline-popup-template").html();
