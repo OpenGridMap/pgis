@@ -6,7 +6,16 @@ import sys
 '''
 WARNING: This could be a very memory intense script. The variables can grow
 huge depending on the size of imports. You are adviced to import in smaller
-sizes.
+sizes. We advice you run this with on the +.pbf+ files that have only 
+relations related data. Use the command line tool osmosis 
+(http://wiki.openstreetmap.org/wiki/Osmosis) to filter out the file to 
+contain only power relations and run this script on that
+result file. Below is an example script on how to run osmosis.
+
+    osmosis --read-pbf file=bayern-latest.osm.pbf \
+            --tag-filter accept-relations power=* \
+            --used-way --used-node --buffer \
+            --write-pbf file=bayern-latest-relations.pbf
 
 NOTE: This script only imports points and powerlines that are related to a
 relation. To import other generic points and powerlines, use the usual
