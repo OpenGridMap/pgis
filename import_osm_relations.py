@@ -12,10 +12,7 @@ relations related data. Use the command line tool osmosis
 contain only power relations and run this script on that
 result file. Below is an example script on how to run osmosis.
 
-    osmosis --read-pbf file=bayern-latest.osm.pbf \
-            --tag-filter accept-relations power=* \
-            --used-way --used-node --buffer \
-            --write-pbf file=bayern-latest-relations.pbf
+  osmosis --read-pbf file=bayern-latest.osm.pbf --tag-filter accept-relations power=* --used-way --used-node --buffer --write-pbf file=bayern-latest-relations.pbf
 
 NOTE: This script only imports points and powerlines that are related to a
 relation. To import other generic points and powerlines, use the usual
