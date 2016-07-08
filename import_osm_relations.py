@@ -253,8 +253,6 @@ p = OSMParser(concurrency=4, ways_callback=powerline_importer.perform)
 p.parse(sys.argv[1])
 conn.commit()
 
-
-
 print("\nAdding Point-to-Relation assosication and copying those points from "
       + "temp_points to actual point table:")
 # find missing node relations from temp_points and update power_relations table
@@ -293,5 +291,8 @@ for row in rows:
 
 conn.commit()
 
+# Delete the temp_points's records.
 print("\nDeleting temp_points table:")
-# TODO: Delete everything in temp_points.
+truncate_temp_points_query = "TRUNCATE temp_points;"
+cur.execute(truncate_temp_points_query)
+conn.commit()
