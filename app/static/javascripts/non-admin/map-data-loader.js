@@ -1,6 +1,14 @@
 var MapDataLoader = {
   loadDataForMapFragment: function(pgisMap, markers, clusterGroup, powerlinesLayerGroup){
     var map = pgisMap.map;
+    var unverifiedIcon = L.icon({
+      iconUrl: 'static/images/marker-unverified-icon-2x.png',
+      shadowUrl: 'static/images/marker-shadow.png',
+      iconSize:    [25, 41],
+      iconAnchor:  [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize:  [41, 41]
+    });
 
     if(map.getZoom() > 11) {
       map.fireEvent("dataloading");
@@ -17,7 +25,11 @@ var MapDataLoader = {
           var newMarkers = []
           markerMap = {};
           for(var i = 0; i < data.length; i++){
-            var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
+            if(data[i]['revised'] == true) {
+              var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
+            } else {
+              var marker = new L.Marker(data[i]['latlng'], {icon: unverifiedIcon}).on('click', onMarkerClick);
+            }
             marker.data = data[i];
             newMarkers.push(marker);
             markerMap[data[i].id] = marker;
