@@ -2,6 +2,7 @@ from app.models.point import Point
 from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response
 from geoalchemy2 import Geometry, func
 from geoalchemy2.functions import GenericFunction
+from sqlalchemy import or_
 import app.helpers.point_form
 import base64
 import sys
@@ -14,7 +15,7 @@ class PointsController:
         if request.args.get('bounds') is None:
             return Response(json.dumps([]), mimetype='application/json')
         bounds_parts = request.args.get("bounds").split(',')
-        points = Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(Point.approved).all()
+        points = Point.query.filter(func.ST_Contains(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Point.geom)).filter(or_(Point.approved, Point.revised == False)).all()
         points = list(map(lambda point: point.serialize(), points))
         return Response(json.dumps(points),  mimetype='application/json')
 
@@ -26,7 +27,7 @@ class PointsController:
         if request.args.get('zoom'):
             n_clusters = int(request.args.get('zoom'))
         #TODO this should be cached or precomputed
-        query = text("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], :n_clusters) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope(:bounds_1, :bounds_2, :bounds_3, :bounds_4), point.geom) AND point.approved = TRUE) AS ksub GROUP BY kmeans ORDER BY kmeans;")
+        query = text("SELECT kmeans, count(*), ST_X(ST_Centroid(ST_Collect(geom))), ST_Y(ST_Centroid(ST_Collect(geom))) AS geom FROM ( SELECT kmeans(ARRAY[ST_X(geom), ST_Y(geom)], :n_clusters) OVER (), geom FROM point WHERE ST_Contains(ST_MakeEnvelope(:bounds_1, :bounds_2, :bounds_3, :bounds_4), point.geom) AND (point.approved = TRUE OR point.revised = FALSE)) AS ksub GROUP BY kmeans ORDER BY kmeans;")
         result = db.engine.execute(query, n_clusters=n_clusters, bounds_1=bounds_parts[1], bounds_2=bounds_parts[0], bounds_3=bounds_parts[3], bounds_4=bounds_parts[2])
         clusters = []
         for row in result:
