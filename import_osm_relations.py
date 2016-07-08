@@ -81,6 +81,8 @@ class PointImporter(object):
 
     def perform(self, coords):
         for osmid, lon, lat in coords:
+            print ".",
+
             query = "INSERT INTO temp_points(geom, properties, revised, approved) "\
                 "VALUES(%s, %s, TRUE, TRUE)"
             query_values = (
@@ -94,6 +96,8 @@ class PowerStationImporter(object):
 
     def perform(self, nodes):
         for osmid, tags, coords in nodes:
+            print ".",
+
             query = "UPDATE temp_points SET (geom, properties, revised, approved) "\
                 "= (%s, %s, TRUE, TRUE) "\
                 "WHERE properties->>'osmid' = %s"
@@ -114,6 +118,7 @@ class PowerlineImporter(object):
         #       then insert the way
         #       update the power_relations with the way's id.
         for osmid, tags, refs in ways:
+            print ".",
 
             # check if it is a member of a relation:
             is_member_query = "SELECT id FROM power_relation_members "\
@@ -135,17 +140,21 @@ class PowerlineImporter(object):
                     cur.execute(query, [str(ref)] )
                     node = cur.fetchone()
                     if node is None:
+                        print("\nMissing point {0} for powerling {1}".format(
+                            str(ref),
+                            osmid
+                        ))
                         flag = True
                     else:
                         nodes.append(node)
 
                 # skip this powerline if a point is missing in the database.
                 if flag:
-                    print("Breaking for %s" % str(osmid))
+                    print("\nOne or more Points missing for line %s" % str(osmid))
                     continue
 
                 if len(nodes) < 2:
-                    print("Breaking for %s" % str(osmid))
+                    print("\nLess than 2 points for line, skipping %s" % str(osmid))
                     continue
 
                 linestring = ""
@@ -161,8 +170,6 @@ class PowerlineImporter(object):
                 powerline_record = cur.fetchone()
                 if powerline_record is not None:
                     powerline_record_id = powerline_record[0]
-                    print 'Powerline already exists with PG id -- ',
-                    print powerline_record_id
                 else:
                     query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
                     query_values = [
@@ -177,13 +184,15 @@ class PowerlineImporter(object):
                         "WHERE id = %s"
                     cur.execute(join_table_update_query, [join_table_row_id])
             else:
-                print("Haven't found relation for powerline - osmid %s" % osmid)
+                print("\nHaven't found relation for powerline - osmid %s" % osmid)
 
 class RelationsImporter(object):
 
     def perform(self, relations):
         for osmid, tags, members in relations:
             if 'power' in tags:
+                print ".",
+
                 relation_insert_query = "INSERT INTO power_relations(properties)"\
                     " VALUES (%s)"
                 cur.execute(relation_insert_query, [
@@ -205,7 +214,6 @@ class RelationsImporter(object):
                             [str(member_osm_id)]
                         )
                         member = cur.fetchone()
-                        print member
                         if member is not None:
                             member_id = member[0]
 
@@ -224,31 +232,47 @@ power_station_importer = PowerStationImporter()
 powerline_importer = PowerlineImporter()
 relations_importer = RelationsImporter()
 
+print("\nImporting the Points to temp_points: ")
 p = OSMParser(concurrency=4, coords_callback=all_points_importer.perform )
 p.parse(sys.argv[1])
 conn.commit()
 
+print("\nImporting the tags for Points that are in temp_points:")
 p = OSMParser(concurrency=4, nodes_callback=power_station_importer.perform )
 p.parse(sys.argv[1])
 conn.commit()
 
+print("\nImporting the Relations to power_relations and power_relation_members:")
 p = OSMParser(concurrency=4, relations_callback=relations_importer.perform )
 p.parse(sys.argv[1])
 conn.commit()
 
-p = OSMParser(concurrency=4, ways_callback=powerline_importer.perform )
+print("\nImporting the Powerlines to +powerline+ and adding association with "
+        + "power_relations:")
+p = OSMParser(concurrency=4, ways_callback=powerline_importer.perform)
 p.parse(sys.argv[1])
 conn.commit()
 
 
-# find missing node relations from temp_points and update power_relation_table
 
-# get the nodes' osmids
-nodes_osmids_query = "SELECT id, member_osm_id FROM power_relation_members "\
-    "WHERE (member_id = 0 OR member_id is NULL) AND member_type='node';"
+print("\nAdding Point-to-Relation assosication and copying those points from "
+      + "temp_points to actual point table:")
+# find missing node relations from temp_points and update power_relations table
+
+# get the OSM ids of the nodes that are as power_relation_members.
+# There are some cases where the nodes are missing in the OSM data but relations
+# are marked with those nodes anyway. Having JOIN in the query below makes sure
+# we bother only those that are present.
+nodes_osmids_query = """SELECT pr.id, pr.member_osm_id FROM
+                            power_relation_members pr
+                        JOIN temp_points tp
+                            ON pr.member_osm_id = tp.properties->>'osmid'
+                        WHERE (pr.member_id = 0 OR pr.member_id is NULL)
+                            AND pr.member_type='node';"""
 cur.execute(nodes_osmids_query)
 rows = cur.fetchall()
 for row in rows:
+    print ".",
     node_osmid = row[1]
     relation_id = row[0]
 
@@ -264,8 +288,10 @@ for row in rows:
                     SELECT id FROM point_record
                 )
                 WHERE id = %s """
+
     cur.execute(query, [str(node_osmid), relation_id])
 
 conn.commit()
 
+print("\nDeleting temp_points table:")
 # TODO: Delete everything in temp_points.
