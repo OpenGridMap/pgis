@@ -115,7 +115,9 @@ var MapDataLoader = {
           relationFeatureLayer.addLayer(polyline);
         });
 
-        var markersLayer =  new L.PgisMarkerClusterGroup();
+        var markersLayer =  new L.pgisMarkerClusterGroup({
+          relationId: relation.id
+        });
 
         var markers = []
         _.each(relation.points, function(point){
@@ -126,14 +128,6 @@ var MapDataLoader = {
         });
         markersLayer.addLayers(markers);
         relationFeatureLayer.addLayer(markersLayer);
-
-        markersLayer.on("clustermouseover", function(e){
-          markersLayer.addHighlightStyle();
-        })
-
-        markersLayer.on("clustermouseout", function(e){
-          markersLayer.removeHighlightStyle();
-        })
 
         relationFeatureLayer.on("mouseover", function(e) {
           markersLayer.addHighlightStyle();

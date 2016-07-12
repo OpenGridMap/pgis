@@ -1,29 +1,21 @@
 // Extend the behavior of L.MarkerClusterGroup from
 // https://github.com/Leaflet/Leaflet.markercluster
 // so that we can change the style of the cluster or the markers.
+//  or highlight em on mouseover based on the relationId in options.
 
 // Author: Sri Vishnu Totakura <t.srivishnu@gmail.com>
 
 L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
 
   options: {
+    relationId: undefined,
     // Add these css classes to the Cluster marker icon when
     //  clustered. These classes won't appear when Markers are shown.
     defaultIconCssClasses: ['default'],
-    highlightIconCssClasses: ['highlighted'],
-    // The below option is modified by other functions. Don't pass this
-    //  option while initializing. It is changed dynamically depending on
-    //  +defaultIconCssClasses+ and +highlightIconCssClasses+.
-    clusterIconCssClasses: undefined
-    // TODO: May be +clusterIconCssClasses+ could be made a property on
-    //  the PgisMarkerClusterGroup rather than being in the +options+
+    highlightIconCssClasses: ['highlighted']
   },
 
-  addedLayers: [],
-
   // Override the default icon creation function.
-  // Only change intended was to add className to DivIcon dynamically
-  // based on the +clusterIconCssClasses+ options.
   _defaultIconCreateFunction: function(cluster) {
      var childCount = cluster.getChildCount();
 
@@ -37,26 +29,19 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
        c += 'large';
      }
 
-     if(!this.clusterIconCssClasses){
-       this.clusterIconCssClasses = this.defaultIconCssClasses;
-     }
-     var additionalClasses = this.clusterIconCssClasses.join(" ")
-
      return new L.DivIcon({
        html: '<div><span>' + childCount + '</span></div>',
-       className: additionalClasses + ' marker-cluster' + c,
+       className: "relation-id-" + this.relationId + ' marker-cluster' + c,
        iconSize: new L.Point(40, 40)
      });
    },
 
-   additionalClusterCssClasss: function(){
-     return this.clusterIconCssClasses.join(" ")
-   },
-
    addHighlightStyle: function(){
-      this.options.clusterIconCssClasses = this.options.highlightIconCssClasses;
-      this.refreshClusters();
       var _this = this;
+
+      _.each(this.options.highlightIconCssClasses, function(cssClass) {
+        $(_this._relationClassSelector()).addClass(cssClass)
+      })
 
       // This assumes all the child layers in this clusterGroup are
       // markers - L.Marker
@@ -66,9 +51,11 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
    },
 
    removeHighlightStyle: function() {
-     this.options.clusterIconCssClasses = this.options.defaultIconCssClasses;
-     this.refreshClusters();
      var _this = this;
+
+     _.each(this.options.highlightIconCssClasses, function(cssClass) {
+      $(_this._relationClassSelector()).removeClass(cssClass)
+     })
 
      // This assumes all the child layers in this clusterGroup are
      // markers - L.Marker
@@ -87,7 +74,31 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
      return new L.Icon({
        iconUrl: '/static/images/marker-icon.png'
      });
+   },
+
+   _bindEvents: function() {
+     var _this = this;
+
+     this.on("clustermouseover", function(e) {
+       window.tar = e;
+       _this.addHighlightStyle();
+     });
+
+     this.on("clustermouseout", function(e) {
+       _this.removeHighlightStyle();
+     })
+
+     L.MarkerClusterGroup.prototype._bindEvents.call(this);
+   },
+
+   _relationClass: function() {
+     return "relation-id-" + this.options.relationId;
+   },
+
+   _relationClassSelector: function() {
+     return "." + this._relationClass();
    }
+
 });
 
 L.pgisMarkerClusterGroup = function(options) {
