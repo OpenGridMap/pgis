@@ -90,13 +90,18 @@ $(document).ready(function(){
   window.pgisMap = pgisMap;
 
   pgisMap.onOverlayAdd  = function(layer) {
-    // TODO: Do this only if it is a Relations layr
-    // if (target.name == 'Relations') {
-
     _.each(_pgisMap.markerLayers, function(layer){
       layer.clearLayers();
     });
 
-    MapDataLoader.fetchAndPlotRelations(_pgisMap);
+    this.baseMapDataLoader();
+  };
+
+  pgisMap.onOverlayRemove  = function(layer) {
+    _.each(_pgisMap.markerLayers, function(layer){
+      layer.clearLayers();
+    });
+
+    this.baseMapDataLoader();
   };
 });
