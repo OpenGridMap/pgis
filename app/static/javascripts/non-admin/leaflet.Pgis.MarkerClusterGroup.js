@@ -8,7 +8,10 @@
 L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
 
   options: {
+    // TODO: Override initializer and raise exception if the options are not
+    //  set during initialization.
     relationId: undefined,
+    relationLayer: undefined,
     // Add these css classes to the Cluster marker icon when
     //  clustered. These classes won't appear when Markers are shown.
     defaultIconCssClasses: ['default'],
@@ -36,18 +39,19 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
      });
    },
 
-   addHighlightStyle: function(){
-      var _this = this;
+   addHighlightStyle: function() {
+     var _this = this;
 
-      _.each(this.options.highlightIconCssClasses, function(cssClass) {
-        $(_this._relationClassSelector()).addClass(cssClass)
-      })
+     _.each(this.options.highlightIconCssClasses, function(cssClass) {
+       $(_this._relationClassSelector()).addClass(cssClass)
+     })
 
-      // This assumes all the child layers in this clusterGroup are
-      // markers - L.Marker
-      this.eachLayer(function(layer){
-        layer.setIcon(_this.getMarkerHighlightIcon());
-      })
+     // Change to hightlight icon on the markers in this cluster.
+     // This assumes all the child layers in this clusterGroup are
+     // markers - L.Marker
+     this.eachLayer(function(layer){
+       layer.setIcon(_this.getMarkerHighlightIcon());
+     });
    },
 
    removeHighlightStyle: function() {
@@ -61,7 +65,7 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
      // markers - L.Marker
      this.eachLayer(function(layer) {
        layer.setIcon(_this.getMarkerDefaultIcon());
-     })
+     });
    },
 
    getMarkerDefaultIcon: function() {
@@ -80,12 +84,11 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
      var _this = this;
 
      this.on("clustermouseover", function(e) {
-       window.tar = e;
-       _this.addHighlightStyle();
+       _this.options.relationLayer.fire('mouseover', e)
      });
 
      this.on("clustermouseout", function(e) {
-       _this.removeHighlightStyle();
+       _this.options.relationLayer.fire('mouseout', e)
      })
 
      L.MarkerClusterGroup.prototype._bindEvents.call(this);

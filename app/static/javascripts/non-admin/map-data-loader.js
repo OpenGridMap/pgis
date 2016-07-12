@@ -116,7 +116,8 @@ var MapDataLoader = {
         });
 
         var markersLayer =  new L.pgisMarkerClusterGroup({
-          relationId: relation.id
+          relationId: relation.id,
+          relationLayer: relationFeatureLayer
         });
 
         var markers = []
@@ -126,6 +127,7 @@ var MapDataLoader = {
           marker.setIcon(markersLayer.getMarkerDefaultIcon())
           markers.push(marker);
         });
+
         markersLayer.addLayers(markers);
         relationFeatureLayer.addLayer(markersLayer);
 
