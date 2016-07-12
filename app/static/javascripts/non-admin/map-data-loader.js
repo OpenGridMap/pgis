@@ -104,55 +104,18 @@ var MapDataLoader = {
       pgisMap.overlayLayers.relations.layer.clearLayers();
 
       _.each(relations, function(relation){
-        var relationFeatureLayer = L.featureGroup();
-        relationFeatureLayer.osm_properties = relation.properties;
-
-        _.each(relation.powerlines, function(line){
-          var polyline = L.polyline(line.latlngs);
-          polyline.data = polyline.properties;
-          polyline.setStyle({ color: 'red' });
-
-          relationFeatureLayer.addLayer(polyline);
-        });
-
-        var markersLayer =  new L.pgisRelationMarkerClusterGroup({
-          relationId: relation.id,
-          relationLayer: relationFeatureLayer
-        });
-
-        var markers = []
-        _.each(relation.points, function(point){
-          var marker = new L.Marker(point.latlng)
-          marker.data = point.properties;
-          marker.setIcon(markersLayer.getMarkerDefaultIcon())
-          markers.push(marker);
-        });
-
-        markersLayer.addLayers(markers);
-        relationFeatureLayer.addLayer(markersLayer);
-
-        relationFeatureLayer.on("mouseover", function(e) {
-          markersLayer.addHighlightStyle();
-          e.target.setStyle({ color: "blue" });
-        });
-
-        relationFeatureLayer.on("mouseout", function(e) {
-          markersLayer.removeHighlightStyle();
-          e.target.setStyle({ color: "red" });
-        });
-
+        var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
+        pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
 
         relationFeatureLayer.on('click', function(e) {
           pgisMap.sidebar.setContent(
-            MapHelpers.getRelationSidebarContent(e.target.osm_properties)
+            MapHelpers.getRelationSidebarContent(e.target.relation.properties)
           );
 
           if (!pgisMap.sidebar.isVisible()) {
             pgisMap.sidebar.show()
           }
-        })
-
-        pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
+        });
       });
     });
   }
