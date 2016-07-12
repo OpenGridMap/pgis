@@ -115,7 +115,7 @@ var MapDataLoader = {
           relationFeatureLayer.addLayer(polyline);
         });
 
-        var markersLayer =  new L.pgisMarkerClusterGroup({
+        var markersLayer =  new L.pgisRelationMarkerClusterGroup({
           relationId: relation.id,
           relationLayer: relationFeatureLayer
         });

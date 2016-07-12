@@ -5,7 +5,7 @@
 
 // Author: Sri Vishnu Totakura <t.srivishnu@gmail.com>
 
-L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
+L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
 
   options: {
     // TODO: Override initializer and raise exception if the options are not
@@ -101,11 +101,8 @@ L.PgisMarkerClusterGroup = L.MarkerClusterGroup.extend({
    _relationClassSelector: function() {
      return "." + this._relationClass();
    }
-
 });
 
-L.pgisMarkerClusterGroup = function(options) {
-  return new L.PgisMarkerClusterGroup(options);
+L.pgisRelationMarkerClusterGroup = function(options) {
+  return new L.PgisRelationMarkerClusterGroup(options);
 };
-
-
