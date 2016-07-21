@@ -6,9 +6,9 @@ import sys
 '''
 WARNING: This could be a very memory intense script. The variables can grow
 huge depending on the size of imports. You are adviced to import in smaller
-sizes. We advice you run this with on the +.pbf+ files that have only 
-relations related data. Use the command line tool osmosis 
-(http://wiki.openstreetmap.org/wiki/Osmosis) to filter out the file to 
+sizes. We advice you run this with on the +.pbf+ files that have only
+relations related data. Use the command line tool osmosis
+(http://wiki.openstreetmap.org/wiki/Osmosis) to filter out the file to
 contain only power relations and run this script on that
 result file. Below is an example script on how to run osmosis.
 
@@ -169,7 +169,18 @@ class PowerlineImporter(object):
                 ])
                 powerline_record = cur.fetchone()
                 if powerline_record is not None:
+                    # Powerline already exists in the database. Take its id and
+                    #   update the join table.
                     powerline_record_id = powerline_record[0]
+
+                    join_table_update_query = "UPDATE power_relation_members "\
+                        "SET member_id = %s "\
+                        "WHERE id = %s"
+
+                    cur.execute(join_table_update_query, [
+                        powerline_record_id,
+                        join_table_row_id
+                    ])
                 else:
                     query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
                     query_values = [
