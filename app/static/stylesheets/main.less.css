@@ -28,6 +28,17 @@
   width: 100%;
 }
 
+.sidebar-tags-table {
+  max-height: 300px;
+  overflow: auto;
+
+  table {
+    td, th {
+      padding: 2px;
+    }
+  }
+}
+
 .default.marker-cluster {
   background-color: red;
 }
