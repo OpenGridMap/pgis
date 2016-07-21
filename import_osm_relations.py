@@ -120,7 +120,7 @@ class PowerlineImporter(object):
         for osmid, tags, refs in ways:
             print ".",
 
-            # check if it is a member of a relation:
+            # check if it is a member of atleast one relation:
             is_member_query = "SELECT id FROM power_relation_members "\
                 "WHERE member_osm_id = %s "\
                     "AND member_type = %s "\
@@ -175,11 +175,11 @@ class PowerlineImporter(object):
 
                     join_table_update_query = "UPDATE power_relation_members "\
                         "SET member_id = %s "\
-                        "WHERE id = %s"
+                        "WHERE member_osm_id = %s"
 
                     cur.execute(join_table_update_query, [
                         powerline_record_id,
-                        join_table_row_id
+                        str(osmid)
                     ])
                 else:
                     query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
@@ -192,8 +192,8 @@ class PowerlineImporter(object):
                     # TODO: Don't use +currval+
                     join_table_update_query = "UPDATE power_relation_members "\
                         "SET member_id = currval('powerline_id_seq') "\
-                        "WHERE id = %s"
-                    cur.execute(join_table_update_query, [join_table_row_id])
+                        "WHERE member_osm_id = %s"
+                    cur.execute(join_table_update_query, [str(osmid)])
             else:
                 print("\nHaven't found relation for powerline - osmid %s" % osmid)
 
@@ -282,8 +282,8 @@ cur.execute(nodes_osmids_query)
 rows = cur.fetchall()
 for row in rows:
     print ".",
-    node_osmid = row[1]
     relation_id = row[0]
+    node_osmid = row[1]
 
     query = """ WITH point_record AS (
                     INSERT INTO point (geom, properties, revised, approved)
@@ -296,9 +296,9 @@ for row in rows:
                 SET member_id = (
                     SELECT id FROM point_record
                 )
-                WHERE id = %s """
+                WHERE member_osm_id = %s """
 
-    cur.execute(query, [str(node_osmid), relation_id])
+    cur.execute(query, [str(node_osmid), str(node_osmid)])
 
 conn.commit()
 
