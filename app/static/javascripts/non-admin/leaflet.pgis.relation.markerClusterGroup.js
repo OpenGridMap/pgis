@@ -71,13 +71,23 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
 
    getMarkerDefaultIcon: function() {
      return new L.Icon({
-       iconUrl: '/static/images/marker-icon-red.png'
+       iconUrl     : '/static/images/marker-icon-red.png',
+       shadowUrl   : '/static/images/marker-shadow.png',
+       iconSize    : [25, 41],
+       iconAnchor  : [12, 41],
+       popupAnchor : [1, -34],
+       shadowSize  : [41, 41]
      });
    },
 
    getMarkerHighlightIcon: function() {
      return new L.Icon({
-       iconUrl: '/static/images/marker-icon.png'
+       iconUrl     : '/static/images/marker-icon.png',
+       shadowUrl   : '/static/images/marker-shadow.png',
+       iconSize    : [25, 41],
+       iconAnchor  : [12, 41],
+       popupAnchor : [1, -34],
+       shadowSize  : [41, 41]
      });
    },
 

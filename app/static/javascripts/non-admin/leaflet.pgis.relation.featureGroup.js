@@ -40,7 +40,7 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
 
     // Create markers for each point and push them to MarkerClusterGroup
     _.each(this.relation.points, function(point){
-      var marker = new L.Marker(point.latlng)
+      var marker = new L.Marker(point.latlng);
       marker.data = point.properties;
       marker.setIcon(_this._markersClusterGroup.getMarkerDefaultIcon())
       markers.push(marker);
