@@ -113,7 +113,7 @@ var MapDataLoader = {
           );
 
           if (!pgisMap.sidebar.isVisible()) {
-            pgisMap.sidebar.show()
+            pgisMap.sidebar.show();
           }
         });
       });

@@ -12,6 +12,7 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
     //  set during initialization.
     relationId: undefined,
     relationLayer: undefined,
+    zoomToBoundsOnClick: false,
     // Add these css classes to the Cluster marker icon when
     //  clustered. These classes won't appear when Markers are shown.
     defaultIconCssClasses: ['default'],
@@ -84,12 +85,17 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
      var _this = this;
 
      this.on("clustermouseover", function(e) {
-       _this.options.relationLayer.fire('mouseover', e)
+       _this.options.relationLayer.fire('mouseover', e);
      });
 
      this.on("clustermouseout", function(e) {
-       _this.options.relationLayer.fire('mouseout', e)
-     })
+       _this.options.relationLayer.fire('mouseout', e);
+     });
+
+     // // send the click event to relation
+     this.on("clusterclick", function(e) {
+       _this.options.relationLayer.fire("click", e);
+     });
 
      L.MarkerClusterGroup.prototype._bindEvents.call(this);
    },
