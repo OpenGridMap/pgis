@@ -26,7 +26,6 @@ $(document).ready(function(){
         + '&zoom=' + pgisMap.map.getZoom();
     }
   };
-
   pgisMap.addLinkButton(newPointLinkProperties);
 
   var rankingTableLinkProperties = {
@@ -36,7 +35,6 @@ $(document).ready(function(){
       window.location.href = '/ranking';
     }
   };
-
   pgisMap.addLinkButton(rankingTableLinkProperties);
 
   var userProfileLinkProperties = {
@@ -46,19 +44,16 @@ $(document).ready(function(){
       window.location.href = '/userprofile';
     }
   };
-
   pgisMap.addLinkButton(userProfileLinkProperties);
 
   pgisMap.addMarkerLayer({
     name: 'markers',
     layer: new L.MarkerClusterGroup()
   });
-
   pgisMap.addMarkerLayer({
     name: 'clusterGroup',
     layer: new L.LayerGroup()
   });
-
   pgisMap.addMarkerLayer({
     name: 'powerlinesLayerGroup',
     layer: new L.LayerGroup()
@@ -86,10 +81,25 @@ $(document).ready(function(){
     ref: 'relations',
     layer: new L.LayerGroup()
   });
+  pgisMap.addLinkButton({
+    ref: 'exportRelations',
+    text: 'Export Relations in Bound',
+    onclick: function() {
+      window.open(
+        '/relations/export?bounds=' + pgisMap.map.getBounds().toBBoxString()
+          + '&zoom=' + _pgisMap.map.getZoom(),
+        '_blank'
+      )
+    }
+  });
+  pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
 
   window.pgisMap = pgisMap;
 
   pgisMap.onOverlayAdd  = function(layer) {
+    if(layer.name == 'Relations') {
+      _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelations);
+    }
     _.each(_pgisMap.markerLayers, function(layer){
       layer.clearLayers();
     });
@@ -98,6 +108,9 @@ $(document).ready(function(){
   };
 
   pgisMap.onOverlayRemove  = function(layer) {
+    if(layer.name == 'Relations') {
+      _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelations);
+    }
     _.each(_pgisMap.markerLayers, function(layer){
       layer.clearLayers();
     });

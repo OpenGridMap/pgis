@@ -155,6 +155,14 @@ function PgisMap() {
     }
   };
 
+  this.hideLinkButton = function(linkButton) {
+    linkButton.removeFrom(this.map);
+  };
+
+  this.showLinkButton = function(linkButton) {
+    linkButton.addTo(this.map);
+  };
+
   this.setMoveEndListener = function() {
     var _this = this;
     this.map.on('moveend', function() {

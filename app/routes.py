@@ -146,6 +146,10 @@ def relations():
     controller = app.controllers.relations_controller.RelationsController()
     return controller.index()
 
+@GisApp.route('/relations/export')
+def relations_export():
+    controller = app.controllers.relations_controller.RelationsController()
+    return controller.export()
 
 @GisApp.route('/admin/login')
 def admin_login():

@@ -16,3 +16,13 @@ class RelationsController:
         relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
 
         return Response(json.dumps(relations), mimetype='application/json')
+
+    def export(self):
+        if request.args.get('bounds') is None:
+            return Response(json.dumps([]), mimetype='application/json')
+
+        bounds_parts = request.args.get("bounds").split(',')
+
+        relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
+
+        return Response(json.dumps(relations), mimetype='application/json')
