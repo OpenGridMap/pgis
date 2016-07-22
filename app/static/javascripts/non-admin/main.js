@@ -26,8 +26,6 @@ $(document).ready(function(){
         + '&zoom=' + pgisMap.map.getZoom();
     }
   };
-
-  // var newPointLink = L.control.link_button(newPointLinkProperties).addTo(map);
   pgisMap.addLinkButton(newPointLinkProperties);
 
   var rankingTableLinkProperties = {
@@ -37,7 +35,6 @@ $(document).ready(function(){
       window.location.href = '/ranking';
     }
   };
-
   pgisMap.addLinkButton(rankingTableLinkProperties);
 
   var userProfileLinkProperties = {
@@ -47,32 +44,77 @@ $(document).ready(function(){
       window.location.href = '/userprofile';
     }
   };
-
   pgisMap.addLinkButton(userProfileLinkProperties);
 
   pgisMap.addMarkerLayer({
     name: 'markers',
     layer: new L.MarkerClusterGroup()
   });
-
   pgisMap.addMarkerLayer({
     name: 'clusterGroup',
     layer: new L.LayerGroup()
   });
-
   pgisMap.addMarkerLayer({
     name: 'powerlinesLayerGroup',
     layer: new L.LayerGroup()
   });
 
-  pgisMap.dataLoader = function() {
-    MapDataLoader.loadDataForMapFragment(
-      this,
-      this.markerLayers.markers,
-      this.markerLayers.clusterGroup,
-      this.markerLayers.powerlinesLayerGroup
-    );
+  var _pgisMap = pgisMap;
+
+  pgisMap.baseMapDataLoader = function() {
+    if (_.contains(_pgisMap.selectedOverlayLayers, "Relations")) {
+      MapDataLoader.fetchAndPlotRelations(_pgisMap);
+    } else {
+      MapDataLoader.loadBaseMapDataForMapFragment(
+        this,
+        this.markerLayers.markers,
+        this.markerLayers.clusterGroup,
+        this.markerLayers.powerlinesLayerGroup
+      );
+    }
   }
 
-  pgisMap.dataLoader();
+  pgisMap.baseMapDataLoader();
+
+  pgisMap.addOverlayLayer({
+    name: "Relations",
+    ref: 'relations',
+    layer: new L.LayerGroup()
+  });
+  pgisMap.addLinkButton({
+    ref: 'exportRelations',
+    text: 'Export Relations in Bound',
+    onclick: function() {
+      window.open(
+        '/relations/export?bounds=' + pgisMap.map.getBounds().toBBoxString()
+          + '&zoom=' + _pgisMap.map.getZoom(),
+        '_blank'
+      )
+    }
+  });
+  pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
+
+  window.pgisMap = pgisMap;
+
+  pgisMap.onOverlayAdd  = function(layer) {
+    if(layer.name == 'Relations') {
+      _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelations);
+    }
+    _.each(_pgisMap.markerLayers, function(layer){
+      layer.clearLayers();
+    });
+
+    this.baseMapDataLoader();
+  };
+
+  pgisMap.onOverlayRemove  = function(layer) {
+    if(layer.name == 'Relations') {
+      _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelations);
+    }
+    _.each(_pgisMap.markerLayers, function(layer){
+      layer.clearLayers();
+    });
+
+    this.baseMapDataLoader();
+  };
 });

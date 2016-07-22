@@ -1,5 +1,8 @@
+// Will make more sense to rename this as MapDataHandler.
+//  It fetches the data and plots it on the map.
+
 var MapDataLoader = {
-  loadDataForMapFragment: function(pgisMap, markers, clusterGroup, powerlinesLayerGroup){
+  loadBaseMapDataForMapFragment: function(pgisMap, markers, clusterGroup, powerlinesLayerGroup){
     var map = pgisMap.map;
     var unverifiedIcon = L.icon({
       iconUrl: 'static/images/marker-unverified-icon-2x.png',
@@ -60,7 +63,7 @@ var MapDataLoader = {
 
           for(var i = 0; i < data.length; i++){
             var marker = new L.Marker(data[i]['latlng'], {
-              icon: createClusterIcon(data[i])
+              icon: MiscHelpers.createClusterIcon(data[i])
             });
             marker.panelOpen = false;
             clusterGroup.addLayer(marker);
@@ -91,6 +94,29 @@ var MapDataLoader = {
         map.fireEvent("dataload");
       }
     });
-  }
+  },
 
+  fetchAndPlotRelations: function(pgisMap) {
+    ApiService.fetchRelationsData(pgisMap, function(data){
+
+      relations = data;
+
+      pgisMap.overlayLayers.relations.layer.clearLayers();
+
+      _.each(relations, function(relation){
+        var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
+        pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
+
+        relationFeatureLayer.on('click', function(e) {
+          pgisMap.sidebar.setContent(
+            MapHelpers.getRelationSidebarContent(e.target.relation.properties)
+          );
+
+          if (!pgisMap.sidebar.isVisible()) {
+            pgisMap.sidebar.show();
+          }
+        });
+      });
+    });
+  }
 }

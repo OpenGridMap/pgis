@@ -3,17 +3,20 @@ function PgisMap() {
   this.lat               = MiscHelpers.getQueryString("lat");
   this.lng               = MiscHelpers.getQueryString("long");
   this.boundsQueryString = MiscHelpers.getQueryString("bounds");
-  this.zoom              = MiscHelpers.getQueryString("zoom") || 13;
+  this.zoom              = MiscHelpers.getQueryString("zoom") || 15;
   this.bounds            = undefined;
   this.center            = undefined;
   this.map               = undefined; // Leaflet's map object
-  this.baseLayersControl = undefined;
+  this.layerControl      = undefined;
   this.baseLayer         = undefined;
   this.sidebar           = undefined;
   this.linkButtons       = {}
   // Add any kind of marker layers to this.markerLayers
   //   e.g: L.MarkerClusterGroup(), L.LayerGroup() etc.
   this.markerLayers      = {};
+  this.overlayLayers     = {};
+
+  this.selectedOverlayLayers = []; // Dynamically changed. Don't set it yourself.
 
   this.createMap = function(baseLayer) {
     L.Icon.Default.imagePath = APP_IMAGES_URL;
@@ -22,7 +25,9 @@ function PgisMap() {
     if(this.lat && this.lng){
       this.center = [this.lat, this.lng];
     } else {
-      this.center = [48.1333, 11.5667];
+      // this.center = [48.1333, 11.5667];
+      this.center = [50.151097188604574, 12.053203582763672];
+      // this.center = [48.0423314,10.4929626]
     }
 
     this.map = L.map('map', {
@@ -43,6 +48,7 @@ function PgisMap() {
 
     this.addDefaultControlsToMap();
     this.setMoveEndListener();
+    this.bindOverlayLayerAddRemoveEvent();
   };
 
   this.addDefaultControlsToMap = function() {
@@ -60,9 +66,40 @@ function PgisMap() {
   };
 
   this.addBaseMaps = function(baseMaps) {
-    this.baseLayersControl = L.control.layers(baseMaps);
-    this.map.addControl(this.baseLayersControl);
+    this.layerControl = L.control.layers(baseMaps);
+    this.map.addControl(this.layerControl);
   };
+
+  this.addOverlayLayer = function(toBeAddedOverlayLayer) {
+    // Pass layer in format:
+    // {
+    //    name: 'Relations',
+    //    layer: new L.LayerGroup()
+    //    ref: 'relations'
+    // }
+    //
+    // This gets added to +this.overlayLayers so that it can be
+    //  access with the +ref+ attribute. E.g., this.overlayLayers.relations
+
+    overlayLayer = {};
+    overlayLayer[toBeAddedOverlayLayer.ref] = {
+      name: toBeAddedOverlayLayer.name,
+      layer: toBeAddedOverlayLayer.layer
+    };
+
+    if(_.has(this.overlayLayers, toBeAddedOverlayLayer.ref)) {
+      throw("Overlay Layer with ref: "
+              + toBeAddedOverlayLayer.ref
+              + " already exits");
+    } else {
+      _.extend(this.overlayLayers, overlayLayer);
+
+      this.layerControl.addOverlay(
+        toBeAddedOverlayLayer.layer,
+        toBeAddedOverlayLayer.name
+      )
+    }
+  }
 
   this.addMarkerLayer = function(toBeAddedMarkerLayer) {
     /*
@@ -118,6 +155,14 @@ function PgisMap() {
     }
   };
 
+  this.hideLinkButton = function(linkButton) {
+    linkButton.removeFrom(this.map);
+  };
+
+  this.showLinkButton = function(linkButton) {
+    linkButton.addTo(this.map);
+  };
+
   this.setMoveEndListener = function() {
     var _this = this;
     this.map.on('moveend', function() {
@@ -125,22 +170,44 @@ function PgisMap() {
     });
   };
 
-  this.dataLoader = function() {
-    // Override this function to load the data.
-    throw("PgisMap#dataLoader: This function needs to be overriden");
+  this.baseMapDataLoader = function() {
+    // Override this function to load the data on the base default map.
+    throw("PgisMap#baseMapDataLoader: This function needs to be overriden");
   };
 
   this.callDataLoader = function() {
     // DO NOT OVERRIDE THIS FUNCTION
 
     // This function gets called from _.debounce
-    // We pass this function to _.debounce instead of +this.dataLoader+
+    // We pass this function to _.debounce instead of +this.baseMapDataLoader+
     //   because _.debounce call wouldn't pick up overrides on the
     //   function that is passed to it.
-    //   So, if we keep this function as an mediating function the overridden
-    //   +dataLoader+ gets called.
-    this.dataLoader();
-  }
+    //   So, if we keep this function as a mediating function, the overridden
+    //   +baseMapDataLoader+ gets called.
+    this.baseMapDataLoader();
+  };
+
+  this.onOverlayAdd = function(layer) {  } // override these as needed
+  this.onOverlayRemove = function(layer) {  } //override these as needed.
+
+  this.bindOverlayLayerAddRemoveEvent = function() {
+    var _this = this;
+
+    this.map.addEventListener("overlayadd", function(layer) {
+      _this.selectedOverlayLayers.push(layer.name);
+      _this.onOverlayAdd(layer);
+    });
+
+    this.map.addEventListener("overlayremove", function(layer) {
+      // First remove the overrlay layer from _this.selectedOverlayLayers
+      selectedLayerIndex = index = _this.selectedOverlayLayers.indexOf(layer.name);
+      if (selectedLayerIndex > -1) {
+        _this.selectedOverlayLayers.splice(selectedLayerIndex, 1);
+      }
+
+      _this.onOverlayRemove(layer);
+    });
+  };
 
   this.debouncedDataLoad = _.debounce(this.callDataLoader, 1000);
 };

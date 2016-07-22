@@ -55,4 +55,26 @@
         </div>
 </script>
 {% endraw %}
+{% raw %}
+<script id="relation-sidebar-template" type="text/x-handlebars-template">
+        <div class="sidebar"><h1>Relation: OSM-ID-{{ osmid }}</h1></div>
+        <hr/>
+        <div class="sidebar-tags-table">
+          <strong>Tags:</strong>
+          <table>
+            <tr>
+              <th>Tag</th>
+              <th>Value</th>
+            </tr>
+            {{#each tags}}
+            <tr>
+              <td>{{@key}}:</td>
+              <td>{{this}}</td>
+            </tr>
+            {{/each}}
+          </table>
+        </div>
+        <hr/>
+</script>
+{% endraw %}
 {% endblock %}

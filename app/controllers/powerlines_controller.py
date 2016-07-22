@@ -2,6 +2,7 @@ from flask import render_template, flash, redirect, abort, session, url_for, req
 from geoalchemy2 import Geometry, func
 from geoalchemy2.functions import GenericFunction
 from app.models.powerline import Powerline
+from flask_sqlalchemy import get_debug_queries
 
 class PowerlinesController:
     def index(self):
@@ -19,9 +20,38 @@ class PowerlinesController:
                 min_length = 15000
             else:
                 min_length = 10000
-            powerlines = Powerline.query.filter(func.ST_Intersects(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Powerline.geom)).filter(func.ST_Length(func.ST_GeographyFromText(func.ST_AsText(Powerline.geom))) > min_length * (10 - zoom)).all()
+
+            powerlines = Powerline.query.filter(
+                func.ST_Intersects(
+                    func.ST_MakeEnvelope(
+                        bounds_parts[1],
+                        bounds_parts[0],
+                        bounds_parts[3],
+                        bounds_parts[2]
+                    ),
+                    Powerline.geom
+                )
+            ).filter(
+                func.ST_Length(
+                    func.ST_GeographyFromText(
+                        func.ST_AsText(Powerline.geom)
+                    )
+                ) > min_length * (10 - zoom)
+            ).all()
+
         else:
-            powerlines = Powerline.query.filter(func.ST_Intersects(func.ST_MakeEnvelope(bounds_parts[1], bounds_parts[0], bounds_parts[3], bounds_parts[2]), Powerline.geom)).all()
+            powerlines = Powerline.query.filter(
+                func.ST_Intersects(
+                    func.ST_MakeEnvelope(
+                        bounds_parts[1],
+                        bounds_parts[0],
+                        bounds_parts[3],
+                        bounds_parts[2]
+                    ),
+                    Powerline.geom
+                )
+            ).all()
 
         powerlines = list(map(lambda powerline: powerline.serialize(), powerlines))
+
         return Response(json.dumps(powerlines),  mimetype='application/json')
