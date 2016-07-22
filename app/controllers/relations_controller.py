@@ -24,5 +24,9 @@ class RelationsController:
         bounds_parts = request.args.get("bounds").split(',')
 
         relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
+        headers = {
+            'Content-Type': 'application/json',
+            'Content-Disposition': 'attachment; filename=relations.json'
+        }
 
-        return Response(json.dumps(relations), mimetype='application/json')
+        return Response(json.dumps(relations), headers=headers)
