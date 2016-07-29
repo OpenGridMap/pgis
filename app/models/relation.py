@@ -4,64 +4,12 @@ from sqlalchemy.dialects.postgresql import JSON
 from geoalchemy2.shape import to_shape
 from app.models.powerline import Powerline
 from shapely import wkb
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring
-import json
 
 
 class Relation(db.Model):
     __tablename__ = 'power_relations'
     id            = db.Column(db.Integer, primary_key = True)
     properties    = db.Column(JSON)
-
-    # TODO: Presentation layer logic. Should be moved to a presenter class.
-    def as_xml_element(relations):
-        relations_elem = Element('relations')
-
-        for relation_id, relation in relations.items():
-            relation_elem = SubElement(relations_elem, 'relation', {
-                'id': str(relation['id']),
-                'osmid': str(relation['properties']['osmid']),
-            })
-            for tag, value in relation['properties']['tags'].items():
-                tag_elem = SubElement(relation_elem, 'tag', {
-                    'key': tag,
-                    'value': value
-                })
-
-            points_elem = SubElement(relation_elem, 'points')
-            for point in relation['points']:
-                point_elem = SubElement(points_elem, 'point', {
-                    'lat': str(point['latlng'][0]),
-                    'lng': str(point['latlng'][1]),
-                    'osmid': str(point['properties']['osmid']),
-                    'id': str(point['id'])
-                })
-
-                for tag in point['properties']['tags']:
-                    tag_elem = SubElement(point_elem, 'tag', {
-                        'key': tag,
-                        'value': point['properties']['tags'][tag]
-                    })
-
-            powerlines_elem = SubElement(relation_elem, 'powerlines')
-            for powerline in relation['powerlines']:
-                powerline_elem = SubElement(powerlines_elem, 'powerline', {
-                    'id': str(powerline['id'])
-                })
-
-                for latlng in powerline['latlngs']:
-                    latlng_elem = SubElement(powerline_elem, 'point', {
-                        'lat': str(latlng[0]),
-                        'lng': str(latlng[1])
-                    })
-
-                for tag in powerline['properties']['tags']:
-                    tag_elem = SubElement(powerline_elem, 'tag', {
-                        'key': tag,
-                        'value': powerline['properties']['tags'][tag]
-                    })
-
-        return tostring(relations_elem)
 
     # Get the relations with their points and ways that fall in the
     # given bounds
