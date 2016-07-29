@@ -25,8 +25,8 @@ class RelationsController:
 
         relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
         headers = {
-            'Content-Type': 'application/json',
-            'Content-Disposition': 'attachment; filename=relations.json'
+            'Content-Type': 'application/xml',
+            'Content-Disposition': 'attachment; filename=relations.xml'
         }
 
-        return Response(json.dumps(relations), headers=headers)
+        return Response(Relation.as_xml_element(relations), headers=headers)
