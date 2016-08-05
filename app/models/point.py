@@ -38,6 +38,20 @@ class Point(db.Model):
         db.session.commit()
         GisApp.osmApiClient.ChangesetClose()
 
+    def updateOnOSM(self):
+        GisApp.osmApiClient.ChangesetCreate()
+        # Get the Node's current OSM data so that we have the version number to
+        #   perform the update request.
+        currentOsmNode = GisApp.osmApiClient.NodeGet(self.properties['osmid'])
+        updatedOsmNode = GisApp.osmApiClient.NodeUpdate({
+            "id": self.properties['osmid'],
+            "lon": self.longitude,
+            "lat": self.latitude,
+            "version": currentOsmNode['version'],
+            "tag": self.properties["tags"] if ("tags" in self.properties.keys()) else {}
+        })
+        GisApp.osmApiClient.ChangesetClose()
+
     @property
     def latitude(self):
         return self.shape().x

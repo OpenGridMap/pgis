@@ -47,6 +47,7 @@ class PointsController:
             form.populate_obj(point)
             db.session.add(point)
             db.session.commit()
+            point.updateOnOSM()
             if "redirect_back" in session:
                 del session["redirect_back"]
                 return redirect(url_for('index', lat=point.shape().x, long=point.shape().y,  zoom=18))
