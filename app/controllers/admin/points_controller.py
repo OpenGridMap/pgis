@@ -4,6 +4,7 @@ import app.helpers.point_form
 from app.models.point import Point
 from app.models.submission import Submission
 from app.models.picture import Picture
+from osmapi import OsmApiError
 
 class PointsController:
     def index(self):
@@ -24,7 +25,11 @@ class PointsController:
             form.populate_obj(new_point)
             db.session.add(new_point)
             db.session.commit()
-            new_point.postToOSM()
+            try:
+                new_point.postToOSM()
+            except OsmApiError as e:
+                print("Exception while trying OSM Api call")
+                print(e)
             if "redirect_back" in session:
                 del session["redirect_back"]
                 return redirect(url_for('index', lat=new_point.shape().x, long=new_point.shape().y,  zoom=18))
@@ -47,7 +52,12 @@ class PointsController:
             form.populate_obj(point)
             db.session.add(point)
             db.session.commit()
-            point.updateOnOSM()
+            try:
+                point.updateOnOSM()
+            except OsmApiError as e:
+                print("Exception while trying OSM Api call")
+                print(e)
+
             if "redirect_back" in session:
                 del session["redirect_back"]
                 return redirect(url_for('index', lat=point.shape().x, long=point.shape().y,  zoom=18))
@@ -58,7 +68,11 @@ class PointsController:
 
     def delete(self, id):
         point = Point.query.get(id)
-        point.deleteOnOSM()
+        try:
+            point.deleteOnOSM()
+        except OsmApiError as e:
+            print("Exception while trying OSM Api call")
+            print(e)
         submission = Submission.query.get(point.submission_id)
         db.session.query(Picture).filter(Picture.point_id == point.id).delete()
         db.session.delete(point)
