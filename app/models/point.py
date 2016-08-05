@@ -52,6 +52,19 @@ class Point(db.Model):
         })
         GisApp.osmApiClient.ChangesetClose()
 
+    def deleteOnOSM(self):
+        GisApp.osmApiClient.ChangesetCreate()
+        # Get the Node's current OSM data so that we have the version number to
+        #   perform the update request.
+        currentOsmNode = GisApp.osmApiClient.NodeGet(self.properties['osmid'])
+        GisApp.osmApiClient.NodeDelete({
+            "id": self.properties['osmid'],
+            "lon": self.longitude,
+            "lat": self.latitude,
+            "version": currentOsmNode['version'],
+        })
+        GisApp.osmApiClient.ChangesetClose()
+
     @property
     def latitude(self):
         return self.shape().x

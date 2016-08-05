@@ -58,6 +58,7 @@ class PointsController:
 
     def delete(self, id):
         point = Point.query.get(id)
+        point.deleteOnOSM()
         submission = Submission.query.get(point.submission_id)
         db.session.query(Picture).filter(Picture.point_id == point.id).delete()
         db.session.delete(point)
