@@ -83,6 +83,7 @@ numexpr==2.3.1
 numpy==1.9.0
 oauth2client==1.4.6
 oauthlib==0.7.2
+osmapi==0.6.1
 openpyxl==1.8.5
 pandas==0.14.1
 patsy==0.3.0
