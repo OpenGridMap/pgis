@@ -1,4 +1,5 @@
 from app import db
+from app import GisApp
 from geoalchemy2 import Geometry
 from geoalchemy2.shape import to_shape
 from sqlalchemy.dialects.postgresql import JSON
@@ -22,6 +23,20 @@ class Point(db.Model):
 
     def shape(self):
         return to_shape(self.geom)
+
+    def postToOSM(self):
+        GisApp.osmApiClient.ChangesetCreate()
+        createdNode = GisApp.osmApiClient.NodeCreate({
+            "lon": self.longitude,
+            "lat": self.latitude,
+            "tag": self.properties["tags"] if ("tags" in self.properties.keys()) else {}
+        })
+        self.properties['osmid'] = createdNode['id'] # osmid after creation
+        db.session.query(Point).filter(Point.id == self.id).update({
+            'properties': self.properties
+        })
+        db.session.commit()
+        GisApp.osmApiClient.ChangesetClose()
 
     @property
     def latitude(self):

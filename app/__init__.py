@@ -5,6 +5,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from app.js_assets import non_admin_js_files, admin_js_files
 from app.css_assets import non_admin_css_files, admin_css_files
+import osmapi
 
 # for using a current jQuery version from cdn instead of jQuery 1
 from flask_bootstrap import WebCDN
@@ -47,3 +48,6 @@ from app import routes
 
 # Load Jinja2 template filters
 from app.helpers import template_filters
+
+# configure OSM Api
+GisApp.osmApiClient = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username="vishnuTUM", password="")

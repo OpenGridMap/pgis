@@ -7,41 +7,42 @@ from app.models.picture import Picture
 
 class PointsController:
     def index(self):
-        page = int(request.args.get('page') or 1) 
+        page = int(request.args.get('page') or 1)
         points = Point.query.filter(Point.approved).paginate(page, 20)
         return render_template('admin/points/index.html', points=points)
 
     def new(self):
-        form = app.helpers.point_form.PointForm() 
+        form = app.helpers.point_form.PointForm()
         if request.args.get("redirect_back"):
             session["redirect_back"] = True
         return render_template('admin/points/new.html', form=form)
 
     def create(self):
-        form = app.helpers.point_form.PointForm() 
+        form = app.helpers.point_form.PointForm()
         if form.validate_on_submit():
             new_point = Point()
             form.populate_obj(new_point)
             db.session.add(new_point)
             db.session.commit()
+            new_point.postToOSM()
             if "redirect_back" in session:
                 del session["redirect_back"]
                 return redirect(url_for('index', lat=new_point.shape().x, long=new_point.shape().y,  zoom=18))
             else:
                 return redirect(url_for('admin_points'))
         return 'Error'
-    
+
     def edit(self, id):
         point = Point.query.get(id)
-        form = app.helpers.point_form.PointForm(None, point) 
+        form = app.helpers.point_form.PointForm(None, point)
         form.properties.data = json.dumps(form.properties.data) if form.properties.data else ""
         if request.args.get("redirect_back"):
             session["redirect_back"] = True
         return render_template('admin/points/edit.html', form=form, point=point)
-    
+
     def update(self, id):
         point = Point.query.get(id)
-        form = app.helpers.point_form.PointForm(request.form, obj=point) 
+        form = app.helpers.point_form.PointForm(request.form, obj=point)
         if form.validate_on_submit():
             form.populate_obj(point)
             db.session.add(point)
