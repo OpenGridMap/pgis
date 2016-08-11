@@ -19,12 +19,18 @@ class RelationsController:
         return Response(json.dumps(relations), mimetype='application/json')
 
     def export(self):
-        if request.args.get('bounds') is None:
+        if (request.args.get('bounds') is None and
+                request.args.get('ids') is None):
             return Response(json.dumps([]), mimetype='application/json')
 
-        bounds_parts = request.args.get("bounds").split(',')
+        if request.args.get('bounds') is not None:
+            bounds_parts = request.args.get("bounds").split(',')
+            relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
 
-        relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
+        if request.args.get('ids') is not None:
+            relations_ids = request.args.get("ids").split(',')
+            relations = Relation.relations_for_export(relations_ids)
+
         headers = {
             'Content-Type': 'application/xml',
             'Content-Disposition': 'attachment; filename=relations.xml'
