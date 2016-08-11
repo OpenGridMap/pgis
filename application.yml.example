@@ -1,0 +1,17 @@
+development:
+  osmapi:
+    domain: 'api06.dev.openstreetmap.org'
+    usernmae: vishnuTUM
+    password:
+
+test:
+  osmapi:
+    domain: 'api06.dev.openstreetmap.org'
+    usernmae: vishnuTUM
+    password:
+
+production:
+  osmapi:
+    domain: 'api06.dev.openstreetmap.org'
+    usernmae: vishnuTUM
+    password:

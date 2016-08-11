@@ -7,3 +7,4 @@ __init__.pyc
 *.swo
 tags
 database.yml
+application.yml
