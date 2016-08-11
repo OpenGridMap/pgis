@@ -3,14 +3,21 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 import yaml
 
-# read database configuraion from database.yml
-if os.path.isfile('database.yml'):
-    with open('database.yml', 'r') as f:
-        db_config = yaml.load(f)
-else:
-    raise Exception("Database configuration not found. "\
-                    "Copy +database.yml.example+ as +database.yml+ "\
-                    "and update the configuration to match your system's.")
+def read_yaml_configuration_for(config_type):
+    file_name = "{0}.yml".format(config_type) # example: database.yml
+    if os.path.isfile(file_name):
+        with open(file_name, 'r') as f:
+            config_from_file = yaml.load(f)
+    else:
+        raise Exception("{0} configuration not found. "\
+                        "Copy +{0}.yml.example+ as +{0}.yml+ "\
+                        "and update the configuration to match "\
+                        "your system's.".format(config_type))
+    return config_from_file
+
+
+db_config = read_yaml_configuration_for('database')
+app_config = read_yaml_configuration_for('application')
 
 class Config(object):
     DEBUG = False
@@ -27,6 +34,7 @@ database_uri = "postgresql://{0}:{1}@{2}:{3}/{4}"
 
 class Development(Config):
     DEBUG = True
+    OSMAPI_CONFIG = app_config['development']['osmapi']
     SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['development']['user'],
                                                   db_config['development']['password'],
                                                   db_config['development']['host'],
@@ -34,6 +42,7 @@ class Development(Config):
                                                   db_config['development']['database'])
 
 class Production(Config):
+    OSMAPI_CONFIG = app_config['production']['osmapi']
     SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['production']['user'],
                                                   db_config['production']['password'],
                                                   db_config['production']['host'],
@@ -42,6 +51,7 @@ class Production(Config):
 
 class Test(Config):
     DEBUG = True
+    OSMAPI_CONFIG = app_config['test']['osmapi']
     SQLALCHEMY_DATABASE_URI = database_uri.format(db_config['test']['user'],
                                                   db_config['test']['password'],
                                                   db_config['test']['host'],
