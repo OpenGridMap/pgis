@@ -117,4 +117,53 @@ $(document).ready(function(){
 
     this.baseMapDataLoader();
   };
+
+  Handlebars.registerHelper('relationSelectionButton', function() {
+    htmlClasses = [];
+    if(this.selectedRelationsIds.indexOf(this.relation.id.toString()) > -1) {
+      htmlClasses.push("remove-relation-from-selection");
+      htmlText = "Remove relation from export";
+    } else {
+      htmlClasses.push("add-relation-to-selection");
+      htmlText = "Select relation to export"
+    }
+    return new Handlebars.SafeString(
+      "<button class='" + htmlClasses.join(" ") + "'"
+        + "data-relation-id='" + this.relation.id + "'>"
+          + htmlText
+       + "</button>"
+    );
+  });
+
+
+  Handlebars.registerHelper('relationSelectionSummaryAndActions', function() {
+    htmlClasses = [];
+    if(this.selectedRelationsIds.indexOf(this.relation.id.toString()) > -1) {
+      htmlClasses.push("remove-relation-from-selection");
+      htmlText = "Remove relation from export";
+    } else {
+      htmlClasses.push("add-relation-to-selection");
+      htmlText = "Select relation to export"
+    }
+
+    if(this.selectedRelationsIds.length > 0) {
+      return new Handlebars.SafeString(
+        "<div>" +
+          this.selectedRelationsIds.length.toString() +
+          " relation(s) currently selected. " +
+          "<a class='export-relation-selection' style='cursor:pointer'>" +
+            "Export" +
+          "</a> | " +
+          "<a class='clear-relation-selection' style='cursor:pointer'>" +
+            "Clear All" +
+          "</a> " +
+        "</div>"
+      );
+    }
+
+    return "";
+  });
+
+
+  relationSelection = Pgis.Relation.selectionMode.init(pgisMap);
 });

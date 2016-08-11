@@ -161,6 +161,53 @@ class Relation(db.Model):
         else:
             return relation_and_points
 
+    def relations_for_export(relation_ids):
+        relations_fetch_query = text("""
+             SELECT pr.id AS pr_id, pr.properties AS pr_prop,
+                pl.id AS pl_id, ST_AsBinary(pl.geom) AS pl_geom, pl.properties AS pl_prop,
+                p.id AS p_id, ST_X(p.geom) AS p_x, ST_Y(p.geom) AS p_y, p.properties AS p_prop,
+                member_type AS m_type
+                FROM power_relations pr
+             JOIN power_relation_members prm
+               ON prm.power_relation_id = pr.id AND (prm.member_id IS NOT NULL AND prm.member_id <> 0)
+             LEFT OUTER JOIN point p
+               ON (p.id = prm.member_id AND prm.member_type = 'node')
+             LEFT OUTER JOIN powerline pl
+               ON (pl.id = prm.member_id AND prm.member_type = 'way')
+            WHERE pr.id in :relation_ids
+             ORDER BY pr.id;
+        """)
+        relation_records = db.engine.execute(
+            relations_fetch_query,
+            relation_ids = tuple(relation_ids)
+        )
+
+        relations = {}
+        for row in relation_records:
+            r_id = row['pr_id']
+
+            if r_id not in relations:
+                relations[r_id] = {
+                    'id': r_id,
+                    'properties': row['pr_prop'],
+                    'points': [],
+                    'powerlines': []
+                }
+
+            if row['p_id'] is None: # if not a point, its a powerline.
+                relations[r_id]['powerlines'].append({
+                    'id': row['pl_id'],
+                    'latlngs': list(wkb.loads(bytes(row['pl_geom'])).coords),
+                    'properties': row['pl_prop']
+                })
+            if row['pl_id'] is None:
+                relations[r_id]['points'].append({
+                    'id': row['p_id'],
+                    'latlng': [row['p_x'], row['p_y']],
+                    'properties': row['p_prop']
+                })
+        return relations
+
     def relations_and_points_query():
         # Query to get the points and nodes that are part of a relation that
         # has points that are in the bounds

@@ -11,6 +11,14 @@ var MapHelpers = {
 
     return relationSidebarTemplate(relationProperties);
   },
+  setSidebarContentToLastClickedRelation: function(pgisMap, selectedRelationId) {
+    pgisMap.sidebar.setContent(
+      this.getRelationSidebarContent({
+        relation: pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.relation,
+        selectedRelationsIds: selectedRelationId
+      })
+    );
+  },
   // Binds a the popup to a powerline
   bindPowerlinePopup: function(polyline, powerline){
     var source   = $("#polyline-popup-template").html();

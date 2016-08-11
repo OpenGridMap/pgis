@@ -140,7 +140,9 @@ function PgisMap() {
     linkButton = {};
     linkButton[toBeAddedLinkButton.ref] = L.control.link_button({
       text: toBeAddedLinkButton.text,
-      onclick: toBeAddedLinkButton.onclick
+      onclick: toBeAddedLinkButton.onclick,
+      ref: toBeAddedLinkButton.ref,
+      isVisible: true // because its right away added to the map.
     });
 
     if(_.has(this.linkButtons, toBeAddedLinkButton.ref)) {
@@ -150,17 +152,23 @@ function PgisMap() {
     } else {
       _.extend(this.linkButtons, linkButton);
       this.map.addControl(
-       this.linkButtons[toBeAddedLinkButton.ref]
+        this.linkButtons[toBeAddedLinkButton.ref]
       );
     }
   };
 
   this.hideLinkButton = function(linkButton) {
     linkButton.removeFrom(this.map);
+    linkButton.options.isVisible = false;
   };
 
   this.showLinkButton = function(linkButton) {
-    linkButton.addTo(this.map);
+    if(linkButton.options.isVisible){
+      console.log("Button already on map: " + linkButton.options.ref);
+    } else {
+      linkButton.addTo(this.map);
+      linkButton.options.isVisible = true;
+    }
   };
 
   this.setMoveEndListener = function() {
