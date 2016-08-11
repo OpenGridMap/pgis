@@ -113,7 +113,7 @@ var MapDataLoader = {
 
           MapHelpers.setSidebarContentToLastClickedRelation(
             pgisMap,
-            window.selectedRelationsOsmIds
+            (JSON.parse(localStorage.getItem('selectedRelations')) || [])
           );
 
           if (!pgisMap.sidebar.isVisible()) {

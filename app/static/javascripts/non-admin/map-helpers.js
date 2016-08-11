@@ -15,7 +15,7 @@ var MapHelpers = {
     pgisMap.sidebar.setContent(
       this.getRelationSidebarContent({
         relation: pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.relation.properties,
-        selectedRelationsOsmIds: selectedRelationsOsmIds
+        selectedRelationsOsmIds: selectedRelationOsmIds
       })
     );
   },

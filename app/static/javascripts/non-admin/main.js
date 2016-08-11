@@ -118,8 +118,6 @@ $(document).ready(function(){
     this.baseMapDataLoader();
   };
 
-  window.selectedRelationsOsmIds = [];
-
   Handlebars.registerHelper('relationSelectionButton', function() {
     htmlClasses = [];
     if(this.selectedRelationsOsmIds.indexOf(this.relation.osmid.toString()) > -1) {
@@ -137,26 +135,38 @@ $(document).ready(function(){
     );
   });
 
+  function getSelectedRelations() {
+    return (JSON.parse(localStorage.getItem('selectedRelations')) || []);
+  }
+
+  function saveSelectedRelations(selectedRelations) {
+    localStorage.setItem('selectedRelations', JSON.stringify(selectedRelations));
+  }
+
   $(document).on('click', '.add-relation-to-selection', function() {
     relationOsmId = $(this).attr('data-relation-osm-id');
     // TODO: Check if the relation is already in the array!
-    window.selectedRelationsOsmIds.push(relationOsmId);
+    selectedRelationsOsmIds = getSelectedRelations();
+    selectedRelationsOsmIds.push(relationOsmId)
+    saveSelectedRelations(selectedRelationsOsmIds);
 
     MapHelpers.setSidebarContentToLastClickedRelation(
       pgisMap,
-      window.selectedRelationsOsmIds
-    )
+      selectedRelationsOsmIds
+    );
   });
 
   $(document).on('click', '.remove-relation-from-selection', function() {
     relationOsmId = $(this).attr('data-relation-osm-id');
-    index = window.selectedRelationsOsmIds.indexOf(relationOsmId)
+    selectedRelationsOsmIds = getSelectedRelations();
+    index = selectedRelationsOsmIds.indexOf(relationOsmId)
     if(index > -1) {
-      window.selectedRelationsOsmIds.splice(index, 1);
+     selectedRelationsOsmIds.splice(index, 1);
     }
+    saveSelectedRelations(selectedRelationsOsmIds)
     MapHelpers.setSidebarContentToLastClickedRelation(
       pgisMap,
-      window.selectedRelationsOsmIds
+      selectedRelationsOsmIds
     )
   })
 });
