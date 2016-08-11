@@ -5,11 +5,11 @@ from geoalchemy2.shape import to_shape
 from app.models.powerline import Powerline
 from shapely import wkb
 
+
 class Relation(db.Model):
     __tablename__ = 'power_relations'
     id            = db.Column(db.Integer, primary_key = True)
     properties    = db.Column(JSON)
-
 
     # Get the relations with their points and ways that fall in the
     # given bounds
@@ -47,7 +47,8 @@ class Relation(db.Model):
 
             relations[relation_id]['points'].append({
                 'id': point_row['p_id'],
-                'latlng': [point_row['p_x'], point_row['p_y']]
+                'latlng': [point_row['p_x'], point_row['p_y']],
+                'properties': point_row['p_prop']
             })
 
         return relations
@@ -62,7 +63,8 @@ class Relation(db.Model):
 
         relation_and_powerline_query = text("""
             SELECT r.id AS rel_id, p.id AS pl_id, ST_AsBinary(p.geom) AS pl_geom,
-                   r.properties AS rel_prop
+                   r.properties AS rel_prop,
+                   p.properties as pl_prop
                 FROM powerline p
             JOIN power_relation_members m
                 ON p.id = m.member_id AND m.member_type = 'way'
@@ -97,7 +99,8 @@ class Relation(db.Model):
 
                 relations[r_id]['powerlines'].append({
                     'id': row['pl_id'],
-                    'latlngs': list(wkb.loads(bytes(row['pl_geom'])).coords)
+                    'latlngs': list(wkb.loads(bytes(row['pl_geom'])).coords),
+                    'properties': row['pl_prop']
                 })
 
             return relations
@@ -113,7 +116,8 @@ class Relation(db.Model):
 
         relation_and_points_query = text("""
             SELECT r.id AS rel_id, p.id AS p_id, ST_X(p.geom) AS p_x,
-                   ST_Y(p.geom) AS p_y, r.properties AS rel_prop
+                   ST_Y(p.geom) AS p_y, r.properties AS rel_prop,
+                   p.properties AS p_prop
                 FROM point p
             JOIN power_relation_members m
                 ON p.id = m.member_id AND m.member_type = 'node'
@@ -148,7 +152,8 @@ class Relation(db.Model):
 
                 relations[r_id]['points'].append({
                     'id': row['p_id'],
-                    'latlng': [row['p_x'], row['p_y']]
+                    'latlng': [row['p_x'], row['p_y']],
+                    'properties': row['p_prop']
                 })
 
             return relations

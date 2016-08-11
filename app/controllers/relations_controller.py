@@ -6,6 +6,7 @@ from app import db
 from sqlalchemy.sql import text
 from app.models.powerline import Powerline
 from flask_sqlalchemy import get_debug_queries
+from app.presenters.relations_presenter import RelationsPresenter
 
 class RelationsController:
     def index(self):
@@ -24,5 +25,11 @@ class RelationsController:
         bounds_parts = request.args.get("bounds").split(',')
 
         relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
+        headers = {
+            'Content-Type': 'application/xml',
+            'Content-Disposition': 'attachment; filename=relations.xml'
+        }
 
-        return Response(json.dumps(relations), mimetype='application/json')
+        presenter = RelationsPresenter(relations)
+
+        return Response(presenter.as_xml_element(), headers=headers)
