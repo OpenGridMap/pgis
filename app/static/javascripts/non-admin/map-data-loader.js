@@ -40,7 +40,9 @@ var MapDataLoader = {
           markers.addLayers(newMarkers);
 
           function onMarkerClick(e) {
-            pgisMap.sidebar.setContent(MapHelpers.getPointSidebarContent(e.target.data));
+            pgisMap.sidebar.setContent(
+              MapHelpers.getPointSidebarContent(e.target.data)
+            );
             if (!pgisMap.sidebar.isVisible()) {
               pgisMap.sidebar.show()
             }
