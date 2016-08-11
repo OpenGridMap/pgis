@@ -11,11 +11,11 @@ var MapHelpers = {
 
     return relationSidebarTemplate(relationProperties);
   },
-  setSidebarContentToLastClickedRelation: function(pgisMap, selectedRelationOsmIds) {
+  setSidebarContentToLastClickedRelation: function(pgisMap, selectedRelationId) {
     pgisMap.sidebar.setContent(
       this.getRelationSidebarContent({
-        relation: pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.relation.properties,
-        selectedRelationsOsmIds: selectedRelationOsmIds
+        relation: pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.relation,
+        selectedRelationsIds: selectedRelationId
       })
     );
   },

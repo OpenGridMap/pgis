@@ -120,7 +120,7 @@ $(document).ready(function(){
 
   Handlebars.registerHelper('relationSelectionButton', function() {
     htmlClasses = [];
-    if(this.selectedRelationsOsmIds.indexOf(this.relation.osmid.toString()) > -1) {
+    if(this.selectedRelationsIds.indexOf(this.relation.id.toString()) > -1) {
       htmlClasses.push("remove-relation-from-selection");
       htmlText = "Remove relation from export";
     } else {
@@ -129,44 +129,41 @@ $(document).ready(function(){
     }
     return new Handlebars.SafeString(
       "<button class='" + htmlClasses.join(" ") + "'"
-        + "data-relation-osm-id='" + this.relation.osmid + "'>"
+        + "data-relation-id='" + this.relation.id + "'>"
           + htmlText
        + "</button>"
     );
   });
 
-  function getSelectedRelations() {
-    return (JSON.parse(localStorage.getItem('selectedRelations')) || []);
-  }
 
-  function saveSelectedRelations(selectedRelations) {
-    localStorage.setItem('selectedRelations', JSON.stringify(selectedRelations));
-  }
+  Handlebars.registerHelper('relationSelectionSummaryAndActions', function() {
+    htmlClasses = [];
+    if(this.selectedRelationsIds.indexOf(this.relation.id.toString()) > -1) {
+      htmlClasses.push("remove-relation-from-selection");
+      htmlText = "Remove relation from export";
+    } else {
+      htmlClasses.push("add-relation-to-selection");
+      htmlText = "Select relation to export"
+    }
 
-  $(document).on('click', '.add-relation-to-selection', function() {
-    relationOsmId = $(this).attr('data-relation-osm-id');
-    // TODO: Check if the relation is already in the array!
-    selectedRelationsOsmIds = getSelectedRelations();
-    selectedRelationsOsmIds.push(relationOsmId)
-    saveSelectedRelations(selectedRelationsOsmIds);
+    if(this.selectedRelationsIds.length > 0) {
+      return new Handlebars.SafeString(
+        "<div>" +
+          this.selectedRelationsIds.length.toString() +
+          " relation(s) currently selected. " +
+          "<a class='export-relation-selection' style='cursor:pointer'>" +
+            "Export" +
+          "</a> | " +
+          "<a class='clear-relation-selection' style='cursor:pointer'>" +
+            "Clear All" +
+          "</a> " +
+        "</div>"
+      );
+    }
 
-    MapHelpers.setSidebarContentToLastClickedRelation(
-      pgisMap,
-      selectedRelationsOsmIds
-    );
+    return "";
   });
 
-  $(document).on('click', '.remove-relation-from-selection', function() {
-    relationOsmId = $(this).attr('data-relation-osm-id');
-    selectedRelationsOsmIds = getSelectedRelations();
-    index = selectedRelationsOsmIds.indexOf(relationOsmId)
-    if(index > -1) {
-     selectedRelationsOsmIds.splice(index, 1);
-    }
-    saveSelectedRelations(selectedRelationsOsmIds)
-    MapHelpers.setSidebarContentToLastClickedRelation(
-      pgisMap,
-      selectedRelationsOsmIds
-    )
-  })
+
+  relationSelection = Pgis.Relation.selectionMode.init(pgisMap);
 });
