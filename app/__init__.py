@@ -50,4 +50,8 @@ from app import routes
 from app.helpers import template_filters
 
 # configure OSM Api
-GisApp.osmApiClient = osmapi.OsmApi(api="api06.dev.openstreetmap.org", username="vishnuTUM", password="")
+GisApp.osmApiClient = osmapi.OsmApi(
+    api      = GisApp.config['OSMAPI_CONFIG']['domain'],
+    username = GisApp.config['OSMAPI_CONFIG']['username'],
+    password = GisApp.config['OSMAPI_CONFIG']['password']
+)
