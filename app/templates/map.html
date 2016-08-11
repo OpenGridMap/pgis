@@ -42,6 +42,15 @@
                     <img src="{{ this.filepath }}">
                 {{/each}}
                 <p><a href="/admin/points/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p></div>
+                <br/>
+                OSM-ID:
+                <!-- OSMAPI_DOMAIN config variable needs to be rendered by Jinja2
+                templates. So do +endraw+ statement, print the config variable
+                and open +raw+ statement -->
+                <a href="http://{% endraw %}{{ config['OSMAPI_CONFIG']['domain'] }}{% raw %}/node/{{ osmid }}"
+                    target="_blank">
+                  {{ osmid }}
+                </a>
 </script>
 {% endraw %}
 {% raw %}

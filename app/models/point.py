@@ -16,10 +16,22 @@ class Point(db.Model):
     pictures = db.relationship('Picture')
 
     def serialize(self):
-        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'tags' : self.properties.get('tags', {}), 'pictures' : list(map((lambda p: p.serialize()), self.pictures)), 'revised': self.revised }
+        return {
+            'id': self.id,
+            'latlng': [self.shape().x, self.shape().y],
+            'tags' : self.properties.get('tags', {}),
+            'osmid': self.properties.get('osmid', None),
+            'pictures' : list(map((lambda p: p.serialize()), self.pictures)),
+            'revised': self.revised
+        }
 
     def serialize_with_properties(self):
-        return { 'id': self.id, 'latlng': [self.shape().x, self.shape().y], 'properties' : self.properties, 'pictures' : list(map((lambda p: p.serialize()), self.pictures)) }
+        return {
+            'id': self.id,
+            'latlng': [self.shape().x, self.shape().y],
+            'properties' : self.properties,
+            'pictures' : list(map((lambda p: p.serialize()), self.pictures))
+        }
 
     def shape(self):
         return to_shape(self.geom)
