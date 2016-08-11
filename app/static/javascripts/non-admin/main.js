@@ -117,4 +117,46 @@ $(document).ready(function(){
 
     this.baseMapDataLoader();
   };
+
+  window.selectedRelationsOsmIds = [];
+
+  Handlebars.registerHelper('relationSelectionButton', function() {
+    htmlClasses = [];
+    if(this.selectedRelationsOsmIds.indexOf(this.relation.osmid.toString()) > -1) {
+      htmlClasses.push("remove-relation-from-selection");
+      htmlText = "Remove relation from export";
+    } else {
+      htmlClasses.push("add-relation-to-selection");
+      htmlText = "Select relation to export"
+    }
+    return new Handlebars.SafeString(
+      "<button class='" + htmlClasses.join(" ") + "'"
+        + "data-relation-osm-id='" + this.relation.osmid + "'>"
+          + htmlText
+       + "</button>"
+    );
+  });
+
+  $(document).on('click', '.add-relation-to-selection', function() {
+    relationOsmId = $(this).attr('data-relation-osm-id');
+    // TODO: Check if the relation is already in the array!
+    window.selectedRelationsOsmIds.push(relationOsmId);
+
+    MapHelpers.setSidebarContentToLastClickedRelation(
+      pgisMap,
+      window.selectedRelationsOsmIds
+    )
+  });
+
+  $(document).on('click', '.remove-relation-from-selection', function() {
+    relationOsmId = $(this).attr('data-relation-osm-id');
+    index = window.selectedRelationsOsmIds.indexOf(relationOsmId)
+    if(index > -1) {
+      window.selectedRelationsOsmIds.splice(index, 1);
+    }
+    MapHelpers.setSidebarContentToLastClickedRelation(
+      pgisMap,
+      window.selectedRelationsOsmIds
+    )
+  })
 });

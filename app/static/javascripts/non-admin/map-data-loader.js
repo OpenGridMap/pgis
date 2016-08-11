@@ -108,8 +108,12 @@ var MapDataLoader = {
         pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
 
         relationFeatureLayer.on('click', function(e) {
-          pgisMap.sidebar.setContent(
-            MapHelpers.getRelationSidebarContent(e.target.relation.properties)
+          pgisMap.overlayLayers.relations
+            .lastClickedRelationFeatureLayer = this;
+
+          MapHelpers.setSidebarContentToLastClickedRelation(
+            pgisMap,
+            window.selectedRelationsOsmIds
           );
 
           if (!pgisMap.sidebar.isVisible()) {

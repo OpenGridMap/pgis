@@ -57,7 +57,7 @@
 {% endraw %}
 {% raw %}
 <script id="relation-sidebar-template" type="text/x-handlebars-template">
-        <div class="sidebar"><h1>Relation: OSM-ID-{{ osmid }}</h1></div>
+        <div class="sidebar"><h1>Relation: OSM-ID-{{ relation.osmid }}</h1></div>
         <hr/>
         <div class="sidebar-tags-table">
           <strong>Tags:</strong>
@@ -66,7 +66,7 @@
               <th>Tag</th>
               <th>Value</th>
             </tr>
-            {{#each tags}}
+            {{#each relation.tags}}
             <tr>
               <td>{{@key}}:</td>
               <td>{{this}}</td>
@@ -75,6 +75,9 @@
           </table>
         </div>
         <hr/>
+        <div>
+          {{relationSelectionButton}}
+        </div>
 </script>
 {% endraw %}
 {% endblock %}
