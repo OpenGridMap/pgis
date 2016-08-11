@@ -27,7 +27,7 @@ class RelationsController:
         relations = Relation.with_points_and_lines_in_bounds(bounds_parts)
         headers = {
             'Content-Type': 'application/xml',
-            # 'Content-Disposition': 'attachment; filename=relations.xml'
+            'Content-Disposition': 'attachment; filename=relations.xml'
         }
 
         presenter = RelationsPresenter(relations)
