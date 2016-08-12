@@ -28,9 +28,7 @@ function PgisMap() {
     if(this.lat && this.lng){
       this.center = [this.lat, this.lng];
     } else {
-      // this.center = [48.1333, 11.5667];
-      this.center = [50.151097188604574, 12.053203582763672];
-      // this.center = [48.0423314,10.4929626]
+      this.center = [48.1333, 11.5667];
     }
 
     this.map = L.map('map', {
