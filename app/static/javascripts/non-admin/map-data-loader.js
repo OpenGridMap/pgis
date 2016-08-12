@@ -12,6 +12,14 @@ var MapDataLoader = {
       popupAnchor: [1, -34],
       shadowSize:  [41, 41]
     });
+    var selectedPointIcon = L.icon({
+      iconUrl: 'static/images/marker-icon-red-2x.png',
+      shadowUrl: 'static/images/marker-shadow.png',
+      iconSize:    [25, 41],
+      iconAnchor:  [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize:  [41, 41]
+    });
 
     if(map.getZoom() > 11) {
       map.fireEvent("dataloading");
@@ -25,8 +33,15 @@ var MapDataLoader = {
           markers.clearLayers();
           clusterGroup.clearLayers();
 
-          var newMarkers = []
-          markerMap = {};
+          // don't delete a selected point from pgisMap.markerMap
+          if (pgisMap.selectedPoint != null) {
+            selectedPointReference = pgisMap.markerMap[pgisMap.selectedPoint];
+            pgisMap.markerMap = {};
+            pgisMap.markerMap[selectedPointReference.data.id] = selectedPointReference;
+          } else {
+            pgisMap.markerMap = {};
+          }
+          var newMarkers = [];
           for(var i = 0; i < data.length; i++){
             if(data[i]['revised'] == true) {
               var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
@@ -35,17 +50,36 @@ var MapDataLoader = {
             }
             marker.data = data[i];
             newMarkers.push(marker);
-            markerMap[data[i].id] = marker;
+            pgisMap.markerMap[data[i].id] = marker;
           }
           markers.addLayers(newMarkers);
+          if (pgisMap.selectedPoint != null) {
+            pgisMap.markerMap[pgisMap.selectedPoint].setIcon(selectedPointIcon);
+          }
 
           function onMarkerClick(e) {
             pgisMap.sidebar.setContent(MapHelpers.getPointSidebarContent(e.target.data));
             if (!pgisMap.sidebar.isVisible()) {
-              pgisMap.sidebar.show()
+              pgisMap.sidebar.show();
             }
+            if (pgisMap.selectedPoint != null) {
+              // deselect old point
+              pgisMap.markerMap[pgisMap.selectedPoint].setIcon(new L.Icon.Default());
+            }
+            e.target.setIcon(selectedPointIcon);
+            pgisMap.selectedPoint = e.target.data.id; // here a refernce to the point should be saved, not an id
           }
           map.fireEvent("dataload");
+
+          // if user wants to jump to a specific point, open sidebar for this point
+          if (pgisMap.point_id != null) {
+            marker = pgisMap.markerMap[pgisMap.point_id];
+            marker.setIcon(selectedPointIcon);
+            pgisMap.selectedPoint = pgisMap.point_id;
+            pgisMap.sidebar.setContent(MapHelpers.getPointSidebarContent(marker.data));
+            pgisMap.sidebar.show();
+            pgisMap.point_id = null;
+          }
         }
       });
     } else {

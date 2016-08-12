@@ -4,13 +4,16 @@ function PgisMap() {
   this.lng               = MiscHelpers.getQueryString("long");
   this.boundsQueryString = MiscHelpers.getQueryString("bounds");
   this.zoom              = MiscHelpers.getQueryString("zoom") || 15;
+  this.point_id          = MiscHelpers.getQueryString("point_id");
   this.bounds            = undefined;
   this.center            = undefined;
   this.map               = undefined; // Leaflet's map object
   this.layerControl      = undefined;
   this.baseLayer         = undefined;
   this.sidebar           = undefined;
-  this.linkButtons       = {}
+  this.selectedPoint     = null; // point, currently opened in sidebar
+  this.markerMap         = {};
+  this.linkButtons       = {};
   // Add any kind of marker layers to this.markerLayers
   //   e.g: L.MarkerClusterGroup(), L.LayerGroup() etc.
   this.markerLayers      = {};
@@ -54,10 +57,14 @@ function PgisMap() {
   this.addDefaultControlsToMap = function() {
     var loadingControl = L.Control.loading({
       separate: true
-    })
+    });
 
     this.sidebar = L.control.sidebar('sidebar', {
       position: 'right'
+    });
+    this.sidebar.on('hide', function() {
+      pgisMap.markerMap[pgisMap.selectedPoint].setIcon(new L.Icon.Default());
+      pgisMap.selectedPoint = null;
     });
 
     this.map.addControl(loadingControl);
