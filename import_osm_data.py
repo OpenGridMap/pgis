@@ -13,7 +13,7 @@ class PowerStationImporter(object):
 
     def perform(self, nodes):
         for osmid, tags, coords in nodes:
-            if 'power' in tags:
+            if ('power' in tags) or ('power' in tags.values()):
                 query = "INSERT INTO point(geom, properties, revised, approved) VALUES(%s, %s, TRUE, TRUE)"
                 print("INSERTING {} {}".format(coords[1], coords[0]))
                 cur.execute(query, ("POINT({} {})".format(coords[1], coords[0]), json.dumps({ 'tags' : tags , 'osmid' : osmid}) ))
@@ -22,7 +22,7 @@ class PowerlineImporter(object):
 
     def perform(self, ways):
         for osmid, tags, refs in ways:
-            if 'power' in tags:
+            if ('power' in tags) or ('power' in tags.values()):
                 nodes = []
                 flag = False
                 for ref in refs:
