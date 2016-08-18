@@ -12,7 +12,7 @@ relations related data. Use the command line tool osmosis
 contain only power relations and run this script on that
 result file. Below is an example script on how to run osmosis.
 
-  osmosis --read-pbf file=bayern-latest.osm.pbf --tag-filter accept-relations power=* --used-way --used-node --buffer --write-pbf file=bayern-latest-relations.pbf
+  osmosis --read-pbf file=bayern-latest.osm.pbf --tag-filter accept-relations --used-way --used-node --buffer --write-pbf file=bayern-latest-relations.pbf
 
 NOTE: This script only imports points and powerlines that are related to a
 relation. To import other generic points and powerlines, use the usual
@@ -201,7 +201,20 @@ class RelationsImporter(object):
 
     def perform(self, relations):
         for osmid, tags, members in relations:
-            if 'power' in tags:
+            should_insert_relation = False
+
+            if ('power' in tags) or ('power' in tags.values()):
+                # Check if it is already imported
+                is_already_imported_query = "SELECT id from power_relations "\
+                    "WHERE properties->>'osmid' = %s"
+                cur.execute(is_already_imported_query, [str(osmid)])
+
+                if cur.fetchone() is not None:
+                    should_insert_relation = False
+                else:
+                    should_insert_relation = True
+
+            if should_insert_relation:
                 print ".",
 
                 relation_insert_query = "INSERT INTO power_relations(properties)"\
