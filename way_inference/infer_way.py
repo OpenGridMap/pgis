@@ -4,6 +4,7 @@ import sys
 import ast
 from cluster_wrapper import ClusterWrapper
 from nodes_wrapper import NodesWrapper
+from ways_wrapper import WaysWrapper
 
 try:
     conn = psycopg2.connect("dbname='gis' user='Munna' host='localhost' password=''")
@@ -20,16 +21,18 @@ nodes_osmids = (
 '3212195884', '3212195874', '3212195866', '3212195869', '3212195878',
 '3212195882', '3212195889', '3212195895', '3212195893', '3212195896'
 )
-
-bounds = [28.212890625, -1.8261677821806805, 33.486328125, 0.8349313860427184]
+bounds = [11.089153289794922, 4.593878359460639, 11.418743133544922, 4.759664350520704]
+# bounds = [28.212890625, -1.8261677821806805, 33.486328125, 0.8349313860427184]
 clusterWrapper = ClusterWrapper(cur, bounds)
 clusters = clusterWrapper.getClusters()
 
 for cluster in clusters:
     nodes_osmids = NodesWrapper(cur, bounds).get_nodes_osmids_in_cluster(cluster[0])
+print(nodes_osmids)
 
 # processing_node = "3212196097"
-processing_node = "2043615536"
+# # processing_node = "2043615536"
+processing_node = "3318502646"
 processed_nodes = []
 processed_nodes.append(processing_node)
 
@@ -39,12 +42,18 @@ while is_complete == False:
     # print(processed_nodes)
     # print "processing - ",
     # print(processing_node)
-    closest_nodes = NodesWrapper(cur, []).get_closest_nodes_to(
-        processing_node,
-        tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
-    )
+    unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
     closest_node = None
-    print(closest_nodes)
+
+    if len(unprocessed_nodes) > 0:
+        closest_nodes = NodesWrapper(cur, []).get_closest_nodes_to(
+            processing_node,
+            unprocessed_nodes
+        )
+        print(closest_nodes)
+    else:
+        is_complete = True
+        continue
 
     if len(closest_nodes) > 0:
         closest_node = closest_nodes[0] # There are already ordered by distance
@@ -61,3 +70,6 @@ while is_complete == False:
 print(processed_nodes)
 for node_osmid in processed_nodes:
     print("node(%s);" % node_osmid)
+
+WaysWrapper(cur).save_to_database(processed_nodes)
+conn.commit()
