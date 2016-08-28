@@ -4,6 +4,7 @@
 // Author: Sri Vishnu Totakura <t.srivishnu@gmail.com>
 
 L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
+  isHighlightedForSidebar: false,
 
   initialize: function(relation, layers) {
     L.FeatureGroup.prototype.initialize.call(this, layers);
@@ -13,6 +14,17 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     this._handleRelationPoints();
     this._handleRelationPowerlines();
     this._bindCustomEvents();
+  },
+
+  highlightForSidebar: function() {
+    this.isHighlightedForSidebar = true;
+    this._markersClusterGroup.addHighlightForSidebarStyle();
+    this.setStyle({ color: "blue" });
+  },
+
+  removeHighlightForSidebar: function() {
+    this.isHighlightedForSidebar = false;
+    this.fireEvent('mouseout');
   },
 
   _initMarkerClusterGroup: function() {
@@ -54,13 +66,19 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     var _this = this;
 
     this.on("mouseover", function(e) {
-      _this._markersClusterGroup.addHighlightStyle();
-      e.target.setStyle({ color: "blue" });
+      // Change colors only if not highlighted for sidebar
+      if(!_this.isHighlightedForSidebar){
+        _this._markersClusterGroup.addHighlightStyle();
+        e.target.setStyle({ color: "blue" });
+      }
     });
 
     this.on("mouseout", function(e) {
-      _this._markersClusterGroup.removeHighlightStyle();
-      e.target.setStyle({ color: "red" });
+      // Change colors only if not highlighted for sidebar
+      if(!_this.isHighlightedForSidebar){
+        _this._markersClusterGroup.removeHighlightStyle();
+        e.target.setStyle({ color: "red" });
+      }
     });
   }
 })

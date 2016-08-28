@@ -143,18 +143,26 @@ var MapDataLoader = {
         var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
         pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
 
-        relationFeatureLayer.on('click', function(e) {
-          pgisMap.overlayLayers.relations
-            .lastClickedRelationFeatureLayer = this;
+        // if relation with this id was previously selected for sidebar, hightlight it
+        //  This is needed because when clicked on a relation, the display of sidebar
+        //  moved the map triggering a reload of data and rerender of the layers
+        if(typeof(pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
+          selectedRelationId = pgisMap.overlayLayers.relations
+            .lastClickedRelationFeatureLayer.relation.id;
 
-          MapHelpers.setSidebarContentToLastClickedRelation(
-            pgisMap,
-            (JSON.parse(localStorage.getItem('selectedRelations')) || [])
-          );
-
-          if (!pgisMap.sidebar.isVisible()) {
-            pgisMap.sidebar.show();
+          if(relation.id == selectedRelationId) {
+            pgisMap.map.fireEvent("relation-click", {
+              relationFeatureLayer: relationFeatureLayer
+            });
           }
+        }
+
+        relationFeatureLayer.on('click', function(e) {
+          // remove any relation layer that is already highlighted for sidebar
+          if(typeof(pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
+            pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.removeHighlightForSidebar();
+          }
+          pgisMap.map.fireEvent("relation-click", { relationFeatureLayer: relationFeatureLayer });
         });
       });
     });
