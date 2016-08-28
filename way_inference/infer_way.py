@@ -2,6 +2,8 @@ import psycopg2
 import json
 import sys
 import ast
+from cluster_wrapper import ClusterWrapper
+from nodes_wrapper import NodesWrapper
 
 try:
     conn = psycopg2.connect("dbname='gis' user='Munna' host='localhost' password=''")
@@ -19,17 +21,15 @@ nodes_osmids = (
 '3212195882', '3212195889', '3212195895', '3212195893', '3212195896'
 )
 
-nodes_query = "SELECT id, geom, properties->>'osmid' FROM point "\
-    "WHERE properties->>'osmid' in %s"
-cur.execute(nodes_query, (nodes_osmids, ))
+bounds = [28.212890625, -1.8261677821806805, 33.486328125, 0.8349313860427184]
+clusterWrapper = ClusterWrapper(cur, bounds)
+clusters = clusterWrapper.getClusters()
 
-nodes = cur.fetchall()
+for cluster in clusters:
+    nodes_osmids = NodesWrapper(cur, bounds).get_nodes_osmids_in_cluster(cluster[0])
 
-print(len(nodes_osmids))
-print(len(nodes))
-
-
-processing_node = "3212196097"
+# processing_node = "3212196097"
+processing_node = "2043615536"
 processed_nodes = []
 processed_nodes.append(processing_node)
 
@@ -39,21 +39,16 @@ while is_complete == False:
     # print(processed_nodes)
     # print "processing - ",
     # print(processing_node)
-    fetch_closest_query = '''
-        WITH current_point AS (
-            SELECT id, ST_AsText(geom) AS geom FROM point WHERE (properties->>'osmid') = %s
-        )
-        SELECT point.id, point.properties->>'osmid' FROM point, current_point
-            WHERE ST_Distance(ST_GeomFromText(current_point.geom), point.geom) > 0.002
-                AND ST_Distance(ST_GeomFromText(current_point.geom), point.geom) < 0.09
-                AND properties->>'osmid' IN %s
-            ORDER BY ST_Distance(ST_GeomFromText(current_point.geom), point.geom) ASC
-            LIMIT 1'''
-    cur.execute(fetch_closest_query, [
+    closest_nodes = NodesWrapper(cur, []).get_closest_nodes_to(
         processing_node,
         tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
-    ])
-    closest_node = cur.fetchone()
+    )
+    closest_node = None
+    print(closest_nodes)
+
+    if len(closest_nodes) > 0:
+        closest_node = closest_nodes[0] # There are already ordered by distance
+
     if closest_node is not None and len(closest_node) > 0:
         print "Closest is - ",
         print(closest_node[1])
@@ -64,3 +59,5 @@ while is_complete == False:
         is_complete = True
 
 print(processed_nodes)
+for node_osmid in processed_nodes:
+    print("node(%s);" % node_osmid)
