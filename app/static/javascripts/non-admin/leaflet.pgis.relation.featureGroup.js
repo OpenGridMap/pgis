@@ -18,13 +18,14 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
 
   highlightForSidebar: function() {
     this.isHighlightedForSidebar = true;
-    this._markersClusterGroup.addHighlightForSidebarStyle();
+    this._markersClusterGroup.addHighlightStyle();
     this.setStyle({ color: "blue" });
   },
 
   removeHighlightForSidebar: function() {
     this.isHighlightedForSidebar = false;
-    this.fireEvent('mouseout');
+    this._markersClusterGroup.removeHighlightStyle();
+    this.setStyle({ color: "red" });
   },
 
   _initMarkerClusterGroup: function() {

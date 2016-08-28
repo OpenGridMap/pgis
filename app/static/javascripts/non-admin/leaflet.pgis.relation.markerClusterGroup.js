@@ -16,8 +16,7 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
     // Add these css classes to the Cluster marker icon when
     //  clustered. These classes won't appear when Markers are shown.
     defaultIconCssClasses: ['default'],
-    highlightIconCssClasses: ['highlighted'],
-    highlightForSidebarIconCssClasses: ['sidebar-highlighted']
+    highlightIconCssClasses: ['highlighted']
   },
 
   // Override the default icon creation function.
@@ -38,21 +37,6 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
        html: '<div><span>' + childCount + '</span></div>',
        className: "relation-id-" + this.relationId + ' marker-cluster' + c,
        iconSize: new L.Point(40, 40)
-     });
-   },
-
-   addHighlightForSidebarStyle: function() {
-     var _this = this;
-
-     _.each(this.options.highlightForSidebarIconCssClasses, function(cssClass) {
-       $(_this._relationClassSelector()).addClass(cssClass)
-     })
-
-     // Change to hightlight icon on the markers in this cluster.
-     // This assumes all the child layers in this clusterGroup are
-     // markers - L.Marker
-     this.eachLayer(function(layer){
-       layer.setIcon(_this.getMarkerHighlightForSidebarIcon());
      });
    },
 
@@ -88,17 +72,6 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
    getMarkerDefaultIcon: function() {
      return new L.Icon({
        iconUrl     : '/static/images/marker-icon-red.png',
-       shadowUrl   : '/static/images/marker-shadow.png',
-       iconSize    : [25, 41],
-       iconAnchor  : [12, 41],
-       popupAnchor : [1, -34],
-       shadowSize  : [41, 41]
-     });
-   },
-
-   getMarkerHighlightForSidebarIcon: function() {
-     return new L.Icon({
-       iconUrl     : '/static/images/marker-icon.png',
        shadowUrl   : '/static/images/marker-shadow.png',
        iconSize    : [25, 41],
        iconAnchor  : [12, 41],
