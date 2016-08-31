@@ -42,18 +42,30 @@ Pgis.Relation.selectionMode = {
     }
   },
 
+  handleRelationHighlightForSelection: function() {
+    var _this = this;
+    this.pgisMap.overlayLayers.relations.layer.eachLayer(function(relationFeatureLayer) {
+      // if selected, add selectionStyle.
+      if(_this._getSelectedRelations().indexOf(relationFeatureLayer.relation.id.toString()) > -1) {
+        relationFeatureLayer.highlightForExport();
+      } else {
+        relationFeatureLayer.removeHighlightForExport();
+      }
+    });
+  },
+
   _bindRelationSelectionEvents: function() {
     var _this = this;
 
     $(document).on('click', '.add-relation-to-selection', function() {
       $(document).trigger('relationSelected', {
-        relationOsmId: $(this).attr('data-relation-id')
+        relationId: $(this).attr('data-relation-id')
       });
     });
 
     $(document).on('click', '.remove-relation-from-selection', function() {
       $(document).trigger('relationUnselected', {
-        relationOsmId: $(this).attr('data-relation-id')
+        relationId: $(this).attr('data-relation-id')
       });
     });
 
@@ -68,30 +80,33 @@ Pgis.Relation.selectionMode = {
 
     $(document).on('relationSelected', function(event, options) {
       selectedRelationsIds = _this._getSelectedRelations(); // from local storage
-      if(selectedRelationsIds.indexOf(options.relationOsmId) > -1) {
+      if(selectedRelationsIds.indexOf(options.relationId) > -1) {
         console.log("Relation already selected");
       } else {
-        selectedRelationsIds.push(options.relationOsmId)
+        selectedRelationsIds.push(options.relationId)
         _this._saveSelectedRelations(selectedRelationsIds);
       }
       _this._checkAndToggleExportButtonDisplay();
       _this._updateMapSidebarContent();
+      _this.handleRelationHighlightForSelection();
     });
 
     $(document).on('relationUnselected', function(event, options) {
       selectedRelationsIds = _this._getSelectedRelations(); // from local storage
-      index = selectedRelationsIds.indexOf(options.relationOsmId)
+      index = selectedRelationsIds.indexOf(options.relationId)
       if(index > -1) {
         selectedRelationsIds.splice(index, 1);
       }
       _this._saveSelectedRelations(selectedRelationsIds)
       _this._checkAndToggleExportButtonDisplay();
       _this._updateMapSidebarContent();
+      _this.handleRelationHighlightForSelection();
     });
 
     $(document).on('relationsCleared', function(event, options) {
       _this._checkAndToggleExportButtonDisplay();
       _this._updateMapSidebarContent();
+      _this.handleRelationHighlightForSelection();
     });
   },
 

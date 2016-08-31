@@ -4,6 +4,8 @@
 // Author: Sri Vishnu Totakura <t.srivishnu@gmail.com>
 
 L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
+  isHighlightedForSidebar: false,
+  isHighlightedForExport: false,
 
   initialize: function(relation, layers) {
     L.FeatureGroup.prototype.initialize.call(this, layers);
@@ -13,6 +15,35 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     this._handleRelationPoints();
     this._handleRelationPowerlines();
     this._bindCustomEvents();
+  },
+
+  highlightForExport: function() {
+    this.isHighlightedForExport = true;
+    this._markersClusterGroup.addHighlightStyleForExport();
+    this.setStyle({ color: 'black' });
+  },
+
+  removeHighlightForExport: function() {
+    this.isHighlightedForExport = false;
+    this._markersClusterGroup.removeHighlightStyle();
+    this.setStyle({ color: 'red' });
+  },
+
+  highlightForSidebar: function() {
+    this.isHighlightedForSidebar = true;
+    this._markersClusterGroup.addHighlightStyle();
+    this.setStyle({ color: "blue" });
+  },
+
+  removeHighlightForSidebar: function() {
+    this.isHighlightedForSidebar = false;
+
+    if(this.isHighlightedForExport){
+      this.highlightForExport();
+    } else{
+      this._markersClusterGroup.removeHighlightStyle();
+      this.setStyle({ color: "red" });
+    }
   },
 
   _initMarkerClusterGroup: function() {
@@ -54,13 +85,19 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     var _this = this;
 
     this.on("mouseover", function(e) {
-      _this._markersClusterGroup.addHighlightStyle();
-      e.target.setStyle({ color: "blue" });
+      // Change colors only if not highlighted for sidebar or export
+      if(!_this.isHighlightedForSidebar && !_this.isHighlightedForExport){
+        _this._markersClusterGroup.addHighlightStyle();
+        e.target.setStyle({ color: "blue" });
+      }
     });
 
     this.on("mouseout", function(e) {
-      _this._markersClusterGroup.removeHighlightStyle();
-      e.target.setStyle({ color: "red" });
+      // Change colors only if not highlighted for sidebar or export
+      if(!_this.isHighlightedForSidebar && !_this.isHighlightedForExport){
+        _this._markersClusterGroup.removeHighlightStyle();
+        e.target.setStyle({ color: "red" });
+      }
     });
   }
 })

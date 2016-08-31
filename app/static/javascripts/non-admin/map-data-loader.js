@@ -133,29 +133,48 @@ var MapDataLoader = {
   },
 
   fetchAndPlotRelations: function(pgisMap) {
+    var _this = this;
+
     ApiService.fetchRelationsData(pgisMap, function(data){
-
       relations = data;
+      _this.plotRelationsOnMap(pgisMap, relations);
+    });
+  },
 
-      pgisMap.overlayLayers.relations.layer.clearLayers();
+  plotRelationsOnMap: function(pgisMap, relations) {
+    pgisMap.overlayLayers.relations.layer.clearLayers();
 
-      _.each(relations, function(relation){
-        var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
-        pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
+    _.each(relations, function(relation){
+      var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
+      pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
 
-        relationFeatureLayer.on('click', function(e) {
-          pgisMap.overlayLayers.relations
-            .lastClickedRelationFeatureLayer = this;
+      // if relation with this id was previously selected for sidebar, hightlight it
+      //  This is needed because when clicked on a relation, the display of sidebar
+      //  moved the map triggering a reload of data and rerender of the layers
+      if(typeof(pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
+        selectedRelationId = pgisMap.overlayLayers.relations
+          .lastClickedRelationFeatureLayer.relation.id;
 
-          MapHelpers.setSidebarContentToLastClickedRelation(
-            pgisMap,
-            (JSON.parse(localStorage.getItem('selectedRelations')) || [])
-          );
+        if(relation.id == selectedRelationId) {
+          // to highlight the relation as if its clicked for opening sidebar
+          pgisMap.map.fireEvent("relation-click", {
+            relationFeatureLayer: relationFeatureLayer
+          });
+        }
+      }
 
-          if (!pgisMap.sidebar.isVisible()) {
-            pgisMap.sidebar.show();
-          }
-        });
+      // if the relation was selected to be exported. Add the required highlighting
+      selectedRelationsIds = (JSON.parse(localStorage.getItem('selectedRelations')) || [])
+      if(selectedRelationsIds.indexOf(relation.id.toString()) > -1) {
+        relationFeatureLayer.highlightForExport();
+      }
+
+      relationFeatureLayer.on('click', function(e) {
+        // remove any relation layer that is already highlighted for sidebar
+        if(typeof(pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
+          pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.removeHighlightForSidebar();
+        }
+        pgisMap.map.fireEvent("relation-click", { relationFeatureLayer: relationFeatureLayer });
       });
     });
   }

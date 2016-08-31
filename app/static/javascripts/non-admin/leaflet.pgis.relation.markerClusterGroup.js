@@ -16,7 +16,8 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
     // Add these css classes to the Cluster marker icon when
     //  clustered. These classes won't appear when Markers are shown.
     defaultIconCssClasses: ['default'],
-    highlightIconCssClasses: ['highlighted']
+    highlightIconCssClasses: ['highlighted'],
+    highlightForExportIconCssClasses: ['export-highlighted']
   },
 
   // Override the default icon creation function.
@@ -40,6 +41,21 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
      });
    },
 
+   addHighlightStyleForExport: function() {
+     var _this = this;
+
+     _.each(this.options.highlightForExportIconCssClasses, function(cssClass) {
+       $(_this._relationClassSelector()).addClass(cssClass)
+     })
+
+     // Change to hightlight icon on the markers in this cluster.
+     // This assumes all the child layers in this clusterGroup are
+     // markers - L.Marker
+     this.eachLayer(function(layer){
+       layer.setIcon(_this.getMarkerHighlightForExportIcon());
+     });
+   },
+
    addHighlightStyle: function() {
      var _this = this;
 
@@ -58,14 +74,30 @@ L.PgisRelationMarkerClusterGroup = L.MarkerClusterGroup.extend({
    removeHighlightStyle: function() {
      var _this = this;
 
-     _.each(this.options.highlightIconCssClasses, function(cssClass) {
-      $(_this._relationClassSelector()).removeClass(cssClass)
+     // Get all highlight classes into an array and remove em all from the
+     //   DOM element
+     highlightClasses = this.options.highlightIconCssClasses.concat(
+       this.options.highlightForExportIconCssClasses
+     )
+     _.each(highlightClasses, function(cssClass) {
+       $(_this._relationClassSelector()).removeClass(cssClass)
      })
 
      // This assumes all the child layers in this clusterGroup are
      // markers - L.Marker
      this.eachLayer(function(layer) {
        layer.setIcon(_this.getMarkerDefaultIcon());
+     });
+   },
+
+   getMarkerHighlightForExportIcon: function() {
+     return new L.Icon({
+       iconUrl     : '/static/images/marker-icon-dark-green.png',
+       shadowUrl   : '/static/images/marker-shadow.png',
+       iconSize    : [25, 41],
+       iconAnchor  : [12, 41],
+       popupAnchor : [1, -34],
+       shadowSize  : [41, 41]
      });
    },
 

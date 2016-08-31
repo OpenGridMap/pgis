@@ -50,9 +50,11 @@ function PgisMap() {
     this.addDefaultControlsToMap();
     this.setMoveEndListener();
     this.bindOverlayLayerAddRemoveEvent();
+    this.bindRelationClickEvent();
   };
 
   this.addDefaultControlsToMap = function() {
+    var _this = this;
     var loadingControl = L.Control.loading({
       separate: true
     });
@@ -61,8 +63,15 @@ function PgisMap() {
       position: 'right'
     });
     this.sidebar.on('hide', function() {
-      pgisMap.markerMap[pgisMap.selectedPoint].setIcon(new L.Icon.Default());
-      pgisMap.selectedPoint = null;
+      if(_this.markerMap[pgisMap.selectedPoint] != null) {
+        pgisMap.markerMap[pgisMap.selectedPoint].setIcon(new L.Icon.Default());
+        pgisMap.selectedPoint = null;
+      }
+
+      if(typeof(_this.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
+        _this.overlayLayers.relations.lastClickedRelationFeatureLayer.removeHighlightForSidebar();
+        _this.overlayLayers.relations.lastClickedRelationFeatureLayer = undefined
+      }
     });
 
     this.map.addControl(loadingControl);
@@ -219,6 +228,26 @@ function PgisMap() {
       }
 
       _this.onOverlayRemove(layer);
+    });
+  };
+
+  this.bindRelationClickEvent = function() {
+    var _this = this;
+    this.map.addEventListener("relation-click", function(data) {
+      relationFeatureLayer = data.relationFeatureLayer;
+
+      _this.overlayLayers.relations
+        .lastClickedRelationFeatureLayer = relationFeatureLayer;
+
+      relationFeatureLayer.highlightForSidebar();
+      MapHelpers.setSidebarContentToLastClickedRelation(
+        pgisMap,
+        (JSON.parse(localStorage.getItem('selectedRelations')) || [])
+      );
+
+      if (!_this.sidebar.isVisible()) {
+        _this.sidebar.show();
+      }
     });
   };
 

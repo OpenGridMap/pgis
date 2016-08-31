@@ -43,6 +43,11 @@
   background-color: red;
 }
 
-.highlighted.marker-cluster {
+.highlighted.marker-cluster, .sidebar-highlighted.marker-cluster {
   background-color: blue;
 }
+
+.export-highlighted.marker-cluster {
+  background-color: black;
+}
+
