@@ -21,8 +21,9 @@ nodes_osmids = (
 '3212195884', '3212195874', '3212195866', '3212195869', '3212195878',
 '3212195882', '3212195889', '3212195895', '3212195893', '3212195896'
 )
-bounds = [11.089153289794922, 4.593878359460639, 11.418743133544922, 4.759664350520704]
+# bounds = [11.089153289794922, 4.593878359460639, 11.418743133544922, 4.759664350520704]
 # bounds = [28.212890625, -1.8261677821806805, 33.486328125, 0.8349313860427184]
+bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
 clusterWrapper = ClusterWrapper(cur, bounds)
 clusters = clusterWrapper.getClusters()
 
@@ -30,9 +31,12 @@ for cluster in clusters:
     nodes_osmids = NodesWrapper(cur, bounds).get_nodes_osmids_in_cluster(cluster[0])
 print(nodes_osmids)
 
-# processing_node = "3212196097"
-# # processing_node = "2043615536"
-processing_node = "3318502646"
+
+farthest_nodes = NodesWrapper(cur, bounds).get_farthest_nodes_among_nodes(nodes_osmids)
+print(farthest_nodes)
+
+# Start processing with one of the farthest nodes
+processing_node = farthest_nodes[0]
 processed_nodes = []
 processed_nodes.append(processing_node)
 
