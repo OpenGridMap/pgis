@@ -21,9 +21,8 @@ nodes_osmids = (
 '3212195884', '3212195874', '3212195866', '3212195869', '3212195878',
 '3212195882', '3212195889', '3212195895', '3212195893', '3212195896'
 )
-# bounds = [11.089153289794922, 4.593878359460639, 11.418743133544922, 4.759664350520704]
-# bounds = [28.212890625, -1.8261677821806805, 33.486328125, 0.8349313860427184]
-bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
+bounds = [10.39529800415039, 4.050234320898018, 10.50516128540039, 4.109221809610561] # parallel lines
+# bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
 clusterWrapper = ClusterWrapper(cur, bounds)
 clusters = clusterWrapper.getClusters()
 
@@ -39,6 +38,7 @@ print(farthest_nodes)
 processing_node = farthest_nodes[0]
 processed_nodes = []
 processed_nodes.append(processing_node)
+ignored_nodes = [] # nodes are ignored if there are too close to a node
 
 is_complete = False
 
@@ -46,26 +46,29 @@ while is_complete == False:
     # print(processed_nodes)
     # print "processing - ",
     # print(processing_node)
+    # procesed nodes minus the all nodes
     unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
+
+    # unprocessed nodes minus the ignored node.
+    unprocessed_nodes = tuple(set(unprocessed_nodes) ^ set(tuple(ignored_nodes)))
     closest_node = None
 
     if len(unprocessed_nodes) > 0:
-        closest_nodes = NodesWrapper(cur, []).get_closest_nodes_to(
+        nodes_around = NodesWrapper(cur, []).get_closest_nodes_to(
             processing_node,
             unprocessed_nodes
         )
-        print(closest_nodes)
+
+        ignored_nodes = ignored_nodes + nodes_around['too_close_node_osmids']
+        closest_node = nodes_around['closest_node_osmid']
     else:
         is_complete = True
         continue
 
-    if len(closest_nodes) > 0:
-        closest_node = closest_nodes[0] # There are already ordered by distance
-
-    if closest_node is not None and len(closest_node) > 0:
+    if closest_node is not None:
         print "Closest is - ",
-        print(closest_node[1])
-        processing_node = closest_node[1]
+        print(closest_node)
+        processing_node = closest_node
         processed_nodes.append(processing_node)
     else:
         print("\n*********** IS COMPLETE **************\n")

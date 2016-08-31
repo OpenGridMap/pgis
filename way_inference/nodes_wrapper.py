@@ -1,6 +1,8 @@
 class NodesWrapper:
     bounds = []
     cur = None
+    closest_min_distance = 0.0004
+    closest_max_distance = 0.09
 
     def __init__(self, sql_cursor, bounds):
         self.bounds = bounds
@@ -29,19 +31,31 @@ class NodesWrapper:
                     ST_Distance(
                         ST_GeomFromText(current_point.geom),
                         point.geom
-                    )
+                    ) as distance
                 FROM point, current_point
-                WHERE ST_Distance(ST_GeomFromText(current_point.geom), point.geom) > 0.0004
-                    AND ST_Distance(ST_GeomFromText(current_point.geom), point.geom) < 0.09
+                WHERE ST_Distance(ST_GeomFromText(current_point.geom), point.geom) < %s
                     AND properties->>'osmid' IN %s
                 ORDER BY ST_Distance(ST_GeomFromText(current_point.geom), point.geom) ASC
-                LIMIT 1
         '''
         self.cur.execute(fetch_closest_query, [
             for_node_osmid,
-            among_osm_ids
+            self.closest_max_distance,
+            among_osm_ids,
         ])
-        return self.cur.fetchall()
+        closest_nodes = self.cur.fetchall()
+        result = {
+            'too_close_node_osmids': [],
+            'closest_node_osmid': None
+        }
+
+        for node in closest_nodes:
+            if (node[2] < self.closest_min_distance):
+                result['too_close_node_osmids'].append(node[1])
+            else:
+                result['closest_node_osmid'] = node[1]
+                break;
+        return result;
+
 
     def get_farthest_nodes_among_nodes(self, among_osm_ids):
         farthest_nodes_query = '''
