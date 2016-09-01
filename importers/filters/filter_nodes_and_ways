@@ -1,0 +1,44 @@
+#!/bin/bash
+
+main_data_file=$1 # e.g: tanzania-latest.osm.pbf
+
+# intermediate files
+nodes_file="$1.nodes" # e.g: tanzania-latest.osm.pbf.nodes
+ways_file="$1.ways" # e.g: tanzania-latest.osm.pbf.ways
+
+# final filtered file
+filtered_file="$1.filtered.power.nodes_and_ways.pbf" # e.g: tanzania-latest.osm.pbf.filtered.power.nodes_and_ways.pbf
+
+printf "Filtering for nodes with tag power=*\n"
+osmosis \
+  --read-pbf file=$main_data_file \
+  --tag-filter accept-nodes power=* \
+  --tag-filter reject-relations \
+  --tag-filter reject-ways \
+  --buffer --log-progress \
+  --write-pbf file=$nodes_file
+
+
+printf "\nFiltering for ways with tag power=*\n"
+osmosis \
+  --read-pbf file=$main_data_file \
+  --tag-filter accept-ways power=* \
+  --tag-filter reject-relations \
+  --used-node \
+  --buffer --log-progress \
+  --write-pbf file=$ways_file
+
+printf "\nMerging the intermediate files\n"
+osmosis \
+  --read-pbf file=$nodes_file \
+  --read-pbf file=$ways_file \
+  --merge \
+  --buffer --log-progress \
+  --write-pbf file=$filtered_file
+
+printf "\nDeleting intermediate files\n"
+rm $nodes_file
+rm $ways_file
+
+printf "\n---- COMPLETE -----\n"
+echo "Filtering complete! Use filtered file - '$filtered_file' for import"
