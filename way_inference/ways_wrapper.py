@@ -1,9 +1,30 @@
 import json
 
 class WaysWrapper:
+    bounds = []
+    cur = None
 
-    def __init__(self, sql_cur):
+    def __init__(self, sql_cur, bounds):
         self.cur = sql_cur
+        self.bounds = bounds
+
+    def is_node_in_any_polygon(self, node_osmid):
+        query = '''
+            WITH node AS (
+                SELECT geom FROM point WHERE properties->>'osmid' = %s
+            )
+            SELECT powerline.id
+            FROM powerline, node
+            WHERE ST_Contains(ST_MakePolygon(powerline.geom), node.geom)
+                AND ST_IsClosed(powerline.geom)
+            LIMIT 1
+        '''
+        self.cur.execute(query, [str(node_osmid)])
+        powerline = self.cur.fetchone()
+        if powerline is not None:
+            return True
+        else:
+            return False
 
     def save_to_database(self, nodes_osmids):
         nodes = []
