@@ -23,15 +23,18 @@ nodes_osmids = (
 )
 bounds = [10.39529800415039, 4.050234320898018, 10.50516128540039, 4.109221809610561] # parallel lines
 # bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
-clusterWrapper = ClusterWrapper(cur, bounds)
-clusters = clusterWrapper.getClusters()
+
+nodesWrapper = NodesWrapper(cur, bounds)
+clustersWrapper = ClusterWrapper(cur, bounds)
+
+clusters = clustersWrapper.getClusters()
 
 for cluster in clusters:
-    nodes_osmids = NodesWrapper(cur, bounds).get_nodes_osmids_in_cluster(cluster[0])
+    nodes_osmids = nodesWrapper.get_nodes_osmids_in_cluster(cluster[0])
 print(nodes_osmids)
 
 
-farthest_nodes = NodesWrapper(cur, bounds).get_farthest_nodes_among_nodes(nodes_osmids)
+farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
 print(farthest_nodes)
 
 # Start processing with one of the farthest nodes
@@ -54,7 +57,7 @@ while is_complete == False:
     closest_node = None
 
     if len(unprocessed_nodes) > 0:
-        nodes_around = NodesWrapper(cur, []).get_closest_nodes_to(
+        nodes_around = nodesWrapper.get_closest_nodes_to(
             processing_node,
             unprocessed_nodes
         )
