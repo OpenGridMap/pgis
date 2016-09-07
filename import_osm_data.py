@@ -87,7 +87,7 @@ class PowerlineImporter(object):
                 '''
                 cur.execute(query, [
                     'LINESTRING({})'.format(linestring),
-                    json.dumps({ "tags": tags, "refs": refs }),
+                    json.dumps({ "tags": tags, "refs": refs, "osmid": str(osmid) }),
                     'LINESTRING({})'.format(linestring),
                 ])
 
