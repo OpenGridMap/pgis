@@ -8,8 +8,11 @@ class RelationsPresenter:
     def __init__(self, relations):
         self.relations = relations
 
-    def as_xml_element(self):
-        osm_elem = Element('osm')
+    def as_osm_xml(self):
+        osm_elem = Element('osm', {
+            'version': '0.6',
+            'generator': 'PGIS:http://github.com/OpenGridMap/pgis'
+        })
 
         # ref_node_osmids: osm Ids of nodes that are part of a way
         # relation_member_node_osmids: osm Ids of nodes that are members of a relation

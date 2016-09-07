@@ -38,4 +38,4 @@ class RelationsController:
 
         presenter = RelationsPresenter(relations)
 
-        return Response(presenter.as_xml_element(), headers=headers)
+        return Response(presenter.as_osm_xml(), headers=headers)
