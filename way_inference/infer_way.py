@@ -30,63 +30,77 @@ waysWrapper = WaysWrapper(cur, bounds)
 
 clusters = clustersWrapper.getClusters()
 
-for cluster in clusters:
-    nodes_osmids = nodesWrapper.get_nodes_osmids_in_cluster(cluster[0])
-print(nodes_osmids)
+def infer_way_from_nodes(nodes_osmids):
 
+    farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
 
-farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
-print(farthest_nodes)
+    # Start processing with one of the farthest nodes
+    processing_node = farthest_nodes[0]
 
-# Start processing with one of the farthest nodes
-processing_node = farthest_nodes[0]
+    processed_nodes = []
+    ignored_nodes = [] # nodes are ignored if there are too close to a node
 
-processed_nodes = []
-ignored_nodes = [] # nodes are ignored if there are too close to a node
+    processed_nodes.append(processing_node)
 
-processed_nodes.append(processing_node)
+    is_complete = False
 
-is_complete = False
+    while is_complete == False:
+        # procesed nodes minus the all nodes
+        unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
 
-while is_complete == False:
-    # procesed nodes minus the all nodes
-    unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
+        # unprocessed nodes minus the ignored node.
+        unprocessed_nodes = tuple(set(unprocessed_nodes) ^ set(tuple(ignored_nodes)))
 
-    # unprocessed nodes minus the ignored node.
-    unprocessed_nodes = tuple(set(unprocessed_nodes) ^ set(tuple(ignored_nodes)))
+        closest_node = None
 
-    closest_node = None
+        if len(unprocessed_nodes) > 0:
+            nodes_around = nodesWrapper.get_closest_nodes_to(
+                processing_node,
+                unprocessed_nodes
+            )
 
+            ignored_nodes = ignored_nodes + nodes_around['too_close_node_osmids']
+            closest_node = nodes_around['closest_node_osmid']
+        else:
+            is_complete = True
+            continue
 
-    if len(unprocessed_nodes) > 0:
-        nodes_around = nodesWrapper.get_closest_nodes_to(
-            processing_node,
-            unprocessed_nodes
-        )
+        if closest_node is not None:
+            print "Closest is - ",
+            print(closest_node)
+            processing_node = closest_node
+            processed_nodes.append(processing_node)
 
-        ignored_nodes = ignored_nodes + nodes_around['too_close_node_osmids']
-        closest_node = nodes_around['closest_node_osmid']
-    else:
-        is_complete = True
-        continue
-
-    if closest_node is not None:
-        print "Closest is - ",
-        print(closest_node)
-        processing_node = closest_node
-        processed_nodes.append(processing_node)
-
-        # if the node that is just processed in
-        if waysWrapper.is_node_in_any_polygon(processing_node):
+            # if the node that is just processed in any polygon.
+            if waysWrapper.is_node_in_any_polygon(processing_node):
+                is_complete = True
+        else:
+            print("\n*********** IS COMPLETE **************\n")
             is_complete = True
 
+    if len(processed_nodes) < 1:
+        # This means, we couldn't find any close nodes.
+        # End the iteration of the cluster.
+        return
     else:
-        print("\n*********** IS COMPLETE **************\n")
-        is_complete = True
+        print(processed_nodes)
+        for node_osmid in processed_nodes:
+            print("node(%s);" % node_osmid)
 
-print(processed_nodes)
-for node_osmid in processed_nodes:
-    print("node(%s);" % node_osmid)
+        waysWrapper.save_to_database(processed_nodes)
+        conn.commit()
 
-waysWrapper.save_to_database(processed_nodes)
-conn.commit()
+        # procesed nodes minus the all nodes
+        unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
+
+        # unprocessed nodes minus the ignored node.
+        unprocessed_nodes = tuple(set(unprocessed_nodes) ^ set(tuple(ignored_nodes)))
+
+        if len(unprocessed_nodes) > 1:
+            # There are more nodes to be processed in this cluster.
+            infer_way_from_nodes(unprocessed_nodes)
+
+for cluster in clusters:
+    nodes_osmids = nodesWrapper.get_nodes_osmids_in_cluster(cluster[0])
+    infer_way_from_nodes(nodes_osmids)
+
