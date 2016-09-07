@@ -25,6 +25,8 @@ class RelationsPresenter:
             relation_elem = SubElement(osm_elem, 'relation', {
                 'pgisId': str(relation['id']),
                 'id': str(relation['properties']['osmid']),
+                'version': "-1",
+                'timestamp': ""
             })
             self.__buildXmlSubElementForTags(
                 relation['properties']['tags'],
@@ -36,7 +38,9 @@ class RelationsPresenter:
                     'lat': str(point['latlng'][0]),
                     'lng': str(point['latlng'][1]),
                     'id': str(point['properties']['osmid']),
-                    'pgisId': str(point['id'])
+                    'pgisId': str(point['id']),
+                    'version': "-1",
+                    'timestamp': ""
                 })
                 self.__buildXmlSubElementForTags(
                     point['properties']['tags'],
@@ -60,7 +64,9 @@ class RelationsPresenter:
 
                 powerline_elem = SubElement(osm_elem, 'way', {
                     'id': str(powerline_omsid),
-                    'pgisId': str(powerline['id'])
+                    'pgisId': str(powerline['id']),
+                    'version': "-1",
+                    'timestamp': ""
                 })
 
                 for point_id in powerline['properties']['refs']:
@@ -88,7 +94,10 @@ class RelationsPresenter:
                 'lat': str(ref_point['latlng'][0]),
                 'lng': str(ref_point['latlng'][1]),
                 'id': str(ref_point['properties']['osmid']),
-                'pgisId': str(ref_point['id'])
+                'pgisId': str(ref_point['id']),
+                'version': "-1",
+                'timestamp': ""
+
             })
             self.__buildXmlSubElementForTags(
                 ref_point['properties']['tags'],
