@@ -23,7 +23,7 @@ class ClusterWrapper:
                     ST_MakeEnvelope(%s, %s, %s, %s),
                     geom
                   )
-                  AND properties->>'tags' IS NOT NULL
+                  AND properties->>'tags' LIKE '%power%'
             LIMIT 1
             '''
         return clusters_query
