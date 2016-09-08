@@ -22,7 +22,11 @@ nodes_osmids = (
 '3212195882', '3212195889', '3212195895', '3212195893', '3212195896'
 )
 # bounds = [10.39529800415039, 4.050234320898018, 10.50516128540039, 4.109221809610561] # parallel lines
-bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
+# bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
+
+bounds = [15.003890991210938, -4.800890838853971, 15.663070678710938, -4.137558228375503] # bigger africa
+# bounds = [14.793434143066406, -4.934987879630612, 15.452613830566406, -4.603460449699286]
+bounds = [11.2060546875, -7.242597510949338, 16.4794921875, -1.9387168550573113]
 
 nodesWrapper = NodesWrapper(cur, bounds)
 clustersWrapper = ClusterWrapper(cur, bounds)
@@ -30,15 +34,18 @@ waysWrapper = WaysWrapper(cur, bounds)
 
 clusters = clustersWrapper.getClusters()
 
-def infer_way_from_nodes(nodes_osmids):
+def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
 
-    farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
-
-    # Start processing with one of the farthest nodes
+    if cluster_geom_text is not None:
+        farthest_nodes = nodesWrapper.get_farthest_nodes_in_cluster(cluster_geom_text)
+    else:
+        farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
+    print(farthest_nodes)
     processing_node = farthest_nodes[0]
 
     processed_nodes = []
     ignored_nodes = [] # nodes are ignored if there are too close to a node
+    possible_parallel_line_nodes = []
 
     processed_nodes.append(processing_node)
 
@@ -60,14 +67,14 @@ def infer_way_from_nodes(nodes_osmids):
             )
 
             ignored_nodes = ignored_nodes + nodes_around['too_close_node_osmids']
+            possible_parallel_line_nodes = possible_parallel_line_nodes + nodes_around['possible_parallel_line_nodes']
             closest_node = nodes_around['closest_node_osmid']
         else:
             is_complete = True
             continue
 
         if closest_node is not None:
-            print "Closest is - ",
-            print(closest_node)
+            print ".",
             processing_node = closest_node
             processed_nodes.append(processing_node)
 
@@ -83,11 +90,17 @@ def infer_way_from_nodes(nodes_osmids):
         # End the iteration of the cluster.
         return
     else:
-        print(processed_nodes)
-        for node_osmid in processed_nodes:
-            print("node(%s);" % node_osmid)
+        # print(processed_nodes)
+        # for node_osmid in processed_nodes:
+        #     print("node(%s);" % node_osmid)
 
-        waysWrapper.save_to_database(processed_nodes)
+        inferrence_notes = {}
+        if len(possible_parallel_line_nodes) >= (len(processed_nodes)/4):
+            inferrence_notes = {
+                'possible_error': True,
+                'notes': 'Posisble paralle lines'
+            }
+        waysWrapper.save_to_database(processed_nodes, inferrence_notes)
         conn.commit()
 
         # procesed nodes minus the all nodes
@@ -98,9 +111,13 @@ def infer_way_from_nodes(nodes_osmids):
 
         if len(unprocessed_nodes) > 1:
             # There are more nodes to be processed in this cluster.
-            infer_way_from_nodes(unprocessed_nodes)
+            infer_way_from_nodes(nodes_osmids=unprocessed_nodes)
 
 for cluster in clusters:
+    print("************ Processing New Cluster **************")
     nodes_osmids = nodesWrapper.get_nodes_osmids_in_cluster(cluster[0])
-    infer_way_from_nodes(nodes_osmids)
+    if len(nodes_osmids) > 1:
+        infer_way_from_nodes(nodes_osmids, cluster[0])
+    else:
+        print("Not enough nodes in cluster! - SKIPPING")
 

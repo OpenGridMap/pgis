@@ -26,7 +26,7 @@ class WaysWrapper:
         else:
             return False
 
-    def save_to_database(self, nodes_osmids):
+    def save_to_database(self, nodes_osmids, inferrence_notes):
         nodes = []
         flag = False
         for node_osmid in nodes_osmids:
@@ -45,15 +45,14 @@ class WaysWrapper:
             return None
 
         linestring = ""
-        print(nodes)
         for node in nodes:
             linestring += "{} {},".format(node[0], node[1])
 
         linestring = linestring[:-1]
-        print("INSERTING {}".format(linestring))
+        print("Saving powerline to database")
         query = "INSERT INTO inferred_powerlines(geom, properties) VALUES(%s, %s)"
         self.cur.execute(query, [
             'LINESTRING({})'.format(linestring),
-            json.dumps({ "tags": {}, "refs": nodes_osmids })
+            json.dumps({ "tags": {"inferrence": inferrence_notes}, "refs": nodes_osmids, })
         ])
 
