@@ -24,9 +24,13 @@ nodes_osmids = (
 # bounds = [10.39529800415039, 4.050234320898018, 10.50516128540039, 4.109221809610561] # parallel lines
 # bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
 
-bounds = [15.003890991210938, -4.800890838853971, 15.663070678710938, -4.137558228375503] # bigger africa
-# bounds = [14.793434143066406, -4.934987879630612, 15.452613830566406, -4.603460449699286]
-bounds = [11.2060546875, -7.242597510949338, 16.4794921875, -1.9387168550573113]
+# bounds = [15.003890991210938, -4.800890838853971, 15.663070678710938, -4.137558228375503] # bigger africa
+# bounds = [15.232973098754881, -4.554179759718965, 15.342836380004883, -4.495226724658142]
+bounds = [15.070838928222654, -4.89223025116464, 15.510292053222656, -4.656501822101158]
+# bounds = [15.22255539894104, -4.743145262934742, 15.23628830909729, -4.735778370815115]
+
+# settings
+is_less_deviating_point_preferred = False
 
 nodesWrapper = NodesWrapper(cur, bounds)
 clustersWrapper = ClusterWrapper(cur, bounds)
@@ -60,15 +64,33 @@ def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
 
         closest_node = None
 
+        if is_less_deviating_point_preferred and len(processed_nodes) > 1 and processing_node != processed_nodes[-2]:
+            last_processed_node = processed_nodes[-2]
+        else:
+            last_processed_node = None
+
         if len(unprocessed_nodes) > 0:
             nodes_around = nodesWrapper.get_closest_nodes_to(
                 processing_node,
-                unprocessed_nodes
+                unprocessed_nodes,
+                last_processed_node
             )
 
             ignored_nodes = ignored_nodes + nodes_around['too_close_node_osmids']
             possible_parallel_line_nodes = possible_parallel_line_nodes + nodes_around['possible_parallel_line_nodes']
-            closest_node = nodes_around['closest_node_osmid']
+
+            closest_node = None
+
+            if is_less_deviating_point_preferred == True and len(nodes_around['angles']) > 0:
+                sorted_nodes = sorted(nodes_around['angles'].iteritems(), key=lambda (k,v): (v,k))
+                print "From ",
+                print str(processing_node),
+                print " -> ",
+                print(sorted_nodes)
+                closest_node = sorted_nodes[0][0]
+
+            if closest_node is None:
+                closest_node = nodes_around['closest_node_osmid']
         else:
             is_complete = True
             continue
@@ -91,8 +113,8 @@ def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
         return
     else:
         # print(processed_nodes)
-        # for node_osmid in processed_nodes:
-        #     print("node(%s);" % node_osmid)
+        for node_osmid in processed_nodes:
+            print("node(%s);" % node_osmid)
 
         inferrence_notes = {}
         if len(possible_parallel_line_nodes) >= (len(processed_nodes)/4):

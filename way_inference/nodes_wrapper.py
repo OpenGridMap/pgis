@@ -3,6 +3,7 @@ class NodesWrapper:
     cur = None
     closest_min_distance = 0.0004
     closest_max_distance = 0.09
+    closest_max_distance_for_angles = 0.0055 # tells to get angles for those only within that distance.
     parallel_line_nodes_max_distance = 0.0006
 
     def __init__(self, sql_cursor, bounds):
@@ -10,7 +11,19 @@ class NodesWrapper:
         self.cur = sql_cursor
 
     def get_nodes_osmids_in_cluster(self, cluster_geom_text):
-        self.cur.execute(self._node_osmids_in_cluster_query(), [
+        query = '''
+            SELECT DISTINCT properties->>'osmid' FROM point
+            WHERE ST_Intersects(
+                    ST_CollectionExtract(%s, 1),
+                    point.geom
+                  )
+                AND properties->>'tags' LIKE '%%power%%'
+                AND ST_Intersects(
+                        ST_MakeEnvelope(%s, %s, %s, %s),
+                        point.geom
+                    );
+        '''
+        self.cur.execute(query, [
             cluster_geom_text,
             self.bounds[1],
             self.bounds[0],
@@ -22,7 +35,8 @@ class NodesWrapper:
         def tmp(x): return x[0]
         return list(map(tmp, node_osmids_tuple))
 
-    def get_closest_nodes_to(self, for_node_osmid, among_osm_ids):
+    def get_closest_nodes_to(self, for_node_osmid, among_osm_ids,
+                            previous_node_osmid=None):
         fetch_closest_query = '''
             WITH current_point AS (
                 SELECT id, ST_AsText(geom) AS geom FROM point
@@ -47,12 +61,18 @@ class NodesWrapper:
         result = {
             'too_close_node_osmids': [],
             'possible_parallel_line_nodes': [],
-            'closest_node_osmid': None
+            'closest_node_osmid': None,
+            'angles': {}
         }
 
         for node in closest_nodes:
             if (node[2] < self.parallel_line_nodes_max_distance):
                 result['possible_parallel_line_nodes'].append(node[1])
+
+            if (previous_node_osmid is not None) and (node[2] <= self.closest_max_distance_for_angles):
+                # Case to include angles formed.
+                angle = self.get_deviation_angle(previous_node_osmid, for_node_osmid, node[1])
+                result['angles'][node[1]] = angle
 
         for node in closest_nodes:
             if (node[2] < self.closest_min_distance):
@@ -60,6 +80,7 @@ class NodesWrapper:
             else:
                 result['closest_node_osmid'] = node[1]
                 break;
+
         return result;
 
     def get_node_osmids_intersecting_polygons(self, among_osm_ids):
@@ -127,16 +148,35 @@ class NodesWrapper:
         ])
         return self.cur.fetchone()
 
-    def _node_osmids_in_cluster_query(self):
-        return '''
-            SELECT DISTINCT properties->>'osmid' FROM point
-            WHERE ST_Intersects(
-                    ST_CollectionExtract(%s, 1),
-                    point.geom
-                  )
-                AND properties->>'tags' LIKE '%%power%%'
-                AND ST_Intersects(
-                        ST_MakeEnvelope(%s, %s, %s, %s),
-                        point.geom
-                    );
+    def get_deviation_angle(self, point1, intersection, point2):
+        # Returns the angle at which the line joining +intersection+ point
+        # with +point2+ devitates the line formed by joining point1 to
+        # intersection
+        query = '''
+        WITH
+            point1 AS (SELECT geom FROM point WHERE properties->>'osmid' = %s),
+            intersection AS (SELECT geom FROM point WHERE properties->>'osmid' = %s),
+            point2 AS (SELECT geom FROM point WHERE properties->>'osmid' = %s)
+
+        SELECT deg_i21i, CASE WHEN deg_i21i > 180 THEN (360 - deg_i21i)
+                     ELSE deg_i21i END
+        FROM (
+                SELECT
+                    abs(round(degrees(
+                        ST_Azimuth(
+                            ST_Point(ST_y(intersection.geom), ST_x(intersection.geom)),
+                            ST_Point(ST_y(point2.geom), ST_x(point2.geom))
+                        ) -
+                        ST_Azimuth (
+                            ST_Point(ST_y(point1.geom), ST_x(point1.geom)),
+                            ST_Point(ST_y(intersection.geom), ST_x(intersection.geom))
+                        )
+                     )::decimal, 2))
+                     AS deg_i21i
+                FROM point1, point2, intersection
+            ) s
         '''
+        self.cur.execute(query, [str(point1), str(intersection), str(point2)])
+        row = self.cur.fetchone()
+        return row[0]
+
