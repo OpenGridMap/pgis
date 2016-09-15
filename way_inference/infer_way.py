@@ -26,11 +26,13 @@ nodes_osmids = (
 
 # bounds = [15.003890991210938, -4.800890838853971, 15.663070678710938, -4.137558228375503] # bigger africa
 # bounds = [15.232973098754881, -4.554179759718965, 15.342836380004883, -4.495226724658142]
-bounds = [15.070838928222654, -4.89223025116464, 15.510292053222656, -4.656501822101158]
+# bounds = [15.070838928222654, -4.89223025116464, 15.510292053222656, -4.656501822101158]
 # bounds = [15.22255539894104, -4.743145262934742, 15.23628830909729, -4.735778370815115]
+# bounds = [14.515686035156248, -5.103254918829327, 16.27349853515625, -4.160158150193397] # Africa Mbanza
+bounds = [10.853462219238281, 49.238000036465465, 11.292915344238281, 49.392206057422044]
 
 # settings
-is_less_deviating_point_preferred = False
+is_less_deviating_point_preferred = True
 
 nodesWrapper = NodesWrapper(cur, bounds)
 clustersWrapper = ClusterWrapper(cur, bounds)
@@ -57,10 +59,10 @@ def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
 
     while is_complete == False:
         # procesed nodes minus the all nodes
-        unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
+        unprocessed_nodes = tuple(set(nodes_osmids) - set(tuple(processed_nodes)))
 
         # unprocessed nodes minus the ignored node.
-        unprocessed_nodes = tuple(set(unprocessed_nodes) ^ set(tuple(ignored_nodes)))
+        unprocessed_nodes = tuple(set(unprocessed_nodes) - set(tuple(ignored_nodes)))
 
         closest_node = None
 
@@ -82,12 +84,15 @@ def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
             closest_node = None
 
             if is_less_deviating_point_preferred == True and len(nodes_around['angles']) > 0:
-                sorted_nodes = sorted(nodes_around['angles'].iteritems(), key=lambda (k,v): (v,k))
-                print "From ",
-                print str(processing_node),
-                print " -> ",
-                print(sorted_nodes)
-                closest_node = sorted_nodes[0][0]
+                sorted_nodes = sorted(
+                    nodes_around['angles'],
+                    key=lambda x: (x[2], x[1])
+                ) # sort by angle and then distance
+
+                print("From -> %s: %s" % (processing_node, sorted_nodes))
+
+                if sorted_nodes[0][2] is not None: # angle could sometimes be none.
+                    closest_node = sorted_nodes[0][0]
 
             if closest_node is None:
                 closest_node = nodes_around['closest_node_osmid']
@@ -125,11 +130,10 @@ def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
         waysWrapper.save_to_database(processed_nodes, inferrence_notes)
         conn.commit()
 
-        # procesed nodes minus the all nodes
-        unprocessed_nodes = tuple(set(tuple(processed_nodes)) ^ set(nodes_osmids))
-
+        # all nodes minus the processed nodes
+        unprocessed_nodes = tuple(set(nodes_osmids) - set(tuple(processed_nodes)))
         # unprocessed nodes minus the ignored node.
-        unprocessed_nodes = tuple(set(unprocessed_nodes) ^ set(tuple(ignored_nodes)))
+        unprocessed_nodes = tuple(set(unprocessed_nodes) - set(tuple(ignored_nodes)))
 
         if len(unprocessed_nodes) > 1:
             # There are more nodes to be processed in this cluster.

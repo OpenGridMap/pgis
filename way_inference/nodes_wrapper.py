@@ -1,10 +1,14 @@
+import math
+from decimal import *
+
 class NodesWrapper:
     bounds = []
     cur = None
     closest_min_distance = 0.0004
     closest_max_distance = 0.09
-    closest_max_distance_for_angles = 0.0055 # tells to get angles for those only within that distance.
+    closest_max_distance_for_angles = 0.008# 0.0055 # tells to get angles for those only within that distance.
     parallel_line_nodes_max_distance = 0.0006
+    angle_ceil_multiplier = 5
 
     def __init__(self, sql_cursor, bounds):
         self.bounds = bounds
@@ -49,6 +53,7 @@ class NodesWrapper:
                     ) as distance
                 FROM point, current_point
                 WHERE ST_Distance(ST_GeomFromText(current_point.geom), point.geom) < %s
+                    AND ST_Distance(ST_GeomFromText(current_point.geom), point.geom) > 0
                     AND properties->>'osmid' IN %s
                 ORDER BY ST_Distance(ST_GeomFromText(current_point.geom), point.geom) ASC
         '''
@@ -62,7 +67,7 @@ class NodesWrapper:
             'too_close_node_osmids': [],
             'possible_parallel_line_nodes': [],
             'closest_node_osmid': None,
-            'angles': {}
+            'angles': [] # contains tuple with (osmid, roundedup distance, ceiled angle)
         }
 
         for node in closest_nodes:
@@ -72,7 +77,12 @@ class NodesWrapper:
             if (previous_node_osmid is not None) and (node[2] <= self.closest_max_distance_for_angles):
                 # Case to include angles formed.
                 angle = self.get_deviation_angle(previous_node_osmid, for_node_osmid, node[1])
-                result['angles'][node[1]] = angle
+                if angle is not None:
+                    angle = (int(math.ceil(angle/ Decimal(self.angle_ceil_multiplier))) * self.angle_ceil_multiplier)
+                    rounded_up_distance = math.ceil(node[2] * 1000)/1000
+                    node_dist_angle_tuple = (node[1], rounded_up_distance, angle)
+                    result['angles'].append(node_dist_angle_tuple)
+
 
         for node in closest_nodes:
             if (node[2] < self.closest_min_distance):
@@ -158,7 +168,7 @@ class NodesWrapper:
             intersection AS (SELECT geom FROM point WHERE properties->>'osmid' = %s),
             point2 AS (SELECT geom FROM point WHERE properties->>'osmid' = %s)
 
-        SELECT deg_i21i, CASE WHEN deg_i21i > 180 THEN (360 - deg_i21i)
+        SELECT CASE WHEN deg_i21i > 180 THEN (360 - deg_i21i)
                      ELSE deg_i21i END
         FROM (
                 SELECT
