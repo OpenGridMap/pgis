@@ -49,6 +49,54 @@ This again uses the postGIS functions and such points are fecthed using SQL quer
 The script then takes one of those points as a starting point.
 If no such points are found, falls back to using **Farthest points**
 
+## Choosing a possible next point
+
+This is one of the critical steps which would make a difference on how the lines are inferred.
+A possible next point from a point is done based on different variables.
+We have tested these variables seperately. They cannot all work together.
+However, a few of them can work together.
+
+### Closest point in a ring
+
+By default, we choose the next closest point in a ring.
+Its highly possible that a point has points that are too close (in case of parallelly running powerlines).
+We don't want to join those _too-close_ points.
+Similarly, there are always points around a point that are too far.
+We used the `../estimate_power_pole_distance.py` script to find the average minimum and maximum distance between adjacent points among the powerlines in our database.
+Using these minimum and maximum distance, we set the variables in the `NodeWrapper` and form an SQL query to fetch points within the ring with inner and outer radii as minimum and maximum distances respectively.
+From these closest points we take the most closest point.
+
+**Issues:**
+* Crossing powerlines: There usually are powerlines crossing each other and this method might fail by picking a point in supposed to be the other powerline.
+* Lines joining at a substations: Powerlines usually join at a substation and this method might fail by picking points from other powerlines, similar to the _Crossing powerlines_ issue.
+* Parallel lines: Powerlines tend to run parallel for quite some distances from a substation, such parallel lines are failed to be inferred correctly. It forms a zig-zag pattern by joining points from the possible two line alternatively.
+
+**Works best for:**
+* Lone powerlines: Powerlines that run idependantly without any intersections and parallel neighbours.
+
+### Point causing less angle of deviation
+
+Not default. Set by setting the variable `is_less_deviating_point_preferred` to `True`.
+
+While building a line, this method will choose a point that will deviate a line with a lesser angle than all other points that are around it within a maximum distance of 0.008 units.
+This maximum distance is needed so that, too far away nodes are not taken into consideration as quite often the farthest nodes create less deviation angle.
+From a given point, we gather the possible angle formed by all the points within the maximum distance.
+We will then ceil these angles to the closest 5th multiple and round up the distances upto third decimal point.
+We sort these nodes by angle and then by distance so that all the nodes that are forming noticeable deviation (5 degree angle) form a group.
+We will then choose the closest node from the group that forms the least deviation.
+
+The varibales that control angles' ceiling multiple, distance roundup decimal point and maximum distance for point to be considered in angle deviation calculation are within the `NodesWrapper` class.
+
+**Issues:**
+* Lines joining at a substation: Such lines usually take sharp turns at substations but points from neighbouring lines might show less deviations.
+
+**Works better for:**
+* Parallel lines
+* Crossing powerlines
+
+
+## Varibles that can work together
+* Farthest points, Points on a substation, Next Closest within the ring, Point causing less deviation.
 
 # Requirements
 * Postgres with [postGIS](http://postgis.net) Version 2.2
