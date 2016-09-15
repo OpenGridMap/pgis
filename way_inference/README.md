@@ -44,6 +44,7 @@ The script then takes one of those points as a starting point.
 **Optional**
 
 Some polygons are tagged with `power: substation` in the OpenStreetMaps data to mark substations.
+Also, lines that are taggest with `power: line` but are closed are also usually substations.
 If the option to select such points in the script, the script fetches points (from the cluster) that intersects/within such polygons.
 This again uses the postGIS functions and such points are fecthed using SQL queries.
 The script then takes one of those points as a starting point.
