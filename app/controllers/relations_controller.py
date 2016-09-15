@@ -32,8 +32,8 @@ class RelationsController:
             relations = Relation.relations_for_export(relations_ids)
 
         headers = {
-            'Content-Type': 'application/xml',
-            'Content-Disposition': 'attachment; filename=relations.xml'
+            'Content-Type': 'application/osm',
+            'Content-Disposition': 'attachment; filename=relations.xml.osm'
         }
 
         presenter = RelationsPresenter(relations)
