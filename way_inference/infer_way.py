@@ -22,17 +22,18 @@ nodes_osmids = (
 '3212195882', '3212195889', '3212195895', '3212195893', '3212195896'
 )
 # bounds = [10.39529800415039, 4.050234320898018, 10.50516128540039, 4.109221809610561] # parallel lines
-# bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
+bounds = [15.496902465820312, -1.4843615162701949, 16.375808715820312, -1.0113763068489454] # the short line in the middle of africa
 
 # bounds = [15.003890991210938, -4.800890838853971, 15.663070678710938, -4.137558228375503] # bigger africa
 # bounds = [15.232973098754881, -4.554179759718965, 15.342836380004883, -4.495226724658142]
 # bounds = [15.070838928222654, -4.89223025116464, 15.510292053222656, -4.656501822101158]
 # bounds = [15.22255539894104, -4.743145262934742, 15.23628830909729, -4.735778370815115]
-# bounds = [14.515686035156248, -5.103254918829327, 16.27349853515625, -4.160158150193397] # Africa Mbanza
-bounds = [10.853462219238281, 49.238000036465465, 11.292915344238281, 49.392206057422044]
+bounds = [14.515686035156248, -5.103254918829327, 16.27349853515625, -4.160158150193397] # Africa Mbanza
+# bounds = [10.853462219238281, 49.238000036465465, 11.292915344238281, 49.392206057422044] # Nuremburg
 
 # settings
 is_less_deviating_point_preferred = True
+prefer_nodes_from_substations = True
 
 nodesWrapper = NodesWrapper(cur, bounds)
 clustersWrapper = ClusterWrapper(cur, bounds)
@@ -42,12 +43,20 @@ clusters = clustersWrapper.getClusters()
 
 def infer_way_from_nodes(nodes_osmids, cluster_geom_text=None):
 
-    if cluster_geom_text is not None:
-        farthest_nodes = nodesWrapper.get_farthest_nodes_in_cluster(cluster_geom_text)
-    else:
-        farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
-    print(farthest_nodes)
-    processing_node = farthest_nodes[0]
+    processing_node = None
+
+    if prefer_nodes_from_substations == True:
+        nodes_on_polygons = nodesWrapper.get_node_osmids_intersecting_polygons(nodes_osmids)
+        if len(nodes_on_polygons) > 0:
+            processing_node = nodes_on_polygons[0][0]
+
+    if processing_node is None:
+        if cluster_geom_text is not None:
+            farthest_nodes = nodesWrapper.get_farthest_nodes_in_cluster(cluster_geom_text)
+        else:
+            farthest_nodes = nodesWrapper.get_farthest_nodes_among_nodes(nodes_osmids)
+
+        processing_node = farthest_nodes[0]
 
     processed_nodes = []
     ignored_nodes = [] # nodes are ignored if there are too close to a node
@@ -143,7 +152,11 @@ for cluster in clusters:
     print("************ Processing New Cluster **************")
     nodes_osmids = nodesWrapper.get_nodes_osmids_in_cluster(cluster[0])
     if len(nodes_osmids) > 1:
-        infer_way_from_nodes(nodes_osmids, cluster[0])
+        if prefer_nodes_from_substations:
+            infer_way_from_nodes(nodes_osmids)
+        else:
+            infer_way_from_nodes(nodes_osmids, cluster[0])
+
     else:
         print("Not enough nodes in cluster! - SKIPPING")
 

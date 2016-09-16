@@ -101,8 +101,18 @@ class NodesWrapper:
             ON ST_Contains(ST_MakePolygon(powerline.geom), point.geom)
                 AND ST_IsClosed(powerline.geom)
                 AND point.properties->>'osmid' IN %s
+                AND ST_Intersects(
+                    ST_MakeEnvelope(%s, %s, %s, %s),
+                    powerline.geom
+                )
         '''
-        self.cur.execute(query, [tuple(among_osm_ids)])
+        self.cur.execute(query, [
+            tuple(among_osm_ids),
+            self.bounds[1],
+            self.bounds[0],
+            self.bounds[3],
+            self.bounds[2]
+        ])
         return self.cur.fetchall()
 
     def get_farthest_nodes_in_cluster(self, cluster_geom_text):
