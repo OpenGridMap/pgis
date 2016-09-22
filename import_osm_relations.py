@@ -72,7 +72,7 @@ This is what we do here:
 '''
 
 try:
-    conn = psycopg2.connect("dbname='gis' user='Munna' host='localhost' password=''")
+    conn = psycopg2.connect("dbname='gis' user='postgres' host='localhost' password=''")
     cur = conn.cursor()
 except:
     print("I am unable to connect to the database")

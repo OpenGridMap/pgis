@@ -1,29 +1,29 @@
-from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, jsonify, Response, \
-    current_app
+from flask import redirect, session, url_for, request, json, jsonify, current_app
 from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
+from flask.ext.principal import ActionNeed, identity_loaded, UserNeed, identity_changed, \
+    Identity
 from flask_oauthlib.client import OAuth
-from flask.ext.principal import Principal, Permission, ActionNeed, identity_loaded, UserNeed, identity_changed, \
-    Identity, AnonymousIdentity
 from httplib2 import Http
 
-from app import GisApp, db
-import app.models.point
-import app.models.powerline
-import app.models.user
-import app.controllers.application_controller
-import app.controllers.points_controller
-import app.controllers.powerlines_controller
-import app.controllers.submissions_controller
-import app.controllers.relations_controller
 import app.controllers.admin.application_controller
 import app.controllers.admin.points_controller
 import app.controllers.admin.powerlines_controller
-import app.controllers.admin.users_controller
 import app.controllers.admin.submissions_controller
-import app.permissions
-import app.controllers.ranking_controller
-import app.controllers.userprofile_controller
+import app.controllers.admin.users_controller
+import app.controllers.application_controller
 import app.controllers.bonus_system_controller
+import app.controllers.points_controller
+import app.controllers.powerlines_controller
+import app.controllers.ranking_controller
+import app.controllers.relations_controller
+import app.controllers.submissions_controller
+import app.controllers.transnet_controller
+import app.controllers.userprofile_controller
+import app.models.point
+import app.models.powerline
+import app.models.user
+import app.permissions
+from app import GisApp
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
@@ -74,6 +74,7 @@ def index():
     controller = app.controllers.application_controller.ApplicationController()
     return controller.index()
 
+
 @GisApp.route('/userprofile')
 @login_required
 def userprofile():
@@ -81,17 +82,20 @@ def userprofile():
     response = controller.index()
     return controller.index()
 
+
 @GisApp.route('/ranking')
 def ranking():
     controller = app.controllers.ranking_controller.RankingController()
     response = controller.index()
     return controller.index()
 
+
 @GisApp.route('/bonus_system')
 def activity_points():
     controller = app.controllers.bonus_system_controller.BonusSystemController()
     response = controller.index()
     return controller.index()
+
 
 @GisApp.route('/submissions')
 def aubmissions():
@@ -141,15 +145,23 @@ def powerlines():
     return controller.index()
 
 
+@GisApp.route('/transnet')
+def transnet():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.index()
+
+
 @GisApp.route('/relations')
 def relations():
     controller = app.controllers.relations_controller.RelationsController()
     return controller.index()
 
+
 @GisApp.route('/relations/export')
 def relations_export():
     controller = app.controllers.relations_controller.RelationsController()
     return controller.export()
+
 
 @GisApp.route('/admin/login')
 def admin_login():

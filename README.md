@@ -159,7 +159,7 @@ nosetests tests
 
         ````bash
         sudo apt-get install -y python-pip python-dev
-        wget https://protobuf.googlecode.com/svn/rc/protobuf-2.6.0.tar.gz
+        wget https://github.com/google/protobuf/releases/download/v2.6.0/protobuf-2.6.0.tar.gz
         tar xvfz protobuf-2.6.0.tar.gz
         cd protobuf-2.6.0
         sudo ./configure

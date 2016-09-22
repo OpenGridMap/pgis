@@ -17,6 +17,8 @@ non_admin_js_files = common_js_files + [
     'javascripts/libraries/Map.SelectArea.min.js',
     'javascripts/non-admin/leaflet.pgis.relation.markerClusterGroup.js',
     'javascripts/non-admin/leaflet.pgis.relation.featureGroup.js',
+    'javascripts/non-admin/leaflet.pgis.transnet.markerClusterGroup.js',
+    'javascripts/non-admin/leaflet.pgis.transnet.featureGroup.js',
     'javascripts/non-admin/pgis-map.js',
     'javascripts/non-admin/map-helpers.js',
     'javascripts/non-admin/map-data-loader.js',
