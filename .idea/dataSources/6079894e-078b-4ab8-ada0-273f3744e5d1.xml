@@ -47,8 +47,8 @@
     <schema id="15" parent="1" name="public">
       <object-id>2200</object-id>
       <visible>1</visible>
-      <introspection-state-number>22515</introspection-state-number>
-      <introspection-timestamp>2016-09-23.16:52:13.889</introspection-timestamp>
+      <introspection-state-number>22636</introspection-state-number>
+      <introspection-timestamp>2016-09-23.18:40:26.128</introspection-timestamp>
     </schema>
     <schema id="16" parent="1" name="pg_catalog">
       <object-id>11</object-id>
@@ -266,7 +266,7 @@
     </table>
     <table id="59" parent="15" name="transnet_powerline">
       <object-id>54171</object-id>
-      <state-number>22467</state-number>
+      <state-number>22636</state-number>
     </table>
     <table id="60" parent="15" name="transnet_relation">
       <object-id>54416</object-id>
@@ -274,7 +274,7 @@
     </table>
     <table id="61" parent="15" name="transnet_station">
       <object-id>54183</object-id>
-      <state-number>22467</state-number>
+      <state-number>22546</state-number>
     </table>
     <table id="62" parent="15" name="user">
       <object-id>53680</object-id>
@@ -6905,165 +6905,165 @@
       <state-number>22462</state-number>
       <data-type>integer|0</data-type>
     </column>
-    <column id="1356" parent="59" name="lat">
-      <state-number>22462</state-number>
-      <data-type>integer|0</data-type>
+    <column id="1356" parent="59" name="lon">
+      <state-number>22530</state-number>
+      <data-type>numeric|0</data-type>
     </column>
-    <column id="1357" parent="59" name="length">
-      <state-number>22462</state-number>
-      <data-type>integer|0</data-type>
+    <column id="1357" parent="59" name="nodes">
+      <state-number>22546</state-number>
+      <data-type>bigint[]|0</data-type>
     </column>
-    <column id="1358" parent="59" name="lon">
-      <state-number>22462</state-number>
-      <data-type>integer|0</data-type>
-    </column>
-    <column id="1359" parent="59" name="name">
+    <column id="1358" parent="59" name="name">
       <state-number>22462</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1360" parent="59" name="nodes">
-      <state-number>22462</state-number>
-      <data-type>integer[]|0</data-type>
-    </column>
-    <column id="1361" parent="59" name="osm_id">
+    <column id="1359" parent="59" name="osm_id">
       <state-number>22462</state-number>
       <data-type>integer|0</data-type>
     </column>
-    <column id="1362" parent="59" name="raw_geom">
+    <column id="1360" parent="59" name="raw_geom">
       <state-number>22462</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1363" parent="59" name="tags">
+    <column id="1361" parent="59" name="tags">
       <state-number>22462</state-number>
       <data-type>json|0</data-type>
     </column>
-    <column id="1364" parent="59" name="type">
+    <column id="1362" parent="59" name="type">
       <state-number>22462</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1365" parent="59" name="voltage">
+    <column id="1363" parent="59" name="voltage">
       <state-number>22462</state-number>
       <data-type>integer[]|0</data-type>
     </column>
-    <column id="1366" parent="59" name="relation_id">
+    <column id="1364" parent="59" name="relation_id">
       <state-number>22467</state-number>
       <mandatory>1</mandatory>
       <data-type>integer|0</data-type>
     </column>
-    <index id="1367" parent="59" name="transnet_powerline_pkey">
+    <column id="1365" parent="59" name="lat">
+      <state-number>22530</state-number>
+      <data-type>numeric|0</data-type>
+    </column>
+    <column id="1366" parent="59" name="length">
+      <state-number>22530</state-number>
+      <data-type>numeric|0</data-type>
+    </column>
+    <column id="1367" parent="59" name="srs_geom">
+      <state-number>22636</state-number>
+      <data-type>geometry(LineString)|0</data-type>
+    </column>
+    <index id="1368" parent="59" name="transnet_powerline_pkey">
       <object-id>54178</object-id>
       <columns>id</columns>
       <desc-columns></desc-columns>
       <unique>1</unique>
     </index>
-    <index id="1368" parent="59" name="idx_transnet_powerline_geom">
+    <index id="1369" parent="59" name="idx_transnet_powerline_geom">
       <object-id>54180</object-id>
       <columns>geom</columns>
       <desc-columns></desc-columns>
     </index>
-    <index id="1369" parent="59" name="ix_transnet_powerline_relation_id">
+    <index id="1370" parent="59" name="ix_transnet_powerline_relation_id">
       <object-id>54426</object-id>
       <columns>?</columns>
       <desc-columns></desc-columns>
     </index>
-    <key id="1370" parent="59" name="transnet_powerline_pkey">
+    <key id="1371" parent="59" name="transnet_powerline_pkey">
       <object-id>54179</object-id>
       <columns>id</columns>
       <underlying-index>transnet_powerline_pkey</underlying-index>
       <primary>1</primary>
     </key>
-    <column id="1371" parent="60" name="id">
+    <column id="1372" parent="60" name="id">
       <state-number>22463</state-number>
       <mandatory>1</mandatory>
       <data-type>integer|0</data-type>
       <default-expression>nextval(&apos;transnet_relation_id_seq&apos;::regclass)</default-expression>
     </column>
-    <column id="1372" parent="60" name="country">
+    <column id="1373" parent="60" name="country">
       <state-number>22463</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1373" parent="60" name="ref">
+    <column id="1374" parent="60" name="ref">
       <state-number>22463</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1374" parent="60" name="name">
+    <column id="1375" parent="60" name="name">
       <state-number>22475</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1375" parent="60" name="voltage">
+    <column id="1376" parent="60" name="voltage">
       <state-number>22515</state-number>
       <data-type>integer|0</data-type>
     </column>
-    <index id="1376" parent="60" name="transnet_relation_pkey">
+    <index id="1377" parent="60" name="transnet_relation_pkey">
       <object-id>54423</object-id>
       <columns>id</columns>
       <desc-columns></desc-columns>
       <unique>1</unique>
     </index>
-    <key id="1377" parent="60" name="transnet_relation_pkey">
+    <key id="1378" parent="60" name="transnet_relation_pkey">
       <object-id>54424</object-id>
       <columns>id</columns>
       <underlying-index>transnet_relation_pkey</underlying-index>
       <primary>1</primary>
     </key>
-    <column id="1378" parent="61" name="id">
+    <column id="1379" parent="61" name="id">
       <state-number>22421</state-number>
       <mandatory>1</mandatory>
       <data-type>integer|0</data-type>
       <default-expression>nextval(&apos;transnet_station_id_seq&apos;::regclass)</default-expression>
     </column>
-    <column id="1379" parent="61" name="geom">
+    <column id="1380" parent="61" name="geom">
       <state-number>22421</state-number>
       <data-type>geometry(Polygon)|0</data-type>
     </column>
-    <column id="1380" parent="61" name="country">
+    <column id="1381" parent="61" name="country">
       <state-number>22421</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1381" parent="61" name="tags">
+    <column id="1382" parent="61" name="tags">
       <state-number>22462</state-number>
       <data-type>json|0</data-type>
     </column>
-    <column id="1382" parent="61" name="raw_geom">
+    <column id="1383" parent="61" name="raw_geom">
       <state-number>22462</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1383" parent="61" name="lat">
-      <state-number>22462</state-number>
-      <data-type>integer|0</data-type>
+    <column id="1384" parent="61" name="lon">
+      <state-number>22530</state-number>
+      <data-type>numeric|0</data-type>
     </column>
-    <column id="1384" parent="61" name="length">
-      <state-number>22462</state-number>
-      <data-type>integer|0</data-type>
-    </column>
-    <column id="1385" parent="61" name="lon">
-      <state-number>22462</state-number>
-      <data-type>integer|0</data-type>
-    </column>
-    <column id="1386" parent="61" name="name">
+    <column id="1385" parent="61" name="name">
       <state-number>22462</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1387" parent="61" name="osm_id">
+    <column id="1386" parent="61" name="osm_id">
       <state-number>22462</state-number>
       <data-type>integer|0</data-type>
     </column>
-    <column id="1388" parent="61" name="nodes">
+    <column id="1387" parent="61" name="voltage">
       <state-number>22462</state-number>
       <data-type>integer[]|0</data-type>
     </column>
-    <column id="1389" parent="61" name="voltage">
-      <state-number>22462</state-number>
-      <data-type>integer[]|0</data-type>
-    </column>
-    <column id="1390" parent="61" name="type">
+    <column id="1388" parent="61" name="type">
       <state-number>22462</state-number>
       <data-type>varchar|0</data-type>
     </column>
-    <column id="1391" parent="61" name="relation_id">
+    <column id="1389" parent="61" name="relation_id">
       <state-number>22467</state-number>
       <mandatory>1</mandatory>
       <data-type>integer|0</data-type>
+    </column>
+    <column id="1390" parent="61" name="lat">
+      <state-number>22530</state-number>
+      <data-type>numeric|0</data-type>
+    </column>
+    <column id="1391" parent="61" name="length">
+      <state-number>22530</state-number>
+      <data-type>numeric|0</data-type>
     </column>
     <index id="1392" parent="61" name="transnet_station_pkey">
       <object-id>54190</object-id>
