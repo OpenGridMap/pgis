@@ -66,7 +66,7 @@ def find_and_import_relation_files():
         for dir in dirs[1:]:
             relation_path = '{0}/relations.json'.format(dir)
             if exists(relation_path):
-                print('relations exist {0}'.format(dir))
+                transnet_import_relations(relation_path)
             else:
                 print('relations  not exist {0}'.format(dir))
 
@@ -75,50 +75,102 @@ def find_and_import_relation_files():
         exit()
 
 
-def transnet_powerline_importer(continent, country):
+def try_parse_int(string):
+    try:
+        return int(string)
+    except ValueError as e:
+        print(e)
+        raise ValueError()
+
+
+def transnet_import_relations(json_file):
+    country = json_file.split('/')[-2]
     cur.execute('''DELETE FROM transnet_powerline
                     WHERE country=%s;''', [
         country
     ])
-    conn.commit()
-
-    with open('./data/{0}/{1}/csv_lines_segment.csv'.format(continent, country), 'rb') as csvfile:
-        powerlines = csv.reader(csvfile, delimiter=',')
-        for row in powerlines:
-            query = '''INSERT INTO transnet_powerline(geom, properties, country)
-                                VALUES (ST_FlipCoordinates(%s), %s, %s)'''
-
-            cur.execute(query, [
-                row[7],
-                json.dumps({"lon": row[1], "lat": row[2], "voltage": row[5], "type": row[6], "name": row[3],
-                            "osm_id": row[4]}),
-                country,
-            ])
-        conn.commit()
-
-
-def transnet_station_importer(continent, country):
     cur.execute('''DELETE FROM transnet_station
                         WHERE country=%s;''', [
         country
     ])
+    cur.execute('''DELETE FROM transnet_relation
+                        WHERE country=%s;''', [
+        country
+    ])
     conn.commit()
-    with open('./data/{0}/{1}/csv_nodes.csv'.format(continent, country), 'rb') as csvfile:
-        powerlines = csv.reader(csvfile, delimiter=',')
-        for row in powerlines:
-            query = '''INSERT INTO transnet_station(geom, properties, country)
-                                        VALUES (%s, %s, %s)'''
 
-            cur.execute(query, [
-                row[7],
-                json.dumps({"lon": row[1], "lat": row[2], "voltage": row[5], "type": row[6], "name": row[3],
-                            "osm_id": row[4]}),
-                country,
-            ])
+    query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
+                                    VALUES (%s, %s, %s, %s) RETURNING id'''
+
+    query_powerline = '''INSERT INTO transnet_powerline(country, geom, tags, raw_geom, voltage, type, nodes,
+                                                                  lat, lon, cables, name, length, osm_id, relation_id)
+                                                    VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s, %s, %s
+                                                    ,%s, %s)'''
+    query_station = '''INSERT INTO transnet_station(country, geom, tags, raw_geom, lat, lon, name,
+                                                      length, osm_id, nodes, voltage, type, relation_id)
+                                                    VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s, %s, %s
+                                                    ,%s)'''
+
+    powerline_tags = ['line', 'cable', 'minor_line']
+    station_tags = ['substation', 'station', 'sub_station', 'plant', 'generator']
+
+    with open(json_file, 'r+') as relations_file:
+        relations = json.load(relations_file)
+        for relation in relations:
+            cur.execute(query_relation, [country, relation['ref'], relation['name'], relation['voltage']])
+            relation_id = cur.fetchone()[0]
+            for member in relation['members']:
+                if member['type'] in powerline_tags:
+                    cur.execute(query_powerline, [country,
+                                                  member['geom'],
+                                                  json.dumps(
+                                                      {}),
+                                                  member['raw_geom'],
+                                                  member['voltage'],
+                                                  member['type'],
+                                                  member['nodes'],
+                                                  member['lat'],
+                                                  member['lon'],
+                                                  member['cables'],
+                                                  member['name'],
+                                                  member['length'],
+                                                  member['id'],
+                                                  relation_id
+                                                  ])
+                elif member['type'] in station_tags:
+                    cur.execute(query_station, [country,
+                                                member['geom'],
+                                                json.dumps(
+                                                    {}),
+                                                member['raw_geom'],
+                                                member['lat'],
+                                                member['lon'],
+                                                member['name'],
+                                                member['length'],
+                                                member['id'],
+                                                member['nodes'],
+                                                member['voltage'],
+                                                member['type'],
+                                                relation_id
+                                                ])
+
         conn.commit()
 
 
-# transnet_powerline_importer('europe', 'austria')
-# transnet_station_importer('europe', 'austria')
 # download_latest_relation_files()
-import_relation_files()
+# find_and_import_relation_files()
+transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+
+
+
+
+
+# query = '''INSERT INTO transnet_relation(geom, properties, country)
+#                                 VALUES (ST_FlipCoordinates(%s), %s, %s)'''
+#
+#             cur.execute(query, [
+#                 row[7],
+#                 json.dumps({"lon": row[1], "lat": row[2], "voltage": row[5], "type": row[6], "name": row[3],
+#                             "osm_id": row[4]}),
+#                 country,
+#             ])

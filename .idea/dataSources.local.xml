@@ -8,8 +8,8 @@
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>postgres</user-name>
-      <introspection-scope>gis:public,pg_catalog,postgres</introspection-scope>
-      <resolve-scope>gis:public,postgres</resolve-scope>
+      <introspection-scope>gis:pg_catalog,postgres,public</introspection-scope>
+      <resolve-scope>gis:postgres,public</resolve-scope>
     </data-source>
   </component>
 </project>
