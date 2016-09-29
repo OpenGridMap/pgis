@@ -62,11 +62,9 @@ $(document).ready(function () {
     var _pgisMap = pgisMap;
 
     pgisMap.baseMapDataLoader = function () {
-        if (_.contains(_pgisMap.selectedOverlayLayers, "Relations")) {
+        if (_.contains(_pgisMap.selectedOverlayLayers, "relations")
+            || _.contains(_pgisMap.selectedOverlayLayers, "transnet")) {
             MapDataLoader.fetchAndPlotRelations(_pgisMap);
-        }
-        else if (_.contains(_pgisMap.selectedOverlayLayers, "Transnet")) {
-            MapDataLoader.fetchAndPlotTransnet(_pgisMap);
         }
         else {
             MapDataLoader.loadBaseMapDataForMapFragment(
@@ -76,7 +74,7 @@ $(document).ready(function () {
                 this.markerLayers.powerlinesLayerGroup
             );
         }
-    }
+    };
 
     pgisMap.baseMapDataLoader();
 
@@ -97,21 +95,22 @@ $(document).ready(function () {
         text: 'Export Relations in Bound',
         onclick: function () {
             window.open(
-                '/relations/export?bounds=' + pgisMap.map.getBounds().toBBoxString()
+                '/' + pgisMap.selectedOverlayLayers[0] +
+                '/export?bounds=' + pgisMap.map.getBounds().toBBoxString()
                 + '&zoom=' + _pgisMap.map.getZoom(),
                 '_blank'
             )
         }
     });
+
     pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
 
     window.pgisMap = pgisMap;
 
     pgisMap.onOverlayAdd = function (layer) {
-        if (layer.name == 'Relations') {
+        if (layer.name == 'Relations' || layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelations);
         }
-
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
         });
@@ -120,10 +119,9 @@ $(document).ready(function () {
     };
 
     pgisMap.onOverlayRemove = function (layer) {
-        if (layer.name == 'Relations') {
+        if (layer.name == 'Relations'|| layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelations);
         }
-
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
         });

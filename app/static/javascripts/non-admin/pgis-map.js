@@ -68,9 +68,9 @@ function PgisMap() {
         pgisMap.selectedPoint = null;
       }
 
-      if(typeof(_this.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
-        _this.overlayLayers.relations.lastClickedRelationFeatureLayer.removeHighlightForSidebar();
-        _this.overlayLayers.relations.lastClickedRelationFeatureLayer = undefined
+      if(typeof(_this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer) != 'undefined') {
+        _this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer.removeHighlightForSidebar();
+        _this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer = undefined
       }
     });
 
@@ -216,13 +216,13 @@ function PgisMap() {
     var _this = this;
 
     this.map.addEventListener("overlayadd", function(layer) {
-      _this.selectedOverlayLayers.push(layer.name);
+      _this.selectedOverlayLayers.push(layer.name.toLowerCase());
       _this.onOverlayAdd(layer);
     });
 
     this.map.addEventListener("overlayremove", function(layer) {
       // First remove the overrlay layer from _this.selectedOverlayLayers
-      selectedLayerIndex = index = _this.selectedOverlayLayers.indexOf(layer.name);
+      selectedLayerIndex = index = _this.selectedOverlayLayers.indexOf(layer.name.toLowerCase());
       if (selectedLayerIndex > -1) {
         _this.selectedOverlayLayers.splice(selectedLayerIndex, 1);
       }
@@ -236,7 +236,7 @@ function PgisMap() {
     this.map.addEventListener("relation-click", function(data) {
       relationFeatureLayer = data.relationFeatureLayer;
 
-      _this.overlayLayers.relations
+      _this.overlayLayers[_this.selectedOverlayLayers[0]]
         .lastClickedRelationFeatureLayer = relationFeatureLayer;
 
       relationFeatureLayer.highlightForSidebar();
