@@ -1,32 +1,37 @@
 from flask import request, json, Response
-from geoalchemy2 import Geography, Geometry
-from geoalchemy2 import func
-from sqlalchemy import cast
 
-from app.models.transnet_powerline import TransnetPowerline
+from app.models.transnet_relation import TransnetRelation
+from app.presenters.relations_presenter import RelationsPresenter
 
 
 class TransnetController:
     def index(self):
-        if request.args.get('bounds') is None:
+        if not request.args.get('bounds'):
             return Response(json.dumps([]), mimetype='application/json')
+
         bounds_parts = request.args.get("bounds").split(',')
+        relations = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts)
 
-        powerlines = TransnetPowerline.query.filter(
-            func.ST_Intersects(
-                func.ST_MakeEnvelope(
-                    bounds_parts[1],
-                    bounds_parts[0],
-                    bounds_parts[3],
-                    bounds_parts[2]
-                ),
-                cast( TransnetPowerline.geom, Geography)
+        return Response(json.dumps(relations), mimetype='application/json')
 
-            )
-        ).all()
+    def export(self):
+        if (not request.args.get('bounds') and
+                not request.args.get('ids')):
+            return Response(json.dumps([]), mimetype='application/json')
 
-        #powerlines = TransnetPowerline.query.all()
+        relations = None
+        if request.args.get('bounds') is not None:
+            bounds_parts = request.args.get("bounds").split(',')
+            relations = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts)
 
-        powerlines = list(map(lambda powerline: powerline.serialize(), powerlines))
+        if request.args.get('ids') is not None:
+            relations_ids = request.args.get("ids").split(',')
+            relations = TransnetRelation.relations_for_export(relations_ids)
 
-        return Response(json.dumps(powerlines), mimetype='application/json')
+        headers = {
+            'Content-Type': 'application/xml',
+            'Content-Disposition': 'attachment; filename=relations.xml'
+        }
+
+        presenter = RelationsPresenter(relations)
+        return Response(presenter.as_xml_element(), headers=headers)

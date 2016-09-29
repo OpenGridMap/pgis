@@ -147,15 +147,13 @@ def powerlines():
 
 @GisApp.route('/transnet')
 def transnet():
-    #controller = app.controllers.transnet_controller.TransnetController()
-    controller = app.controllers.relations_controller.RelationsController()
+    controller = app.controllers.transnet_controller.TransnetController()
     return controller.index()
 
 
 @GisApp.route('/transnet/export')
 def transnet_export():
-    #controller = app.controllers.transnet_controller.TransnetController()
-    controller = app.controllers.relations_controller.RelationsController()
+    controller = app.controllers.transnet_controller.TransnetController()
     return controller.export()
 
 

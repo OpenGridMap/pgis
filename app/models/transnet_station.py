@@ -20,14 +20,7 @@ class TransnetStation(db.Model):
     voltage = db.Column(ARRAY(db.INTEGER), nullable=True)
     type = db.Column(db.String, nullable=True)
     relation_id = db.Column(db.Integer, db.ForeignKey('transnet_relation.id'))
-
-
-    def serialize(self):
-        return {"id": self.id, "latlngs": list(self.shape().coords)}
+    relation = db.relationship('TransnetRelation', back_populates='stations')
 
     def shape(self):
         return to_shape(self.geom)
-
-    @property
-    def latlngs(self):
-        return ', '.join(list(map(lambda tuple: str(tuple[0]) + ' ' + str(tuple[1]), list(self.shape().coords))))
