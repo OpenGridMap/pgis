@@ -92,25 +92,25 @@ L.Polyline.prototype.measuredDistanceInsideBoundingBox = function () {
 
       intersection = lineIntersect(coordsA.lng, coordsA.lat, coordsB.lng, coordsB.lat, northWest.lng,
           northWest.lat, northEast.lng, northEast.lat);
-      if (intersection.seg1 && intersection.seg2) {
+      if (intersection != null && intersection.seg1 && intersection.seg2) {
         intersectionPoints.push(L.latLng(intersection.y, intersection.x));
       }
 
       intersection = lineIntersect(coordsA.lng, coordsA.lat, coordsB.lng, coordsB.lat, northEast.lng,
           northEast.lat, southEast.lng, southEast.lat);
-      if (intersection.seg1 && intersection.seg2) {
+      if (intersection != null && intersection.seg1 && intersection.seg2) {
         intersectionPoints.push(L.latLng(intersection.y, intersection.x));
       }
 
       intersection = lineIntersect(coordsA.lng, coordsA.lat, coordsB.lng, coordsB.lat, southEast.lng,
           southEast.lat, southWest.lng, southWest.lat);
-      if (intersection.seg1 && intersection.seg2) {
+      if (intersection != null && intersection.seg1 && intersection.seg2) {
         intersectionPoints.push(L.latLng(intersection.y, intersection.x));
       }
 
       intersection = lineIntersect(coordsA.lng, coordsA.lat, coordsB.lng, coordsB.lat, southWest.lng,
           southWest.lat, northWest.lng, northWest.lat);
-      if (intersection.seg1 && intersection.seg2) {
+      if (intersection != null && intersection.seg1 && intersection.seg2) {
         intersectionPoints.push(L.latLng(intersection.y, intersection.x));
       }
       if (intersectionPoints.length == 2) {
@@ -121,15 +121,15 @@ L.Polyline.prototype.measuredDistanceInsideBoundingBox = function () {
 
   }
 
-  // source: http://stackoverflow.com/a/38977789, inspired by http://paulbourke.net/geometry/pointlineplane/
+  // adapted from: http://stackoverflow.com/a/38977789, inspired by http://paulbourke.net/geometry/pointlineplane/
   function lineIntersect(x1, y1, x2, y2, x3, y3, x4, y4)
     {
-      var ua, ub, denom = (y4 - y3)*(x2 - x1) - (x4 - x3)*(y2 - y1);
-      if (denom == 0) {
+      var denom = (y4 - y3)*(x2 - x1) - (x4 - x3)*(y2 - y1);
+      if (denom == 0) { // no intersection
           return null;
       }
-      ua = ((x4 - x3)*(y1 - y3) - (y4 - y3)*(x1 - x3))/denom;
-      ub = ((x2 - x1)*(y1 - y3) - (y2 - y1)*(x1 - x3))/denom;
+      var ua = ((x4 - x3)*(y1 - y3) - (y4 - y3)*(x1 - x3))/denom;
+      var ub = ((x2 - x1)*(y1 - y3) - (y2 - y1)*(x1 - x3))/denom;
       return {
         x: x1 + ua*(x2 - x1),
         y: y1 + ua*(y2 - y1),
