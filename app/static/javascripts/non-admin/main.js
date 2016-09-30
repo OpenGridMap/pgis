@@ -46,6 +46,15 @@ $(document).ready(function(){
   };
   pgisMap.addLinkButton(userProfileLinkProperties);
 
+    var statisticLinkProperties = {
+    ref: 'statistic',
+    text: 'Open statistic',
+    onclick: function() {
+      Statistics.countPowerObjects(pgisMap);
+    }
+  };
+  pgisMap.addLinkButton(statisticLinkProperties);
+
   pgisMap.addMarkerLayer({
     name: 'markers',
     layer: new L.MarkerClusterGroup()
