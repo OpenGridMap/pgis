@@ -103,13 +103,33 @@ $(document).ready(function () {
         }
     });
 
+    pgisMap.addLinkButton({
+        ref: 'exportCim',
+        text: 'Export CIM Model in Bound for Relations',
+        onclick: function () {
+
+            window.open(
+                'http://127.0.0.1:8000/transnet' +
+                '/export_cim?bounds=' + pgisMap.map.getBounds().toBBoxString()
+                + '&zoom=' + _pgisMap.map.getZoom(),
+                '_blank'
+            )
+        }
+    });
+
     pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
+    pgisMap.hideLinkButton(pgisMap.linkButtons.exportCim);
+
 
     window.pgisMap = pgisMap;
 
     pgisMap.onOverlayAdd = function (layer) {
         if (layer.name == 'Relations' || layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelations);
+        }
+
+        if (layer.name == 'Transnet') {
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.exportCim);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
@@ -119,8 +139,12 @@ $(document).ready(function () {
     };
 
     pgisMap.onOverlayRemove = function (layer) {
-        if (layer.name == 'Relations'|| layer.name == 'Transnet') {
+        if (layer.name == 'Relations' || layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelations);
+        }
+
+        if (layer.name == 'Transnet') {
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportCim);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();

@@ -55,5 +55,5 @@ class RelationsPresenter:
         for tag, value in tags.items(): # tag.items() because tags is a dict
             tag_elem = SubElement(parent_xml_element, 'tag', {
                 'key': tag,
-                'value': value
+                'value': str(value)
             })

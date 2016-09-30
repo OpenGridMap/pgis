@@ -64,45 +64,70 @@ class TransnetRelation(db.Model):
         return TransnetRelation.prepare_relations_for_export(powerlines, stations)
 
     @staticmethod
+    def make_base_relation(relation_id):
+        return {
+            'id': relation_id,
+            'properties': {
+                'osmid': relation_id,
+                'tags': {
+                    'osmid': relation_id,
+                },
+            },
+            'points': [],
+            'powerlines': []
+        }
+
+    @staticmethod
     def prepare_relations_for_export(powerlines, stations):
 
         relations = {}
 
         for powerline in powerlines:
             if powerline.relation_id not in relations:
-                relations[powerline.relation_id] = {
-                    'id': powerline.relation_id,
-                    'properties': {
-                        'osmid': powerline.relation_id,
-                        'tags': {},
-                    },
-                    'points': [],
-                    'powerlines': []
-                }
+                relations[powerline.relation_id] = TransnetRelation.make_base_relation(powerline.relation_id)
+
+            tags = powerline.tags
+            tags['country'] = powerline.country
+            tags['lat'] = powerline.lat
+            tags['lon'] = powerline.lon
+            tags['name'] = powerline.name
+            tags['length'] = powerline.length
+            tags['osm_id'] = powerline.osm_id
+            tags['voltage'] = powerline.voltage
+            tags['type'] = powerline.type
+            tags['cables'] = powerline.cables
+            tags['relation_id'] = powerline.relation_id
+
             relations[powerline.relation_id]['powerlines'].append({
                 'id': powerline.osm_id,
                 'latlngs': list(powerline.shape().coords),
                 'properties': {
-                    'tags': powerline.tags,
+                    'tags': tags,
+                    'osmid': powerline.osm_id,
                 },
             })
 
         for station in stations:
             if station.relation_id not in relations:
-                relations[station.relation_id] = {
-                    'id': station.relation_id,
-                    'properties': {
-                        'osmid': station.relation_id,
-                    },
-                    'points': [],
-                    'powerlines': []
-                }
+                relations[station.relation_id] = TransnetRelation.make_base_relation(station.relation_id)
+
+            tags = station.tags
+            tags['country'] = station.country
+            tags['lat'] = station.lat
+            tags['lon'] = station.lon
+            tags['name'] = station.name
+            tags['length'] = station.length
+            tags['osm_id'] = station.osm_id
+            tags['voltage'] = station.voltage
+            tags['type'] = station.type
+            tags['relation_id'] = station.relation_id
+
             relations[station.relation_id]['points'].append({
                 'id': station.osm_id,
                 'latlng': [station.lat, station.lon],
                 'latlngs': list(station.shape().exterior.coords),
                 'properties': {
-                    'tags': station.tags,
+                    'tags': tags,
                     'osmid': station.osm_id,
                 },
             })
