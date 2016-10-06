@@ -15,6 +15,7 @@ class TransnetStation(db.Model):
     lat = db.Column(db.NUMERIC, nullable=True)
     lon = db.Column(db.NUMERIC, nullable=True)
     name = db.Column(db.String, nullable=True)
+    nominal_power = db.Column(db.String, nullable=True)
     length = db.Column(db.NUMERIC, nullable=True)
     osm_id = db.Column(db.INTEGER, nullable=True)
     voltage = db.Column(ARRAY(db.INTEGER), nullable=True)

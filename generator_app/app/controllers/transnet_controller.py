@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import request, json, Response
 
 from app.models.transnet_relation import TransnetRelation
@@ -24,13 +26,10 @@ class TransnetController:
             relations, map_centroid = TransnetRelation.relations_for_export(relations_ids)
 
         headers = {
-            'Content-Type': 'application/xml',
-            'Content-Disposition': 'attachment; filename=cim.xml'
+            'Content-Type': 'application/zip',
+            'Content-Disposition': 'attachment; filename=CIM-%s.zip' % datetime.now()
         }
 
-        presenter = None
-
         cim_writer = CimWriter(relations, map_centroid)
-        cim_writer.publish('/home/epezhman/Projects/pgis/generator_app')
 
-        return Response(presenter.as_xml_element(), headers=headers)
+        return Response(cim_writer.publish(), headers=headers)
