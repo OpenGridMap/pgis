@@ -240,7 +240,6 @@ class CimWriter:
 
     @staticmethod
     def escape_string(string):
-        print(string)
         if string and string != u'None':
             str = unicode(string.translate(maketrans('-]^$/. ', '_______')), 'utf-8')
             hexstr = ''
