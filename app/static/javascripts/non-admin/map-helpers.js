@@ -19,6 +19,12 @@ var MapHelpers = {
       })
     );
   },
+  getStatisticSidebarContent: function(statisticData){
+    var source   = $("#statistic-sidebar-template").html();
+    var statisticSidebarTemplate = Handlebars.compile(source);
+
+    return statisticSidebarTemplate(statisticData);
+  },
   // Binds a the popup to a powerline
   bindPowerlinePopup: function(polyline, powerline){
     var source   = $("#polyline-popup-template").html();

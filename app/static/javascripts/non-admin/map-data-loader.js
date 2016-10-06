@@ -96,11 +96,13 @@ var MapDataLoader = {
           // Clear both layers that plot points!
           markers.clearLayers();
           clusterGroup.clearLayers();
+          pgisMap.markerMap = {};
 
           for(var i = 0; i < data.length; i++){
             var marker = new L.Marker(data[i]['latlng'], {
               icon: MiscHelpers.createClusterIcon(data[i])
             });
+            pgisMap.clusteredMarkers += data[i].count;
             marker.panelOpen = false;
             clusterGroup.addLayer(marker);
             marker.on('click', function(e){
@@ -124,6 +126,7 @@ var MapDataLoader = {
         powerlinesLayerGroup.clearLayers();
         for(var i = 0; i < data.length; i++){
           var polyline = L.polyline(data[i].latlngs, {color: 'red'});
+          polyline.data = data[i];
           MapHelpers.bindPowerlinePopup(polyline, data[i]);
           powerlinesLayerGroup.addLayer(polyline);
         }

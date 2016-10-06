@@ -12,6 +12,7 @@ function PgisMap() {
   this.baseLayer         = undefined;
   this.sidebar           = undefined;
   this.selectedPoint     = null; // point, currently opened in sidebar
+  this.clusteredMarkers  = 0;
   this.markerMap         = {};
   this.linkButtons       = {};
   // Add any kind of marker layers to this.markerLayers
