@@ -21,7 +21,8 @@ class TransnetStation(db.Model):
     voltage = db.Column(ARRAY(db.INTEGER), nullable=True)
     type = db.Column(db.String, nullable=True)
     relation_id = db.Column(db.Integer, db.ForeignKey('transnet_relation.id'))
-    relation = db.relationship('TransnetRelation', back_populates='stations')
+    relation = db.relationship('TransnetRelation', primaryjoin='TransnetRelation.id==TransnetStation.relation_id',
+                               back_populates='stations')
 
     def shape(self):
         return to_shape(self.geom)

@@ -107,12 +107,27 @@ $(document).ready(function () {
             window.open(
                 '/' + pgisMap.selectedOverlayLayers[0] +
                 '/export?bounds=' + pgisMap.map.getBounds().toBBoxString()
-                + '&zoom=' + _pgisMap.map.getZoom(),
+                + '&zoom=' + _pgisMap.map.getZoom()
+                + '&countries=' + _pgisMap.selectedCountries.toString()
+                + '&voltages=' + _pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
         }
     });
     pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
+
+    pgisMap.addLinkButton({
+        ref: 'exportRelationsCountry',
+        text: 'Export Relations for Selected Countries',
+        onclick: function () {
+            window.open(
+                '/' + pgisMap.selectedOverlayLayers[0] +
+                '/export_countries?countries=' + _pgisMap.selectedCountries.toString(),
+                '_blank'
+            )
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelationsCountry);
 
     pgisMap.addLinkButton({
         ref: 'exportCim',
@@ -122,12 +137,28 @@ $(document).ready(function () {
             window.open(
                 'http://127.0.0.1:8000/transnet' +
                 '/export_cim?bounds=' + pgisMap.map.getBounds().toBBoxString()
-                + '&zoom=' + _pgisMap.map.getZoom(),
+                + '&zoom=' + _pgisMap.map.getZoom()
+                + '&countries=' + _pgisMap.selectedCountries.toString()
+                + '&voltages=' + _pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
         }
     });
     pgisMap.hideLinkButton(pgisMap.linkButtons.exportCim);
+
+    pgisMap.addLinkButton({
+        ref: 'exportCimCountry',
+        text: 'Export CIM Model for Selected Countries',
+        onclick: function () {
+
+            window.open(
+                'http://127.0.0.1:8000/transnet' +
+                '/export_cim_countries?countries=' + _pgisMap.selectedCountries.toString(),
+                '_blank'
+            )
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.exportCimCountry);
 
     pgisMap.addLinkButton({
         ref: 'transnetFilters',
@@ -149,6 +180,8 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.exportCim);
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetFilters);
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.exportCimCountry);
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelationsCountry);
 
         }
         _.each(_pgisMap.markerLayers, function (layer) {
@@ -166,6 +199,8 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportCim);
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportCimCountry);
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelationsCountry);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();

@@ -101,6 +101,50 @@
                 <br/>
                 {{relationSelectionSummaryAndActions}}
             </div>
+            {{#if relation.points}}
+            <hr>
+            <div class="sidebar-tags-table">
+                <strong>Stations:</strong>
+                {{#each relation.points}}
+                <hr>
+                <table>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Value</th>
+                    </tr>
+                    {{#each this.properties.tags}}
+                    <tr>
+                        <td>{{@key}}:</td>
+                        <td>{{this}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+                {{/each}}
+
+            </div>
+            {{/if}}
+            {{#if relation.powerlines}}
+            <hr>
+            <div class="sidebar-tags-table">
+                <strong>Power Lines:</strong>
+                {{#each relation.powerlines}}
+                <hr>
+                <table>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Value</th>
+                    </tr>
+                    {{#each this.properties.tags}}
+                    <tr>
+                        <td>{{@key}}:</td>
+                        <td>{{this}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+                {{/each}}
+
+            </div>
+            {{/if}}
         </div>
     </script>
 

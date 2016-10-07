@@ -9,7 +9,9 @@ var ApiService = {
         $.ajax({
             url: url,
             data: {
-                "bounds": map.getBounds().toBBoxString()
+                "bounds": map.getBounds().toBBoxString(),
+                "countries": pgisMap.selectedCountries.toString(),
+                "voltages": pgisMap.selectedVoltages.toString()
             },
             success: function (data) {
                 successCallback(data);

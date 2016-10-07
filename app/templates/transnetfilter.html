@@ -29,7 +29,9 @@
                                     <div class="col-xs-9">
                                         <div class="checkbox">
                                             <label>
-                                                <input type="checkbox" value="{{ country['country'] }}">
+                                                <input type="checkbox" value="{{ country['country'] }}"
+                                                       class=" transnet-country-filter"
+                                                       data-country="{{ country['country'] }}">
                                                 <span class="cr"><i
                                                         class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                 {{ country['country']|title|replace("-", " ") }}
@@ -57,10 +59,13 @@
         </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="voltages">
+        <div class="alert alert-info" role="alert">Filter relations based on voltage tag of the relations, stations or powerlines</div>
+
         {% for voltage in voltages %}
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" value="{{ voltage }}">
+                    <input type="checkbox" value="{{ voltage }}" class="transnet-voltage-filter"
+                           data-voltage="{{ voltage }}">
                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                     {{ voltage }} V
                 </label>

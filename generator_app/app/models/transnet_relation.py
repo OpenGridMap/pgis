@@ -2,6 +2,7 @@ from geoalchemy2 import Geography
 from geoalchemy2 import func
 from shapely.geometry import MultiPoint
 from sqlalchemy import cast
+from sqlalchemy import or_
 from sqlalchemy.orm import load_only
 
 from app import db
@@ -23,31 +24,48 @@ class TransnetRelation(db.Model):
         return {"id": self.id, }
 
     @staticmethod
-    def with_points_and_lines_in_bounds(bounds):
+    def with_points_and_lines_in_bounds(bounds, voltages, countries):
 
-        powerlines = TransnetPowerline.query.filter(
-            func.ST_Intersects(
-                func.ST_MakeEnvelope(
-                    bounds[1],
-                    bounds[0],
-                    bounds[3],
-                    bounds[2]
-                ),
-                cast(TransnetPowerline.geom, Geography)
-            )
-        ).options(load_only("relation_id", )).distinct()
+        powerlines_qry = TransnetPowerline.query
 
-        stations = TransnetStation.query.filter(
-            func.ST_Intersects(
-                func.ST_MakeEnvelope(
-                    bounds[1],
-                    bounds[0],
-                    bounds[3],
-                    bounds[2]
-                ),
-                cast(TransnetStation.geom, Geography)
+        stations_qry = TransnetStation.query
+
+        if bounds:
+            powerlines_qry = powerlines_qry.filter(
+                func.ST_Intersects(
+                    func.ST_MakeEnvelope(
+                        bounds[1],
+                        bounds[0],
+                        bounds[3],
+                        bounds[2]
+                    ),
+                    cast(TransnetPowerline.geom, Geography)
+                )
             )
-        ).options(load_only("relation_id", )).distinct()
+            stations_qry = stations_qry.filter(
+                func.ST_Intersects(
+                    func.ST_MakeEnvelope(
+                        bounds[1],
+                        bounds[0],
+                        bounds[3],
+                        bounds[2]
+                    ),
+                    cast(TransnetStation.geom, Geography)
+                )
+            )
+
+        if countries:
+            powerlines_qry = powerlines_qry.filter(TransnetPowerline.country.in_(countries))
+            stations_qry = stations_qry.filter(TransnetStation.country.in_(countries))
+
+        if voltages:
+            powerlines_qry = powerlines_qry.join(TransnetRelation).filter(
+                or_(TransnetPowerline.voltage.overlap(voltages), TransnetRelation.voltage.in_(voltages)))
+            stations_qry = stations_qry.join(TransnetRelation).filter(
+                or_(TransnetStation.voltage.overlap(voltages), TransnetRelation.voltage.in_(voltages)))
+
+        powerlines = powerlines_qry.options(load_only("relation_id", )).distinct()
+        stations = stations_qry.options(load_only("relation_id", )).distinct()
 
         return TransnetRelation.prepare_relations_for_export(powerlines, stations)
 

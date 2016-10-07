@@ -17,6 +17,7 @@ Pgis.Relation.selectionMode = {
     init: function (pgisMap) {
         this.pgisMap = pgisMap;
         this._bindRelationSelectionEvents();
+        this._bindTransnetFilterEvents();
         var _this = this;
         this.pgisMap.addLinkButton({
             ref: 'exportRelationsWithId',
@@ -37,7 +38,9 @@ Pgis.Relation.selectionMode = {
         return function () {
             window.open(
                 '/' + _this.pgisMap.selectedOverlayLayers[0] +
-                '/export?ids=' + _this._getSelectedRelations().join(','),
+                '/export?ids=' + _this._getSelectedRelations().join(',')
+                + '&countries=' + this.pgisMap.selectedCountries
+                + '&voltages=' + this.pgisMap.selectedVoltages,
                 '_blank'
             );
         }
@@ -51,6 +54,32 @@ Pgis.Relation.selectionMode = {
                 relationFeatureLayer.highlightForExport();
             } else {
                 relationFeatureLayer.removeHighlightForExport();
+            }
+        });
+    },
+
+    _bindTransnetFilterEvents: function () {
+        var _this = this;
+
+        $(document).on('click', '.transnet-voltage-filter', function () {
+            var voltage = $(this).attr('data-voltage');
+            var index = _this.pgisMap.selectedVoltages.indexOf(voltage);
+            if (index > -1) {
+                _this.pgisMap.selectedVoltages.splice(index, 1);
+            }
+            else {
+                _this.pgisMap.selectedVoltages.push(voltage);
+            }
+        });
+
+        $(document).on('click', '.transnet-country-filter', function () {
+            var country = $(this).attr('data-country');
+            var index = _this.pgisMap.selectedCountries.indexOf(country);
+            if (index > -1) {
+                _this.pgisMap.selectedCountries.splice(index, 1);
+            }
+            else {
+                _this.pgisMap.selectedCountries.push(country);
             }
         });
     },
