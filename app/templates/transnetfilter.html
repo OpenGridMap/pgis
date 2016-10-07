@@ -1,0 +1,70 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#countries" aria-controls="profile" role="tab"
+           data-toggle="tab">Countries</a>
+    </li>
+    <li role="presentation">
+        <a href="#voltages" aria-controls="home" role="tab"
+           data-toggle="tab">Voltages</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="countries">
+        <div class="panel-group" id="accordion-countries" role="tablist" aria-multiselectable="true">
+            {% for continent, countries in world|dictsort %}
+                <div class="panel panel-default">
+                    <div class="panel-heading collapsed" role="tab" data-toggle="collapse"
+                         data-parent="#accordion-countries" href="#accor-{{ continent }}"
+                         aria-expanded="false" aria-controls="accor-{{ continent }}">
+                        <h4 class="panel-title">
+                            {{ continent|title|replace("-", " ") }}
+                        </h4>
+                    </div>
+                    <div id="accor-{{ continent }}" class="panel-collapse collapse" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            {% for country in countries %}
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="{{ country['country'] }}">
+                                                <span class="cr"><i
+                                                        class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                                {{ country['country']|title|replace("-", " ") }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="pull-right">
+                                            <a data-toggle="tooltip" data-placement="left" class="country-extra-links"
+                                               title="{{ country['voltages'] }} V">
+                                                <i class="fa fa-bolt" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="https://github.com/OpenGridMap/transnet/tree/master/models/{{ continent }}/{{ country['country'] }}"
+                                               class="country-extra-links"
+                                               target="_blank"> <i class="fa fa-github" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="voltages">
+        {% for voltage in voltages %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="{{ voltage }}">
+                    <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                    {{ voltage }} V
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+</div>

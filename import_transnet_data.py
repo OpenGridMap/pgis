@@ -32,6 +32,9 @@ def download_latest_relation_files():
         urllib.URLopener().retrieve('{0}/app/meta/planet.json'.format(base_url),
                                     '{0}/planet_json/planet.json'.format(base_dir))
 
+        query_country = '''INSERT INTO transnet_country(continent, country, voltages)
+                                            VALUES (%s, %s, %s);'''
+
         # For each continent in the planet json, we should now download the continent json
         # and then for each country in the continent download the relations file.
 
@@ -44,6 +47,14 @@ def download_latest_relation_files():
                 with open('{0}/planet_json/{1}.json'.format(base_dir, continent), 'r+') as continent_file:
                     countries = json.load(continent_file)
                     for country in countries:
+                        cur.execute('''DELETE FROM transnet_country
+                                            WHERE continent=%s AND country=%s;''', [
+                            continent, country
+                        ])
+                        voltages = [try_parse_int(x) for x in countries[country]['voltages'].split('|')]
+                        cur.execute(query_country, [continent, country, voltages])
+                        conn.commit()
+
                         country_folder = '{0}/relations/{1}/{2}/'.format(base_dir, continent, country)
                         if not exists(country_folder):
                             makedirs(country_folder)
@@ -157,11 +168,12 @@ def transnet_import_relations(json_file):
                                                 voltages,
                                                 member['type'],
                                                 relation_id])
+                conn.commit()
 
-        conn.commit()
+
 
 
 if __name__ == '__main__':
-    # download_latest_relation_files()
-    # find_and_import_relation_files()
-    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+    download_latest_relation_files()
+    # # find_and_import_relation_files()
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')

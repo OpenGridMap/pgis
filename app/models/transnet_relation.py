@@ -1,7 +1,6 @@
 from geoalchemy2 import Geography
 from geoalchemy2 import func
 from sqlalchemy import cast
-from sqlalchemy.dialects.postgresql import ARRAY
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
@@ -13,7 +12,7 @@ class TransnetRelation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     country = db.Column(db.String, nullable=True)
     name = db.Column(db.String, nullable=True)
-    voltage = db.Column(ARRAY(db.INTEGER), nullable=True)
+    voltage = db.Column(db.INTEGER, nullable=True)
     ref = db.Column(db.String, nullable=True)
     powerlines = db.relationship('TransnetPowerline', back_populates='relation')
     stations = db.relationship('TransnetStation', back_populates='relation')
@@ -64,13 +63,18 @@ class TransnetRelation(db.Model):
         return TransnetRelation.prepare_relations_for_export(powerlines, stations)
 
     @staticmethod
-    def make_base_relation(relation_id):
+    def make_base_relation(relation):
         return {
-            'id': relation_id,
+            'id': relation.id,
             'properties': {
-                'osmid': relation_id,
+                'osmid': relation.id,
                 'tags': {
-                    'osmid': relation_id,
+                    'osmid': relation.id,
+                    'warning': 'NO OSM ID',
+                    'name': relation.name,
+                    'ref': relation.ref,
+                    'voltage': relation.voltage,
+                    'country': relation.country
                 },
             },
             'points': [],
@@ -84,7 +88,7 @@ class TransnetRelation(db.Model):
 
         for powerline in powerlines:
             if powerline.relation_id not in relations:
-                relations[powerline.relation_id] = TransnetRelation.make_base_relation(powerline.relation_id)
+                relations[powerline.relation_id] = TransnetRelation.make_base_relation(powerline.relation)
 
             tags = powerline.tags
             tags['country'] = powerline.country
@@ -109,7 +113,7 @@ class TransnetRelation(db.Model):
 
         for station in stations:
             if station.relation_id not in relations:
-                relations[station.relation_id] = TransnetRelation.make_base_relation(station.relation_id)
+                relations[station.relation_id] = TransnetRelation.make_base_relation(station.relation)
 
             tags = station.tags
             tags['country'] = station.country

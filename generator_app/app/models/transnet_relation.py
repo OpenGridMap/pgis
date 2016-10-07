@@ -2,12 +2,10 @@ from geoalchemy2 import Geography
 from geoalchemy2 import func
 from shapely.geometry import MultiPoint
 from sqlalchemy import cast
-from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import load_only
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
-
 from app.models.transnet_station import TransnetStation
 
 

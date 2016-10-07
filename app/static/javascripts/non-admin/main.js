@@ -112,6 +112,7 @@ $(document).ready(function () {
             )
         }
     });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
 
     pgisMap.addLinkButton({
         ref: 'exportCim',
@@ -126,9 +127,16 @@ $(document).ready(function () {
             )
         }
     });
-
-    pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
     pgisMap.hideLinkButton(pgisMap.linkButtons.exportCim);
+
+    pgisMap.addLinkButton({
+        ref: 'transnetFilters',
+        text: 'Transnet Filters',
+        onclick: function () {
+            pgisMap.transnetFilterSidebar.toggle()
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.transnetFilters);
 
 
     window.pgisMap = pgisMap;
@@ -140,6 +148,8 @@ $(document).ready(function () {
 
         if (layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.exportCim);
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetFilters);
+
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
@@ -155,6 +165,7 @@ $(document).ready(function () {
 
         if (layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportCim);
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
