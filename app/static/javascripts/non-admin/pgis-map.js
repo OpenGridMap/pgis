@@ -12,6 +12,8 @@ function PgisMap() {
     this.baseLayer = undefined;
     this.sidebar = undefined;
     this.transnetFilterSidebar = undefined;
+    this.transnetOperationsSidebar = undefined;
+    this.transnetValidationsSidebar = undefined;
     this.selectedPoint = null; // point, currently opened in sidebar
     this.clusteredMarkers = 0;
     this.markerMap = {};
@@ -78,7 +80,15 @@ function PgisMap() {
             }
         });
 
-        this.transnetFilterSidebar = L.control.sidebar('transnet-sidebar', {
+        this.transnetFilterSidebar = L.control.sidebar('transnet-filter-sidebar', {
+            position: 'left'
+        });
+
+        this.transnetOperationsSidebar = L.control.sidebar('transnet-operations-sidebar', {
+            position: 'right'
+        });
+
+        this.transnetValidationsSidebar = L.control.sidebar('transnet-validations-sidebar', {
             position: 'left'
         });
 
@@ -86,6 +96,9 @@ function PgisMap() {
         this.map.addControl(L.Control.geocoder());
         this.map.addControl(this.sidebar);
         this.map.addControl(this.transnetFilterSidebar);
+        this.map.addControl(this.transnetOperationsSidebar);
+        this.map.addControl(this.transnetValidationsSidebar);
+
     };
 
     this.addBaseMaps = function (baseMaps) {

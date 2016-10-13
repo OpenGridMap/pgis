@@ -151,16 +151,28 @@ def transnet():
     return controller.index()
 
 
-@GisApp.route('/transnet/export')
-def transnet_export():
+@GisApp.route('/transnet/export_xml')
+def transnet_export_xml():
     controller = app.controllers.transnet_controller.TransnetController()
-    return controller.export()
+    return controller.export_xml()
 
 
-@GisApp.route('/transnet/export_countries')
-def transnet_export_countries():
+@GisApp.route('/transnet/export_csv')
+def transnet_export_csv():
     controller = app.controllers.transnet_controller.TransnetController()
-    return controller.export_countries()
+    return controller.export_csv()
+
+
+@GisApp.route('/transnet/export_countries_xml')
+def transnet_export_countries_xml():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.export_countries_xml()
+
+
+@GisApp.route('/transnet/export_countries_csv')
+def transnet_export_countries_csv():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.export_countries_csv()
 
 
 @GisApp.route('/relations')

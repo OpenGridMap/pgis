@@ -1,0 +1,3 @@
+id,lon,lat,name,osm_id,voltage,type
+1,11.6033322955,48.2465929486,Umspannwerk Hochbrück,45038813,[110000],substation
+2,11.6589433772,48.2590677752,Umspannwerk Garching,159713512,[0],substation

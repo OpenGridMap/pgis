@@ -1,7 +1,10 @@
+from datetime import datetime
+
 from flask import request, json, Response
 
 from app.models.transnet_relation import TransnetRelation
 from app.presenters.relations_presenter import RelationsPresenter
+from app.utils.csv_writer import CSVWriter
 
 
 class TransnetController:
@@ -42,6 +45,11 @@ class TransnetController:
             relations_ids = request.args.get("ids").split(',')
             relations = TransnetRelation.relations_for_export(relations_ids)
 
+        return relations
+
+    def export_xml(self):
+        relations = self.export()
+
         headers = {
             'Content-Type': 'application/xml',
             'Content-Disposition': 'attachment; filename=relations.xml'
@@ -49,6 +57,17 @@ class TransnetController:
 
         presenter = RelationsPresenter(relations)
         return Response(presenter.as_xml_element(), headers=headers)
+
+    def export_csv(self):
+        relations = self.export()
+
+        headers = {
+            'Content-Type': 'application/zip',
+            'Content-Disposition': 'attachment; filename=CIM-%s.zip' % datetime.now()
+        }
+
+        cim_writer = CSVWriter(relations)
+        return Response(cim_writer.publish(), headers=headers)
 
     def export_countries(self):
         if not request.args.get("countries"):
@@ -60,7 +79,10 @@ class TransnetController:
         if request.args.get("countries"):
             countries = request.args.get("countries").split(',')
 
-        relations = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages, countries)
+        return TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages, countries)
+
+    def export_countries_xml(self):
+        relations = self.export_countries()
 
         headers = {
             'Content-Type': 'application/xml',
@@ -69,3 +91,14 @@ class TransnetController:
 
         presenter = RelationsPresenter(relations)
         return Response(presenter.as_xml_element(), headers=headers)
+
+    def export_countries_csv(self):
+        relations = self.export_countries()
+
+        headers = {
+            'Content-Type': 'application/zip',
+            'Content-Disposition': 'attachment; filename=CIM-%s.zip' % datetime.now()
+        }
+
+        cim_writer = CSVWriter(relations)
+        return Response(cim_writer.publish(), headers=headers)

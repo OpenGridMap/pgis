@@ -16,46 +16,6 @@ $(document).ready(function () {
 
     pgisMap.addBaseMaps(baseMaps);
 
-    var newPointLinkProperties = {
-        ref: 'newPoint',
-        text: 'New Point',  // string
-        onclick: function () {
-            window.location.href = '/admin/points/new?redirect_back=true'
-                + '&lat=' + pgisMap.map.getBounds().getCenter().lat
-                + '&long=' + pgisMap.map.getBounds().getCenter().lng
-                + '&zoom=' + pgisMap.map.getZoom();
-        }
-    };
-    pgisMap.addLinkButton(newPointLinkProperties);
-
-    var rankingTableLinkProperties = {
-        ref: 'ranking',
-        text: 'Top 10 Ranking',
-        onclick: function () {
-            window.location.href = '/ranking';
-        }
-    };
-    pgisMap.addLinkButton(rankingTableLinkProperties);
-
-    var userProfileLinkProperties = {
-        ref: 'userprofile',
-        text: 'Your Profile',
-        onclick: function () {
-            window.location.href = '/userprofile';
-        }
-    };
-    pgisMap.addLinkButton(userProfileLinkProperties);
-
-    var statisticLinkProperties = {
-        ref: 'statistic',
-        text: 'Open statistic',
-        onclick: function () {
-            Statistics.countPowerObjects(pgisMap);
-        }
-    };
-    pgisMap.addLinkButton(statisticLinkProperties);
-
-
     pgisMap.addMarkerLayer({
         name: 'markers',
         layer: new L.MarkerClusterGroup()
@@ -100,6 +60,45 @@ $(document).ready(function () {
         layer: new L.LayerGroup()
     });
 
+    var newPointLinkProperties = {
+        ref: 'newPoint',
+        text: 'New Point',  // string
+        onclick: function () {
+            window.location.href = '/admin/points/new?redirect_back=true'
+                + '&lat=' + pgisMap.map.getBounds().getCenter().lat
+                + '&long=' + pgisMap.map.getBounds().getCenter().lng
+                + '&zoom=' + pgisMap.map.getZoom();
+        }
+    };
+    pgisMap.addLinkButton(newPointLinkProperties);
+
+    var rankingTableLinkProperties = {
+        ref: 'ranking',
+        text: 'Top 10 Ranking',
+        onclick: function () {
+            window.location.href = '/ranking';
+        }
+    };
+    pgisMap.addLinkButton(rankingTableLinkProperties);
+
+    var userProfileLinkProperties = {
+        ref: 'userprofile',
+        text: 'Your Profile',
+        onclick: function () {
+            window.location.href = '/userprofile';
+        }
+    };
+    pgisMap.addLinkButton(userProfileLinkProperties);
+
+    var statisticLinkProperties = {
+        ref: 'statistic',
+        text: 'Open statistic',
+        onclick: function () {
+            Statistics.countPowerObjects(pgisMap);
+        }
+    };
+    pgisMap.addLinkButton(statisticLinkProperties);
+
     pgisMap.addLinkButton({
         ref: 'exportRelations',
         text: 'Export Relations in Bound',
@@ -117,71 +116,35 @@ $(document).ready(function () {
     pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelations);
 
     pgisMap.addLinkButton({
-        ref: 'exportRelationsCountry',
-        text: 'Export Relations for Selected Countries',
-        onclick: function () {
-            window.open(
-                '/' + pgisMap.selectedOverlayLayers[0] +
-                '/export_countries?countries=' + _pgisMap.selectedCountries.toString(),
-                '_blank'
-            )
-        }
-    });
-    pgisMap.hideLinkButton(pgisMap.linkButtons.exportRelationsCountry);
-
-    pgisMap.addLinkButton({
-        ref: 'exportCim',
-        text: 'Export CIM Model in Bound for Relations',
-        onclick: function () {
-
-            window.open(
-                'http://127.0.0.1:8000/transnet' +
-                '/export_cim?bounds=' + pgisMap.map.getBounds().toBBoxString()
-                + '&zoom=' + _pgisMap.map.getZoom()
-                + '&countries=' + _pgisMap.selectedCountries.toString()
-                + '&voltages=' + _pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
-        }
-    });
-    pgisMap.hideLinkButton(pgisMap.linkButtons.exportCim);
-
-    pgisMap.addLinkButton({
-        ref: 'exportCimCountry',
-        text: 'Export CIM Model for Selected Countries',
-        onclick: function () {
-
-            window.open(
-                'http://127.0.0.1:8000/transnet' +
-                '/export_cim_countries?countries=' + _pgisMap.selectedCountries.toString(),
-                '_blank'
-            )
-        }
-    });
-    pgisMap.hideLinkButton(pgisMap.linkButtons.exportCimCountry);
-
-    pgisMap.addLinkButton({
         ref: 'transnetFilters',
         text: 'Transnet Filters',
         onclick: function () {
-            pgisMap.transnetFilterSidebar.toggle()
+            pgisMap.transnetFilterSidebar.toggle();
+            pgisMap.transnetValidationsSidebar.hide();
         }
     });
     pgisMap.hideLinkButton(pgisMap.linkButtons.transnetFilters);
+
+    pgisMap.addLinkButton({
+        ref: 'transnetOperations',
+        text: 'Transnet Operations',
+        onclick: function () {
+            pgisMap.transnetOperationsSidebar.toggle();
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.transnetOperations);
 
 
     window.pgisMap = pgisMap;
 
     pgisMap.onOverlayAdd = function (layer) {
-        if (layer.name == 'Relations' || layer.name == 'Transnet') {
+        if (layer.name == 'Relations') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelations);
         }
 
         if (layer.name == 'Transnet') {
-            _pgisMap.showLinkButton(_pgisMap.linkButtons.exportCim);
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetFilters);
-            _pgisMap.showLinkButton(_pgisMap.linkButtons.exportCimCountry);
-            _pgisMap.showLinkButton(_pgisMap.linkButtons.exportRelationsCountry);
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetOperations);
 
         }
         _.each(_pgisMap.markerLayers, function (layer) {
@@ -192,15 +155,13 @@ $(document).ready(function () {
     };
 
     pgisMap.onOverlayRemove = function (layer) {
-        if (layer.name == 'Relations' || layer.name == 'Transnet') {
+        if (layer.name == 'Relations') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelations);
         }
 
         if (layer.name == 'Transnet') {
-            _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportCim);
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
-            _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportCimCountry);
-            _pgisMap.hideLinkButton(_pgisMap.linkButtons.exportRelationsCountry);
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetOperations);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();

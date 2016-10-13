@@ -82,6 +82,81 @@ Pgis.Relation.selectionMode = {
                 _this.pgisMap.selectedCountries.push(country);
             }
         });
+
+        $(document).on('click', '#transnet-export-relations-xml', function () {
+            window.open(
+                '/transnet' +
+                '/export_xml?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
+                + '&zoom=' + _this.pgisMap.map.getZoom()
+                + '&countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                '_blank'
+            )
+        });
+
+        $(document).on('click', '#transnet-export-relations-csv', function () {
+            window.open(
+                '/transnet' +
+                '/export_csv?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
+                + '&zoom=' + _this.pgisMap.map.getZoom()
+                + '&countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                '_blank'
+            )
+        });
+
+        $(document).on('click', '#transnet-export-relations-countries-xml', function () {
+            if (_this.pgisMap.selectedCountries.length == 0) {
+                alert('No Country is Selected!');
+                return;
+            }
+            window.open(
+                '/transnet' +
+                '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '_blank'
+            )
+        });
+
+        $(document).on('click', '#transnet-export-relations-countries-csv', function () {
+            if (_this.pgisMap.selectedCountries.length == 0) {
+                alert('No Country is Selected!');
+                return;
+            }
+            window.open(
+                '/transnet' +
+                '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '_blank'
+            )
+
+        });
+
+        $(document).on('click', '#transnet-export-cim-bound', function () {
+            window.open(
+                'http://127.0.0.1:8000/transnet' +
+                '/export_cim?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
+                + '&zoom=' + _this.pgisMap.map.getZoom()
+                + '&countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                '_blank'
+            )
+        });
+
+        $(document).on('click', '#transnet-export-cim-countries', function () {
+            if (_this.pgisMap.selectedCountries.length == 0) {
+                alert('No Country is Selected!');
+                return;
+            }
+            window.open(
+                'http://127.0.0.1:8000/transnet' +
+                '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '_blank'
+            )
+        });
+
+        $(document).on('click', '#transnet-validations', function () {
+            _this.pgisMap.transnetValidationsSidebar.toggle();
+            _this.pgisMap.transnetFilterSidebar.hide();
+        });
     },
 
     _bindRelationSelectionEvents: function () {
