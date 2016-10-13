@@ -9,3 +9,4 @@ tags
 database.yml
 application.yml
 data
+/models
