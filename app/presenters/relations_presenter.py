@@ -36,7 +36,7 @@ class RelationsPresenter:
             for point in relation['points']:
                 point_elem = SubElement(osm_elem, 'node', {
                     'lat': str(point['latlng'][0]),
-                    'lng': str(point['latlng'][1]),
+                    'lon': str(point['latlng'][1]),
                     'id': str(point['properties']['osmid']),
                     'pgisId': str(point['id']),
                     'version': "-1",
@@ -92,7 +92,7 @@ class RelationsPresenter:
         for ref_point in ref_points:
             point_elem = SubElement(osm_elem, 'node', {
                 'lat': str(ref_point['latlng'][0]),
-                'lng': str(ref_point['latlng'][1]),
+                'lon': str(ref_point['latlng'][1]),
                 'id': str(ref_point['properties']['osmid']),
                 'pgisId': str(ref_point['id']),
                 'version': "-1",
@@ -106,12 +106,14 @@ class RelationsPresenter:
 
         return tostring(osm_elem)
 
+
     def __buildXmlSubElementForTags(self, tags, parent_xml_element):
-        for tag, value in tags.items(): # tag.items() because tags is a dict
-            tag_elem = SubElement(parent_xml_element, 'tag', {
-                'k': tag,
-                'v': value
-            })
+        if tags is not None:
+            for tag, value in tags.items(): # tag.items() because tags is a dict
+                tag_elem = SubElement(parent_xml_element, 'tag', {
+                    'k': tag,
+                    'v': value
+                })
 
     def __points_with_osmids(self, osmids):
         query = text("""
