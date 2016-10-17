@@ -46,12 +46,9 @@ class TransnetController:
         if not request.args.get("countries"):
             return Response(json.dumps([]), mimetype='application/json')
 
-        countries = None
         voltages = None
         bounds_parts = None
-
-        if request.args.get("countries"):
-            countries = request.args.get("countries").split(',')
+        countries = request.args.get("countries").split(',')
 
         relations, map_centroid = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages,
                                                                                    countries)

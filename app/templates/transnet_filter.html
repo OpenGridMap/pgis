@@ -18,7 +18,7 @@
         <div class="panel-group" id="accordion-countries" role="tablist" aria-multiselectable="true">
             {% for continent, countries in world|dictsort %}
                 <div class="panel panel-default">
-                    <div class="panel-heading collapsed" role="tab" data-toggle="collapse"
+                    <div class="panel-heading panel-heading-filter collapsed" role="tab" data-toggle="collapse"
                          data-parent="#accordion-countries" href="#accor-{{ continent }}"
                          aria-expanded="false" aria-controls="accor-{{ continent }}">
                         <h4 class="panel-title">

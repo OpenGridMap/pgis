@@ -109,11 +109,15 @@ td, th {
     padding: 5px;
 }
 
-.panel-heading {
+.panel-heading-filter {
     cursor: pointer;
 }
 
 .country-extra-links {
     color: black !important;
     font-size: 20px;
+}
+
+.panel-stats {
+    margin-bottom: 5px
 }

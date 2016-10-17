@@ -61,6 +61,7 @@ def download_latest_relation_files():
 
                         print('Downloading {0} relation json'.format(country))
                         try:
+                            print('{0}/models/{1}/{2}/relations.json'.format(base_url, continent, country))
                             urllib.URLopener().retrieve(
                                 '{0}/models/{1}/{2}/relations.json'.format(base_url, continent, country),
                                 '{0}/relations/{1}/{2}/relations.json'.format(base_dir, continent, country))
@@ -154,7 +155,8 @@ def transnet_import_relations(json_file):
                                                   member['srs_geom'],
                                                   relation_id])
                 elif member['type'] in station_tags:
-                    tags_list = [x.replace('"', "").replace('\\', "") for x in member['tags'].split('=>')]
+                    tags_list = [x.replace('"', "").replace('\\', "") for x in
+                                 member['tags'].replace(',', '=>').split('=>')]
                     tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
                     cur.execute(query_station, [country,
                                                 member['geom'],
@@ -171,9 +173,9 @@ def transnet_import_relations(json_file):
                 conn.commit()
 
 
-
-
 if __name__ == '__main__':
-    download_latest_relation_files()
-    # # find_and_import_relation_files()
-    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+    #download_latest_relation_files()
+    #find_and_import_relation_files()
+    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
+    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')

@@ -154,8 +154,33 @@ Pgis.Relation.selectionMode = {
         });
 
         $(document).on('click', '#transnet-validations', function () {
-            _this.pgisMap.transnetValidationsSidebar.toggle();
-            _this.pgisMap.transnetFilterSidebar.hide();
+            if (_this.pgisMap.selectedCountries.length == 0) {
+                alert('No Country is Selected!');
+                return;
+            }
+            var validationLoading = $('#validation-loading');
+            var validationSection = $('#validation-section');
+
+            if (_this.pgisMap.transnetValidationsSidebar.isVisible()) {
+                _this.pgisMap.transnetValidationsSidebar.hide();
+                validationSection.html('');
+            }
+            else {
+                validationLoading.show();
+                _this.pgisMap.transnetValidationsSidebar.show();
+                _this.pgisMap.transnetFilterSidebar.hide();
+
+                $.ajax({
+                    url: "/transnet/evaluations",
+                    data: {
+                        "countries": _this.pgisMap.selectedCountries.toString()
+                    },
+                    success: function (data) {
+                        validationLoading.hide();
+                        validationSection.html(data);
+                    }
+                })
+            }
         });
     },
 

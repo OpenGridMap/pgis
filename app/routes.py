@@ -175,6 +175,12 @@ def transnet_export_countries_csv():
     return controller.export_countries_csv()
 
 
+@GisApp.route('/transnet/evaluations')
+def transnet_evaluations():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.evaluations()
+
+
 @GisApp.route('/relations')
 def relations():
     controller = app.controllers.relations_controller.RelationsController()

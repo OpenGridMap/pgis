@@ -3,6 +3,7 @@ from geoalchemy2 import func
 from sqlalchemy import cast
 from sqlalchemy import or_
 from sqlalchemy.orm import load_only
+from sqlalchemy.sql.expression import any_
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
@@ -170,3 +171,36 @@ class TransnetRelation(db.Model):
                 })
 
         return relations
+
+    @staticmethod
+    def get_evaluations(countries):
+        powerline_tags = ['line', 'cable', 'minor_line']
+        station_tags = ['substation', 'station', 'sub_station']
+        plant_tags = ['plant', 'generator']
+
+        countries_stats = {}
+        for country in countries:
+            country_stat = {}
+            country_stat['all_line_length'] = \
+                db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                    TransnetPowerline.country == country)[0][0] / 1000
+            country_stat['plants_count'] = db.session.query(func.count(TransnetStation.id)).filter(
+                TransnetStation.country == country).filter(
+                TransnetStation.type.in_(plant_tags))[0][0]
+            country_stat['substations_count'] = db.session.query(func.count(TransnetStation.id)).filter(
+                TransnetStation.country == country).filter(
+                TransnetStation.type.in_(station_tags))[0][0]
+            country_stat['powerlines_counts'] = db.session.query(func.count(TransnetPowerline.id)).filter(
+                TransnetPowerline.country == country).filter(
+                TransnetPowerline.type.in_(powerline_tags))[0][0]
+            country_stat['length_by_voltages'] = {}
+            voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
+                TransnetPowerline.country == country).distinct()
+            for voltage in voltages:
+                country_stat['length_by_voltages'][voltage[0]] = \
+                    db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                        TransnetPowerline.country == country).filter(voltage == any_(TransnetPowerline.voltage))[0][
+                        0] / 1000
+            countries_stats[country] = country_stat
+
+        return countries_stats

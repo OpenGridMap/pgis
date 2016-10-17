@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask import render_template
 from flask import request, json, Response
 
 from app.models.transnet_relation import TransnetRelation
@@ -73,11 +74,9 @@ class TransnetController:
         if not request.args.get("countries"):
             return Response(json.dumps([]), mimetype='application/json')
 
-        countries = None
         voltages = None
         bounds_parts = None
-        if request.args.get("countries"):
-            countries = request.args.get("countries").split(',')
+        countries = request.args.get("countries").split(',')
 
         return TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages, countries)
 
@@ -102,3 +101,10 @@ class TransnetController:
 
         cim_writer = CSVWriter(relations)
         return Response(cim_writer.publish(), headers=headers)
+
+    def evaluations(self):
+        if not request.args.get("countries"):
+            return Response(json.dumps([]), mimetype='application/json')
+
+        return render_template('evaluations.html', countries_stats=TransnetRelation.get_evaluations(
+            request.args.get("countries").split(',')))
