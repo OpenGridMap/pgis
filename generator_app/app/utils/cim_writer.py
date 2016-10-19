@@ -80,13 +80,14 @@ class CimWriter:
             for line_wsg84 in circuit.powerlines:
                 lines_wsg84.append(to_shape(line_wsg84.geom))
                 line_length += line_wsg84.length
-            line_wsg84 = linemerge(lines_wsg84)
-            total_line_length += line_length
-            self.root.debug('Map line from (%lf,%lf) to (%lf,%lf) with length %s meters', station1.shape().centroid.y,
-                            station1.shape().centroid.x, station2.shape().centroid.y, station2.shape().centroid.x,
-                            str(line_length))
-            self.line_to_cim(connectivity_node1, connectivity_node2, line_length, circuit.name, circuit.voltage,
-                             line_wsg84.centroid.y, line_wsg84.centroid.x)
+            if len(lines_wsg84):
+                line_wsg84 = linemerge(lines_wsg84)
+                total_line_length += line_length
+                self.root.debug('Map line from (%lf,%lf) to (%lf,%lf) with length %s meters', station1.shape().centroid.y,
+                                station1.shape().centroid.x, station2.shape().centroid.y, station2.shape().centroid.x,
+                                str(line_length))
+                self.line_to_cim(connectivity_node1, connectivity_node2, line_length, circuit.name, circuit.voltage,
+                                 line_wsg84.centroid.y, line_wsg84.centroid.x)
 
             # self.root.info('The inferred net\'s length is %s meters', str(total_line_length))
 
