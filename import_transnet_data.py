@@ -29,9 +29,12 @@ def download_large_relations(base_url, continent, country):
                 '{0}/relations/{1}/{2}/_relations{3}'.format(base_dir, continent, country, file_extension))
         except IOError as e:
             print('relations part {0} for {1} not found.'.format(file_extension, country))
-    command = 'cat {0}/relations/{1}/{2}/_relations* > {0}/relations/{1}/{2}/relations.json ' \
-              '&& rm {0}/relations/{1}/{2}/_relations*'.format(base_dir, continent, country, )
-    call(command, shell=True)
+    try:
+        command = 'cat {0}/relations/{1}/{2}/_relations* > {0}/relations/{1}/{2}/relations.json ' \
+                  '&& rm {0}/relations/{1}/{2}/_relations*'.format(base_dir, continent, country, )
+        call(command, shell=True)
+    except Exception as e:
+        print(e)
 
 
 def download_latest_relation_files():
