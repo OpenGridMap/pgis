@@ -8,6 +8,7 @@ from os.path import exists
 from os.path import join
 
 import psycopg2
+from subprocess import call
 
 try:
     conn = psycopg2.connect("dbname='gis' user='postgres' host='localhost' password=''")
@@ -17,6 +18,20 @@ except:
     exit()
 
 base_dir = './data'
+
+
+def download_large_relations(base_url, continent, country):
+    file_extensions = ['aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah', 'ai', 'aj', 'ak']
+    for file_extension in file_extensions:
+        try:
+            urllib.URLopener().retrieve(
+                '{0}/models/{1}/{2}/_relations{3}'.format(base_url, continent, country, file_extension),
+                '{0}/relations/{1}/{2}/_relations{3}'.format(base_dir, continent, country, file_extension))
+        except IOError as e:
+            print('relations part {0} for {1} not found.'.format(file_extension, country))
+    command = 'cat {0}/relations/{1}/{2}/_relations* > {0}/relations/{1}/{2}/relations.json ' \
+              '&& rm {0}/relations/{1}/{2}/_relations*'.format(base_dir, continent, country, )
+    call(command, shell=True)
 
 
 def download_latest_relation_files():
@@ -61,12 +76,12 @@ def download_latest_relation_files():
 
                         print('Downloading {0} relation json'.format(country))
                         try:
-                            print('{0}/models/{1}/{2}/relations.json'.format(base_url, continent, country))
                             urllib.URLopener().retrieve(
                                 '{0}/models/{1}/{2}/relations.json'.format(base_url, continent, country),
                                 '{0}/relations/{1}/{2}/relations.json'.format(base_dir, continent, country))
                         except IOError as e:
                             print('relation for {0} not found.'.format(country))
+                            download_large_relations(base_url, continent, country)
     except Exception as e:
         print(e)
         exit()
@@ -174,8 +189,8 @@ def transnet_import_relations(json_file):
 
 
 if __name__ == '__main__':
-    #download_latest_relation_files()
-    #find_and_import_relation_files()
-    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+    download_latest_relation_files()
+    find_and_import_relation_files()
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
