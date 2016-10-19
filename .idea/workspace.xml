@@ -38,19 +38,29 @@
       <file leaf-file-name="import_transnet_data.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/import_transnet_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2121">
-              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+            <state relative-caret-position="187">
+              <caret line="81" column="32" selection-start-line="81" selection-start-column="32" selection-end-line="81" selection-end-column="32" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1476892846076" expanded="true" signature="1795:1917" ph="INSERT INTO transnet_country... " />
-                <marker date="1476892846076" expanded="true" signature="2792:2898" ph="DELETE FROM " />
-                <marker date="1476892846076" expanded="true" signature="4805:4872" ph="DELETE FROM " />
-                <marker date="1476892846076" expanded="true" signature="4922:4991" ph="DELETE FROM " />
-                <marker date="1476892846076" expanded="true" signature="5041:5111" ph="DELETE FROM " />
-                <marker date="1476892846076" expanded="true" signature="5185:5316" ph="INSERT INTO transnet_relation... " />
-                <marker date="1476892846076" expanded="true" signature="5346:5768" ph="INSERT INTO transnet_powerline... " />
-                <marker date="1476892846076" expanded="true" signature="5796:6150" ph="INSERT INTO transnet_station... " />
+                <marker date="1476894226714" expanded="true" signature="1860:1982" ph="INSERT INTO transnet_country... " />
+                <marker date="1476894226714" expanded="true" signature="2857:2963" ph="DELETE FROM " />
+                <marker date="1476894226714" expanded="true" signature="4909:4976" ph="DELETE FROM " />
+                <marker date="1476894226714" expanded="true" signature="5026:5095" ph="DELETE FROM " />
+                <marker date="1476894226714" expanded="true" signature="5145:5215" ph="DELETE FROM " />
+                <marker date="1476894226714" expanded="true" signature="5289:5420" ph="INSERT INTO transnet_relation... " />
+                <marker date="1476894226714" expanded="true" signature="5450:5872" ph="INSERT INTO transnet_powerline... " />
+                <marker date="1476894226714" expanded="true" signature="5900:6254" ph="INSERT INTO transnet_station... " />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="asia.json" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/planet_json/asia.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-945">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -214,74 +224,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="generator_app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="generator_app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="generator_app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="utils" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -308,7 +250,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="europe" />
+              <option name="myItemId" value="central-america" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -330,11 +272,29 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="europe" />
+              <option name="myItemId" value="central-america" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="great-britain" />
+              <option name="myItemId" value="guatemala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="planet_json" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -713,27 +673,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/templates/map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="54" column="70" selection-start-line="54" selection-start-column="70" selection-end-line="54" selection-end-column="70" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/generator_app/app/models/transnet_relation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="94" column="17" selection-start-line="94" selection-start-column="8" selection-end-line="94" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/pgis-map.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="98" column="33" selection-start-line="98" selection-start-column="33" selection-end-line="98" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/presenters/relations_presenter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -1111,20 +1050,44 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/relations/central-america/haiti-and-domrep/relations.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/relations/central-america/guatemala/relations.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/planet_json/asia.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-945">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/import_transnet_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2121">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+        <state relative-caret-position="187">
+          <caret line="81" column="32" selection-start-line="81" selection-start-column="32" selection-end-line="81" selection-end-column="32" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1476892846076" expanded="true" signature="1795:1917" ph="INSERT INTO transnet_country... " />
-            <marker date="1476892846076" expanded="true" signature="2792:2898" ph="DELETE FROM " />
-            <marker date="1476892846076" expanded="true" signature="4805:4872" ph="DELETE FROM " />
-            <marker date="1476892846076" expanded="true" signature="4922:4991" ph="DELETE FROM " />
-            <marker date="1476892846076" expanded="true" signature="5041:5111" ph="DELETE FROM " />
-            <marker date="1476892846076" expanded="true" signature="5185:5316" ph="INSERT INTO transnet_relation... " />
-            <marker date="1476892846076" expanded="true" signature="5346:5768" ph="INSERT INTO transnet_powerline... " />
-            <marker date="1476892846076" expanded="true" signature="5796:6150" ph="INSERT INTO transnet_station... " />
+            <marker date="1476894226714" expanded="true" signature="1860:1982" ph="INSERT INTO transnet_country... " />
+            <marker date="1476894226714" expanded="true" signature="2857:2963" ph="DELETE FROM " />
+            <marker date="1476894226714" expanded="true" signature="4909:4976" ph="DELETE FROM " />
+            <marker date="1476894226714" expanded="true" signature="5026:5095" ph="DELETE FROM " />
+            <marker date="1476894226714" expanded="true" signature="5145:5215" ph="DELETE FROM " />
+            <marker date="1476894226714" expanded="true" signature="5289:5420" ph="INSERT INTO transnet_relation... " />
+            <marker date="1476894226714" expanded="true" signature="5450:5872" ph="INSERT INTO transnet_powerline... " />
+            <marker date="1476894226714" expanded="true" signature="5900:6254" ph="INSERT INTO transnet_station... " />
           </folding>
         </state>
       </provider>
