@@ -177,5 +177,5 @@ if __name__ == '__main__':
     #download_latest_relation_files()
     #find_and_import_relation_files()
     transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
-    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
-    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
