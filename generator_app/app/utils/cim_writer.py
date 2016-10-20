@@ -91,6 +91,8 @@ class CimWriter:
 
             # self.root.info('The inferred net\'s length is %s meters', str(total_line_length))
 
+        #self.attach_loads()
+
         base_dir = '../../models/{0}/'.format(self.uuid())
         dir_name = join(dirname(__file__), base_dir)
 
@@ -122,6 +124,50 @@ class CimWriter:
         shutil.rmtree(dir_name)
         in_memory.seek(0)
         return in_memory.read()
+
+    # def attach_loads(self):
+    #     for load in self.cimobject_by_uuid_dict.values():
+    #         if isinstance(load, PowerTransformer):
+    #             transformer = load
+    #             osm_substation_id = transformer.name.split('_')[1]
+    #             # self.root.info('Attach load to substation %s', osm_substation_id)
+    #             transformer_lower_voltage = CimWriter.determine_load_voltage(transformer)
+    #             self.attach_load(osm_substation_id, transformer_lower_voltage, transformer)
+    #
+    # @staticmethod
+    # def determine_load_voltage(transformer):
+    #     transformer_lower_voltage = transformer.getTransformerWindings()[0].ratedU
+    #     for winding in transformer.getTransformerWindings():
+    #         transformer_lower_voltage = winding.ratedU if winding.ratedU < transformer_lower_voltage \
+    #             else transformer_lower_voltage
+    #     return transformer_lower_voltage
+    #
+    # def attach_load(self, osm_substation_id, winding_voltage, transformer):
+    #     transformer_winding = None
+    #     if len(transformer.getTransformerWindings()) >= 2:
+    #         for winding in transformer.getTransformerWindings():
+    #             if winding_voltage == winding.ratedU:
+    #                 transformer_winding = winding
+    #                 break
+    #     # add winding for lower voltage, if not already existing or
+    #     # add winding if sub-station is a switching station (only one voltage level)
+    #     if transformer_winding is None:
+    #         transformer_winding = self.add_transformer_winding(osm_substation_id, winding_voltage, transformer)
+    #     connectivity_node = self.connectivity_by_uuid_dict[transformer_winding.UUID]
+    #     estimated_load = LoadEstimator.estimate_load(self.population_by_station_dict[str(
+    #         osm_substation_id)]) if self.population_by_station_dict is not None else 100000
+    #     load_response_characteristic = LoadResponseCharacteristic(exponentModel=False, pConstantPower=estimated_load)
+    #     load_response_characteristic.UUID = str(CimWriter.uuid())
+    #     energy_consumer = EnergyConsumer(name='L_' + osm_substation_id, LoadResponse=load_response_characteristic,
+    #                                      BaseVoltage=self.base_voltage(winding_voltage))
+    #     energy_consumer.UUID = str(CimWriter.uuid())
+    #     self.cimobject_by_uuid_dict[load_response_characteristic.UUID] = load_response_characteristic
+    #     self.cimobject_by_uuid_dict[energy_consumer.UUID] = energy_consumer
+    #     terminal = Terminal(ConnectivityNode=connectivity_node, ConductingEquipment=energy_consumer,
+    #                         sequenceNumber=1)
+    #     terminal.UUID = str(CimWriter.uuid())
+    #     self.cimobject_by_uuid_dict[terminal.UUID] = terminal
+
 
     def substation_to_cim(self, osm_substation, circuit_voltage):
         transformer_winding = None

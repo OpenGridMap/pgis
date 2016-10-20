@@ -3,7 +3,7 @@ from geoalchemy2 import func
 from sqlalchemy import cast
 from sqlalchemy import or_
 from sqlalchemy.orm import load_only
-from sqlalchemy.sql.expression import any_
+from sqlalchemy.sql.expression import any_, all_
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
@@ -188,6 +188,8 @@ class TransnetRelation(db.Model):
                 'length_by_voltages': {}
             }
             try:
+
+
                 country_stat['all_line_length'] = \
                     db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country)[0][0] / 1000
@@ -204,12 +206,22 @@ class TransnetRelation(db.Model):
                 voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
                     TransnetPowerline.country == country).distinct()
                 for voltage in voltages:
-                    country_stat['length_by_voltages'][voltage[0]] = \
-                        db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
-                            TransnetPowerline.country == country).filter(voltage == any_(TransnetPowerline.voltage))[0][
-                            0] / 1000
+                    country_stat['length_by_voltages'][voltage[0]] = []
+                    length_shared = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                        TransnetPowerline.country == country).filter(voltage == any_(TransnetPowerline.voltage))
+                    if length_shared.count() and length_shared[0][0]:
+                        country_stat['length_by_voltages'][voltage[0]].append(length_shared[0][0] / 1000)
+                    else:
+                        country_stat['length_by_voltages'][voltage[0]].append(0)
+
+                    length_single_value = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                        TransnetPowerline.country == country).filter(voltage == all_(TransnetPowerline.voltage))
+                    if length_single_value.count() and length_single_value[0][0]:
+                        country_stat['length_by_voltages'][voltage[0]].append(length_single_value[0][0] / 1000)
+                    else:
+                        country_stat['length_by_voltages'][voltage[0]].append(0)
             except Exception as ex:
-                print(ex.message)
+                pass
             countries_stats[country] = country_stat
 
         if len(countries) > 1:
@@ -222,9 +234,12 @@ class TransnetRelation(db.Model):
             for cn in countries_stats.values():
                 for voltage in cn['length_by_voltages']:
                     if voltage in country_stat['length_by_voltages'].keys():
-                        country_stat['length_by_voltages'][voltage] += cn['length_by_voltages'][voltage]
+                        country_stat['length_by_voltages'][voltage][0] += cn['length_by_voltages'][voltage][0]
+                        country_stat['length_by_voltages'][voltage][1] += cn['length_by_voltages'][voltage][1]
                     else:
-                        country_stat['length_by_voltages'][voltage] = cn['length_by_voltages'][voltage]
+                        country_stat['length_by_voltages'][voltage] = []
+                        country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][0])
+                        country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][1])
 
             countries_stats['aaa'] = country_stat
 

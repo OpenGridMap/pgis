@@ -22,14 +22,19 @@
                 <dt>Powerlines Length</dt>
                 <dd>{{ "{:,.0f} km".format(country_stat['all_line_length']) }} {% if country != 'aaa' %} /
                     §{% endif %}</dd>
+
+
+
+
             </dl>
             {% if country_stat['length_by_voltages']|length %}
                 <table class="table table-hover table-striped">
                     <caption>Powerline length by voltage.</caption>
                     <thead>
                     <tr>
-                        <th>Voltage(v)</th>
-                        <th>Length Inferred(km)</th>
+                        <th>Voltage (v)</th>
+                        <th>Length Inferred Shared(km)</th>
+                        <th>Length Inferred Single(km)</th>
                         {% if country != 'aaa' %}
                             <th>Length Source(km)</th>{% endif %}
 
@@ -39,7 +44,8 @@
                     {% for voltage, length in country_stat['length_by_voltages']|dictsort %}
                         <tr>
                             <td>{{ "{:,.0f}".format(voltage) }}</td>
-                            <td>{{ "{:,.0f}".format(length) }}</td>
+                            <td>{{ "{:,.0f}".format(length[0]) }}</td>
+                            <td>{{ "{:,.0f}".format(length[1]) }}</td>
                             {% if country != 'aaa' %}
                                 <td>§</td>
                             {% endif %}

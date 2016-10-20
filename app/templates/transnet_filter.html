@@ -94,7 +94,7 @@
                     <input type="checkbox" value="{{ voltage }}" class="transnet-voltage-filter"
                            data-voltage="{{ voltage }}">
                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                    {{ voltage }} V
+                    {{ "{:,.0f}".format(voltage) }} V
                 </label>
             </div>
         {% endfor %}
