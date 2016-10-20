@@ -64,11 +64,11 @@ class TransnetController:
 
         headers = {
             'Content-Type': 'application/zip',
-            'Content-Disposition': 'attachment; filename=CIM-%s.zip' % datetime.now()
+            'Content-Disposition': 'attachment; filename=CSV-%s.zip' % datetime.now()
         }
 
-        cim_writer = CSVWriter(relations)
-        return Response(cim_writer.publish(), headers=headers)
+        csv_writer = CSVWriter(relations)
+        return Response(csv_writer.publish(), headers=headers)
 
     def export_countries(self):
         if not request.args.get("countries"):
@@ -96,11 +96,11 @@ class TransnetController:
 
         headers = {
             'Content-Type': 'application/zip',
-            'Content-Disposition': 'attachment; filename=CIM-%s.zip' % datetime.now()
+            'Content-Disposition': 'attachment; filename=CSV-%s.zip' % datetime.now()
         }
 
-        cim_writer = CSVWriter(relations)
-        return Response(cim_writer.publish(), headers=headers)
+        csv_writer = CSVWriter(relations)
+        return Response(csv_writer.publish(), headers=headers)
 
     def evaluations(self):
         if not request.args.get("countries"):
