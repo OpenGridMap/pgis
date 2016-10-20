@@ -180,27 +180,52 @@ class TransnetRelation(db.Model):
 
         countries_stats = {}
         for country in countries:
-            country_stat = {}
-            country_stat['all_line_length'] = \
-                db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
-                    TransnetPowerline.country == country)[0][0] / 1000
-            country_stat['plants_count'] = db.session.query(func.count(TransnetStation.id)).filter(
-                TransnetStation.country == country).filter(
-                TransnetStation.type.in_(plant_tags))[0][0]
-            country_stat['substations_count'] = db.session.query(func.count(TransnetStation.id)).filter(
-                TransnetStation.country == country).filter(
-                TransnetStation.type.in_(station_tags))[0][0]
-            country_stat['powerlines_counts'] = db.session.query(func.count(TransnetPowerline.id)).filter(
-                TransnetPowerline.country == country).filter(
-                TransnetPowerline.type.in_(powerline_tags))[0][0]
-            country_stat['length_by_voltages'] = {}
-            voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
-                TransnetPowerline.country == country).distinct()
-            for voltage in voltages:
-                country_stat['length_by_voltages'][voltage[0]] = \
+            country_stat = {
+                'all_line_length': 0,
+                'plants_count': 0,
+                'substations_count': 0,
+                'powerlines_counts': 0,
+                'length_by_voltages': {}
+            }
+            try:
+                country_stat['all_line_length'] = \
                     db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
-                        TransnetPowerline.country == country).filter(voltage == any_(TransnetPowerline.voltage))[0][
-                        0] / 1000
+                        TransnetPowerline.country == country)[0][0] / 1000
+                country_stat['plants_count'] = db.session.query(func.count(TransnetStation.id)).filter(
+                    TransnetStation.country == country).filter(
+                    TransnetStation.type.in_(plant_tags))[0][0]
+                country_stat['substations_count'] = db.session.query(func.count(TransnetStation.id)).filter(
+                    TransnetStation.country == country).filter(
+                    TransnetStation.type.in_(station_tags))[0][0]
+                country_stat['powerlines_counts'] = db.session.query(func.count(TransnetPowerline.id)).filter(
+                    TransnetPowerline.country == country).filter(
+                    TransnetPowerline.type.in_(powerline_tags))[0][0]
+                country_stat['length_by_voltages'] = {}
+                voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
+                    TransnetPowerline.country == country).distinct()
+                for voltage in voltages:
+                    country_stat['length_by_voltages'][voltage[0]] = \
+                        db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                            TransnetPowerline.country == country).filter(voltage == any_(TransnetPowerline.voltage))[0][
+                            0] / 1000
+            except Exception as ex:
+                print(ex.message)
             countries_stats[country] = country_stat
+
+        if len(countries) > 1:
+            country_stat = {}
+            country_stat['all_line_length'] = sum([cn['all_line_length'] for cn in countries_stats.values()])
+            country_stat['plants_count'] = sum([cn['plants_count'] for cn in countries_stats.values()])
+            country_stat['substations_count'] = sum([cn['substations_count'] for cn in countries_stats.values()])
+            country_stat['powerlines_counts'] = sum([cn['powerlines_counts'] for cn in countries_stats.values()])
+            country_stat['length_by_voltages'] = {}
+            for cn in countries_stats.values():
+                for voltage in cn['length_by_voltages']:
+                    if voltage in country_stat['length_by_voltages'].keys():
+                        country_stat['length_by_voltages'][voltage] += cn['length_by_voltages'][voltage]
+                    else:
+                        country_stat['length_by_voltages'][voltage] = cn['length_by_voltages'][voltage]
+
+            countries_stats['aaa'] = country_stat
 
         return countries_stats

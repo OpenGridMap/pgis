@@ -22,23 +22,44 @@
                          data-parent="#accordion-countries" href="#accor-{{ continent }}"
                          aria-expanded="false" aria-controls="accor-{{ continent }}">
                         <h4 class="panel-title">
-                            {{ continent|title|replace("-", " ") }}
+                            {% if continent == 'usa' %}
+                                USA
+                            {% else %}
+                                {{ continent|title|replace("-", " ") }}
+                            {% endif %}
                         </h4>
                     </div>
                     <div id="accor-{{ continent }}" class="panel-collapse collapse" role="tabpanel"
                          aria-labelledby="headingOne">
                         <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" class="transnet-select-all-countries"
+                                                   data-continent="{{ continent }}">
+                                            <span class="cr">
+                                                <i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                            Select All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             {% for country in countries %}
                                 <div class="row">
                                     <div class="col-xs-9">
                                         <div class="checkbox">
                                             <label>
                                                 <input type="checkbox" value="{{ country['country'] }}"
-                                                       class=" transnet-country-filter"
+                                                       class="transnet-country-filter country-checkbox-{{ continent }}"
                                                        data-country="{{ country['country'] }}">
-                                                <span class="cr"><i
-                                                        class="cr-icon glyphicon glyphicon-ok"></i></span>
-                                                {{ country['country']|title|replace("-", " ") }}
+                                                <span class="cr">
+                                                    <i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                                {% if country['country'] == 'usa' %}
+                                                    USA
+                                                {% else %}
+                                                    {{ country['country']|title|replace("-", " ") }}
+                                                {% endif %}
                                             </label>
                                         </div>
                                     </div>

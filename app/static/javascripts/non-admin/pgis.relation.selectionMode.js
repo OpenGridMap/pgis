@@ -75,13 +75,45 @@ Pgis.Relation.selectionMode = {
         $(document).on('click', '.transnet-country-filter', function () {
             var country = $(this).attr('data-country');
             var index = _this.pgisMap.selectedCountries.indexOf(country);
-            if (index > -1) {
-                _this.pgisMap.selectedCountries.splice(index, 1);
+            if ($(this).is(':checked')) {
+                if (index < 0) {
+                    _this.pgisMap.selectedCountries.push(country);
+                }
             }
             else {
-                _this.pgisMap.selectedCountries.push(country);
+                if (index > -1) {
+                    _this.pgisMap.selectedCountries.splice(index, 1);
+                }
             }
+
         });
+
+        $(document).on('click', '.transnet-select-all-countries', function () {
+            var continent = $(this).attr('data-continent');
+            var countries = $('.country-checkbox-' + continent);
+            if ($(this).is(':checked')) {
+                countries.prop('checked', true);
+            }
+            else {
+                countries.prop('checked', false);
+            }
+
+            countries.each(function (cindex) {
+                var country_name = $(this).attr('data-country');
+                var index = _this.pgisMap.selectedCountries.indexOf(country_name);
+                if ($(this).is(':checked')) {
+                    if (index < 0) {
+                        _this.pgisMap.selectedCountries.push(country_name);
+                    }
+                }
+                else {
+                    if (index > -1) {
+                        _this.pgisMap.selectedCountries.splice(index, 1);
+                    }
+                }
+            })
+        });
+
 
         $(document).on('click', '#transnet-export-relations-xml', function () {
             window.open(
