@@ -1,0 +1,26 @@
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% extends 'bootstrap/base.html' %}
+
+{% block metas %}
+{{super()}}
+
+<link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="/static/icons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/static/icons/android-chrome-192x192.png" sizes="192x192">
+<link rel="icon" type="image/png" href="/static/icons/favicon-16x16.png" sizes="16x16">
+<link rel="manifest" href="/static/icons/manifest.json">
+<link rel="mask-icon" href="/static/icons/safari-pinned-tab.svg" color="#5bbad5">
+<link rel="shortcut icon" href="/static/icons/favicon.ico">
+<meta name="apple-mobile-web-app-title" content="OpenGridMap">
+<meta name="application-name" content="OpenGridMap">
+<meta name="msapplication-TileColor" content="#fcf0ec">
+<meta name="msapplication-TileImage" content="/static/icons/mstile-144x144.png">
+<meta name="msapplication-config" content="/static/icons/browserconfig.xml">
+<meta name="theme-color" content="#ffffff">
+{% endblock %}
+
+{% block head %}
+  {{super()}}
+  {{fixes.ie8()}}
+{% endblock %}

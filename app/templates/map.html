@@ -1,4 +1,4 @@
-{% extends 'bootstrap/base.html' %}
+{% extends 'bootstrap_base.html' %}
 
 {% block styles %}
         {{ super() }}
@@ -94,72 +94,5 @@
         </div>
       </div>
 </script>
-
-<script id="statistic-sidebar-template" type="text/x-handlebars-template">
-        <div class="sidebar"><h1>Statistics</h1></div>
-        <div>
-
-            {{#unless numPowerElements.markers}}
-              {{#if numPowerElements.clusteredMarkers}}
-                <strong>clustered Markers:</strong> {{ numPowerElements.clusteredMarkers }} <br>
-                Please zoom in to get more details!
-              {{else}}
-                <strong>No markers inside this area.</strong>
-              {{/if}}
-            {{else}}
-                <strong>All markers:</strong> {{ numPowerElements.markers }}
-              <ul>
-                {{#if numPowerElements.transformers}}
-                  <li><strong>Transformers:</strong> {{ numPowerElements.transformers }}</li>
-                {{/if}}
-                {{#if numPowerElements.substations}}
-                  <li><strong>Substations:</strong> {{ numPowerElements.substations }}</li>
-                {{/if}}
-                {{#if numPowerElements.powerPoles}}
-                  <li><strong>Power poles:</strong> {{ numPowerElements.powerPoles }}</li>
-                {{/if}}
-                {{#if numPowerElements.powerTowers}}
-                  <li><strong>Power towers:</strong> {{ numPowerElements.powerTowers }}</li>
-                {{/if}}
-                {{#if numPowerElements.powerPlants}}
-                  <li><strong>Power plants:</strong> {{ numPowerElements.powerPlants }}</li>
-                {{/if}}
-                {{#if numPowerElements.windPower}}
-                  <li><strong>Wind power:</strong> {{ numPowerElements.windPower }}</li>
-                {{/if}}
-                {{#if numPowerElements.solarPower}}
-                  <li><strong>Solar power:</strong> {{ numPowerElements.solarPower }}</li>
-                {{/if}}
-                {{#if numPowerElements.waterPower}}
-                  <li><strong>Water power:</strong> {{ numPowerElements.waterPower }}</li>
-                {{/if}}
-                {{#if numPowerElements.otherGenerators}}
-                  <li><strong>Other generators:</strong> {{ numPowerElements.otherGenerators }}</li>
-                {{/if}}
-                {{#if numPowerElements.others}}
-                  <li><strong>Other power related markers:</strong> {{ numPowerElements.others }}</li>
-                {{/if}}
-              </ul>
-            {{/unless}}
-        </div>
-        <div>
-          <strong>All powerlines:</strong> {{ numberOfPowerlines }}
-          {{#if numberOfPowerlines}}
-            <ul>
-              <li><strong>Length of all visible parts of powerlines:</strong> {{ lengthOfPowerlines.all }}</li>
-                <li>
-                  <strong>Length by voltage</strong>
-                  <ul>
-                    {{#each lengthOfPowerlines.voltage}}
-                      <li><strong>{{@key}}:</strong> {{this}}</li>
-                    {{/each}}
-                  </ul>
-                </li>
-            </ul>
-          {{/if}}
-        </div>
-
-</script>
-
 {% endraw %}
 {% endblock %}

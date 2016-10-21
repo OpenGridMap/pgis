@@ -101,10 +101,10 @@ class SubmissionsController:
         directory = "app/static/uploads/submissions/" + str(submission_id)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        fh = open(directory + "/" + str(point_id) + ".png", "wb")
+        fh = open(directory + "/" + str(point_id) + ".jpg", "wb")
         fh.write(base64.b64decode(encoded_string))
         fh.close()
-        return "static/uploads/submissions/" + str(submission_id) + "/" + str(point_id) + ".png"
+        return "static/uploads/submissions/" + str(submission_id) + "/" + str(point_id) + ".jpg"
 
     def __validate_id_token(self, id_token):
         '''Verifies that an id-token is valid and

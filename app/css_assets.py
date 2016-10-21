@@ -15,3 +15,11 @@ non_admin_css_files = common_css_files + [
 admin_css_files = common_css_files + [
     'stylesheets/admin_main.less.css',
 ]
+
+gallery_css_files = common_css_files + [
+    'stylesheets/Control.Geocoder.css',
+    'stylesheets/Control.Loading.css',
+    'stylesheets/lightbox.css',
+    'stylesheets/justifiedGallery.css',
+    'stylesheets/gallery.less',
+]
