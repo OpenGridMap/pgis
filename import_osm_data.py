@@ -56,8 +56,6 @@ class PowerlineImporter(object):
                         # if couldn't find in point table. Find in temp_point
                         #   table, move that to point table.
                         node = tempPointHelper.find_with_osmid(str(ref))
-                        if node is not None:
-                            tempPointHelper.copy_to_actual_point_table(str(ref))
 
                     if node is None:
                         flag = True
