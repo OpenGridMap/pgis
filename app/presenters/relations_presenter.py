@@ -1,59 +1,163 @@
 from xml.etree.ElementTree import Element, SubElement, Comment, tostring
 import json
+from app import db
+from sqlalchemy.sql import text
 
 # Presenter logic for Relations (plural).
 class RelationsPresenter:
     def __init__(self, relations):
         self.relations = relations
 
-    def as_xml_element(self):
-        relations_elem = Element('relations')
+    def as_osm_xml(self):
+        osm_elem = Element('osm', {
+            'version': '0.6',
+            'generator': 'PGIS:http://github.com/OpenGridMap/pgis'
+        })
+
+        relation_member_node_osmids = []
+
+        powerline_ids = []
+        powerline_xml_elems = {}
 
         for relation_id, relation in self.relations.items():
-            relation_elem = SubElement(relations_elem, 'relation', {
-                'id': str(relation['id']),
-                'osmid': str(relation['properties']['osmid']),
+            relation_elem = SubElement(osm_elem, 'relation', {
+                'pgisId': str(relation['id']),
+                'id': str(relation['properties']['osmid']),
+                'version': "-1",
+                'timestamp': ""
             })
             self.__buildXmlSubElementForTags(
                 relation['properties']['tags'],
                 relation_elem
             )
 
-            points_elem = SubElement(relation_elem, 'points')
             for point in relation['points']:
-                point_elem = SubElement(points_elem, 'point', {
+                point_elem = SubElement(osm_elem, 'node', {
                     'lat': str(point['latlng'][0]),
-                    'lng': str(point['latlng'][1]),
-                    'osmid': str(point['properties']['osmid']),
-                    'id': str(point['id'])
+                    'lon': str(point['latlng'][1]),
+                    'id': str(point['properties']['osmid']),
+                    'pgisId': str(point['id']),
+                    'version': "-1",
+                    'timestamp': ""
                 })
                 self.__buildXmlSubElementForTags(
                     point['properties']['tags'],
                     point_elem
                 )
+                relation_member_node_osmids.append(str(point['properties']['osmid']))
 
-            powerlines_elem = SubElement(relation_elem, 'powerlines')
-            for powerline in relation['powerlines']:
-                powerline_elem = SubElement(powerlines_elem, 'powerline', {
-                    'id': str(powerline['id'])
+                member_elem = SubElement(relation_elem, 'member', {
+                    'type': "node",
+                    'ref': str(point['properties']['osmid']),
+                    'role': ""
                 })
 
-                for latlng in powerline['latlngs']:
-                    latlng_elem = SubElement(powerline_elem, 'point', {
-                        'lat': str(latlng[0]),
-                        'lng': str(latlng[1])
-                    })
+            relation_powerline_index = 0
+            for powerline in relation['powerlines']:
+
+                # our initial import scripts didn't import OSM IDs for powerlines
+                if 'osmid' in powerline['properties']:
+                    powerline_omsid = powerline['properties']['osmid']
+                else:
+                    # Generate powerline's id based on relation id if we don;t have it
+                    # We assume appending "-000" will prevent any clashes with
+                    # the actual OSMIDs later in future
+                    powerline_omsid = "-000" + str(relation['id']) + str(relation_powerline_index)
+
+                relation_powerline_index = relation_powerline_index + 1
+
+                powerline_elem = SubElement(osm_elem, 'way', {
+                    'id': str(powerline_omsid),
+                    'pgisId': str(powerline['id']),
+                    'version': "-1",
+                    'timestamp': ""
+                })
+
+                powerline_ids.append(int(powerline['id']))
+                powerline_xml_elems[int(powerline['id'])] = powerline_elem
 
                 self.__buildXmlSubElementForTags(
                     powerline['properties']['tags'],
                     powerline_elem
                 )
 
-        return tostring(relations_elem)
+                member_elem = SubElement(relation_elem, 'member', {
+                    'type': "way",
+                    'ref': str(powerline_omsid),
+                    'role': ""
+                })
+
+
+        # The logic following will fetch the points from a powerline's LINESTRING
+        # and generate the XML for those points and adds +nd+ sub element to the
+        # powerline element.
+        ref_points = self.__points_for_powerlines(powerline_ids)
+        index = 0
+        for ref_point in ref_points:
+            point_powerline_id = ref_point['powerline_id']
+            # Generate point id based on powerline id and index
+            # We assume appending "-00" will prevent any clashes with
+            # the actual OSMIDs later in future
+            point_powerline_link_id = "-00" + str(ref_point['powerline_id']) + str(index)
+            point_elem = SubElement(osm_elem, 'node', {
+                'lat': str(ref_point['latlng'][0]),
+                'lon': str(ref_point['latlng'][1]),
+                'id': point_powerline_link_id,
+                'version': "-1",
+                'timestamp': ""
+
+            })
+            index = index + 1;
+            ref_elem = SubElement(powerline_xml_elems[point_powerline_id], 'nd', {
+                'ref': str(point_powerline_link_id)
+            })
+
+        return tostring(osm_elem)
+
 
     def __buildXmlSubElementForTags(self, tags, parent_xml_element):
-        for tag, value in tags.items(): # tag.items() because tags is a dict
-            tag_elem = SubElement(parent_xml_element, 'tag', {
-                'key': tag,
-                'value': value
+        if tags is not None:
+            for tag, value in tags.items(): # tag.items() because tags is a dict
+                tag_elem = SubElement(parent_xml_element, 'tag', {
+                    'k': tag,
+                    'v': value
+                })
+
+    def __points_for_powerlines(self, powerline_ids):
+        query = text("""
+            SELECT ST_X(geom) AS p_x, ST_Y(geom) AS p_y, id
+            FROM (
+              SELECT (ST_DumpPoints(g.geom)).*, g.id
+              FROM(
+                SELECT geom, id FROM powerline where id IN :powerline_ids
+              ) AS g
+            ) j;
+         """)
+        point_rows = db.engine.execute(query, powerline_ids = tuple(powerline_ids))
+        ref_points = []
+        for row in point_rows:
+            ref_points.append({
+                'latlng': [row['p_x'], row['p_y']],
+                'powerline_id': row['id']
             })
+
+        return ref_points
+
+    def __points_with_osmids(self, osmids):
+        query = text("""
+            SELECT p.id AS p_id, ST_X(p.geom) AS p_x, ST_Y(p.geom) AS p_y,
+                    p.properties AS p_prop
+            FROM point p
+            WHERE properties->>'osmid' IN :osm_ids
+        """)
+        point_rows = db.engine.execute(query, osm_ids = tuple(osmids))
+        ref_points = []
+        for row in point_rows:
+            ref_points.append({
+                'id': row['p_id'],
+                'latlng': [row['p_x'], row['p_y']],
+                'properties': row['p_prop']
+            })
+
+        return ref_points
+

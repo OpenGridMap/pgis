@@ -185,7 +185,7 @@ class PowerlineImporter(object):
                     query = "INSERT INTO powerline(geom, properties) VALUES(%s, %s)"
                     query_values = [
                         'LINESTRING({})'.format(linestring),
-                        json.dumps({ "tags": tags, "refs": refs })
+                        json.dumps({ "tags": tags, "refs": refs, "osmid": str(osmid) })
                     ]
                     cur.execute(query, query_values)
 
@@ -195,7 +195,9 @@ class PowerlineImporter(object):
                         "WHERE member_osm_id = %s"
                     cur.execute(join_table_update_query, [str(osmid)])
             else:
-                print("\nHaven't found relation for powerline - osmid %s" % osmid)
+                # It could be that this line doesn't belong to a relation that
+                #   is tagged with "power".
+                print("\nHaven't found relation for line - osmid %s" % osmid)
 
 class RelationsImporter(object):
 
