@@ -11,7 +11,8 @@ var ApiService = {
             data: {
                 "bounds": map.getBounds().toBBoxString(),
                 "countries": pgisMap.selectedCountries.toString(),
-                "voltages": pgisMap.selectedVoltages.toString()
+                "voltages": pgisMap.selectedVoltages.toString(),
+                "zoom": map.getZoom()
             },
             success: function (data) {
                 successCallback(data);

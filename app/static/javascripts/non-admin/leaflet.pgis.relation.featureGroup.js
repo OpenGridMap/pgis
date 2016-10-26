@@ -6,7 +6,7 @@
 L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     isHighlightedForSidebar: false,
     isHighlightedForExport: false,
-    colorHash: new ColorHash({saturation: 0.8}),
+    colorHash: new ColorHash({saturation: 1}),
 
     initialize: function (relation, layers) {
         L.FeatureGroup.prototype.initialize.call(this, layers);
@@ -108,7 +108,7 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
         _.each(this.relation.points, function (point) {
             var marker = new L.Marker(point.latlng);
             marker.data = point.properties;
-            marker.setIcon(_this._markersClusterGroup.getMarkerDefaultIcon())
+            marker.setIcon(_this._markersClusterGroup.getMarkerDefaultIcon());
             markers.push(marker);
 
             if (point.latlngs !== 'undefined') {

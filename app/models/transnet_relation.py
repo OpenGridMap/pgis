@@ -2,11 +2,13 @@ from geoalchemy2 import Geography
 from geoalchemy2 import func
 from sqlalchemy import cast
 from sqlalchemy import or_
-from sqlalchemy.orm import load_only
+from sqlalchemy.orm import joinedload
 from sqlalchemy.sql.expression import any_, all_
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
+from app.models.transnet_relation_powerline import TransnetRelationPowerline
+from app.models.transnet_relation_station import TransnetRelationStation
 from app.models.transnet_station import TransnetStation
 
 
@@ -17,18 +19,24 @@ class TransnetRelation(db.Model):
     name = db.Column(db.String, nullable=True)
     voltage = db.Column(db.INTEGER, nullable=True)
     ref = db.Column(db.String, nullable=True)
-    powerlines = db.relationship(TransnetPowerline, back_populates='relation')
-    stations = db.relationship(TransnetStation, back_populates='relation')
+    powerlines = db.relationship('TransnetPowerline', secondary='transnet_relation_powerline',
+                                 backref=db.backref('relations'))
+    stations = db.relationship('TransnetStation', secondary='transnet_relation_station',
+                               backref=db.backref('relations'))
 
     def serialize(self):
         return {"id": self.id, }
 
+    # Let this be here
     @staticmethod
-    def with_points_and_lines_in_bounds(bounds, voltages, countries):
+    def fake():
+        TransnetRelationPowerline.query.all()
+        TransnetRelationStation.query.all()
+
+    @staticmethod
+    def get_filtered_relations(bounds, voltages, countries, zoom):
 
         powerlines_qry = TransnetPowerline.query
-
-        stations_qry = TransnetStation.query
 
         if bounds:
             powerlines_qry = powerlines_qry.filter(
@@ -42,50 +50,32 @@ class TransnetRelation(db.Model):
                     cast(TransnetPowerline.geom, Geography)
                 )
             )
-            stations_qry = stations_qry.filter(
-                func.ST_Intersects(
-                    func.ST_MakeEnvelope(
-                        bounds[1],
-                        bounds[0],
-                        bounds[3],
-                        bounds[2]
-                    ),
-                    cast(TransnetStation.geom, Geography)
-                )
-            )
 
         if countries:
             powerlines_qry = powerlines_qry.filter(TransnetPowerline.country.in_(countries))
-            stations_qry = stations_qry.filter(TransnetStation.country.in_(countries))
 
         if voltages:
             powerlines_qry = powerlines_qry.join(TransnetRelation).filter(
                 or_(TransnetPowerline.voltage.overlap(voltages), TransnetRelation.voltage.in_(voltages)))
-            stations_qry = stations_qry.join(TransnetRelation).filter(
-                or_(TransnetStation.voltage.overlap(voltages), TransnetRelation.voltage.in_(voltages)))
 
-        powerlines = powerlines_qry.options(load_only("relation_id", )).distinct()
-        stations = stations_qry.options(load_only("relation_id", )).distinct()
+        powerline_relations = powerlines_qry.options(joinedload('relations')).all()
 
-        return TransnetRelation.prepare_relations_for_export(powerlines, stations)
+        return TransnetRelation.prepare_relations_for_export(powerline_relations,[], zoom)
 
     @staticmethod
     def relations_for_export(relation_ids):
 
-        powerlines = TransnetPowerline.query.filter(
-            TransnetPowerline.relation_id.in_(relation_ids)
+        relations = TransnetRelation.query.filter(
+            TransnetRelation.id.in_(relation_ids)
         ).all()
 
-        stations = TransnetStation.query.filter(
-            TransnetStation.relation_id.in_(relation_ids)
-        ).all()
-
-        return TransnetRelation.prepare_relations_for_export(powerlines, stations)
+        return TransnetRelation.prepare_relations_for_export([], relations, None)
 
     @staticmethod
     def make_base_relation(relation):
         return {
             'id': relation.id,
+            'length': 0,
             'properties': {
                 'osmid': relation.id,
                 'tags': {
@@ -102,28 +92,19 @@ class TransnetRelation(db.Model):
         }
 
     @staticmethod
-    def prepare_relations_for_export(powerlines, stations):
+    def prepare_relations_for_export(powerline_relations, relations_filtered, zoom):
 
-        relations = {}
+        relations_to_export = {}
 
-        relation_ids = []
+        relations_query = set()
 
-        for powerline in powerlines:
-            if powerline.relation_id not in relation_ids:
-                relation_ids.append(powerline.relation_id)
-
-        for station in stations:
-            if station.relation_id not in relation_ids:
-                relation_ids.append(station.relation_id)
-
-        relations_query = TransnetRelation.query.filter(
-            TransnetRelation.id.in_(relation_ids)
-        ).all()
+        relations_query.update(relations_filtered)
+        [relations_query.update([r for r in x.relations]) for x in powerline_relations]
 
         for relation in relations_query:
             for powerline in relation.powerlines:
-                if powerline.relation_id not in relations:
-                    relations[powerline.relation_id] = TransnetRelation.make_base_relation(relation)
+                if relation.id not in relations_to_export:
+                    relations_to_export[relation.id] = TransnetRelation.make_base_relation(relation)
 
                 tags = powerline.tags
                 tags['country'] = powerline.country
@@ -135,9 +116,8 @@ class TransnetRelation(db.Model):
                 tags['voltage'] = powerline.voltage
                 tags['type'] = powerline.type
                 tags['cables'] = powerline.cables
-                tags['relation_id'] = powerline.relation_id
-
-                relations[powerline.relation_id]['powerlines'].append({
+                relations_to_export[relation.id]['length'] += powerline.length
+                relations_to_export[relation.id]['powerlines'].append({
                     'id': powerline.osm_id,
                     'latlngs': list(powerline.shape().coords),
                     'properties': {
@@ -146,31 +126,30 @@ class TransnetRelation(db.Model):
                     },
                 })
             for station in relation.stations:
-                if station.relation_id not in relations:
-                    relations[station.relation_id] = TransnetRelation.make_base_relation(relation)
+                if relation.id not in relations_to_export:
+                    relations_to_export[relation.id] = TransnetRelation.make_base_relation(relation)
+                if not zoom or int(zoom) > 10:
+                    tags = station.tags
+                    tags['country'] = station.country
+                    tags['lat'] = station.lat
+                    tags['lon'] = station.lon
+                    tags['name'] = station.name
+                    tags['length'] = station.length
+                    tags['osm_id'] = station.osm_id
+                    tags['voltage'] = station.voltage
+                    tags['type'] = station.type
 
-                tags = station.tags
-                tags['country'] = station.country
-                tags['lat'] = station.lat
-                tags['lon'] = station.lon
-                tags['name'] = station.name
-                tags['length'] = station.length
-                tags['osm_id'] = station.osm_id
-                tags['voltage'] = station.voltage
-                tags['type'] = station.type
-                tags['relation_id'] = station.relation_id
+                    relations_to_export[relation.id]['points'].append({
+                        'id': station.osm_id,
+                        'latlng': [station.lat, station.lon],
+                        'latlngs': list(station.shape().exterior.coords),
+                        'properties': {
+                            'tags': tags,
+                            'osmid': station.osm_id,
+                        },
+                    })
 
-                relations[station.relation_id]['points'].append({
-                    'id': station.osm_id,
-                    'latlng': [station.lat, station.lon],
-                    'latlngs': list(station.shape().exterior.coords),
-                    'properties': {
-                        'tags': tags,
-                        'osmid': station.osm_id,
-                    },
-                })
-
-        return relations
+        return relations_to_export
 
     @staticmethod
     def get_evaluations(countries):
@@ -188,7 +167,6 @@ class TransnetRelation(db.Model):
                 'length_by_voltages': {}
             }
             try:
-
 
                 country_stat['all_line_length'] = \
                     db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(

@@ -14,6 +14,8 @@ class TransnetController:
             return Response(json.dumps([]), mimetype='application/json')
         bounds_parts = request.args.get("bounds").split(',')
 
+        zoom = request.args.get('zoom')
+
         countries = None
         voltages = None
         if request.args.get("countries"):
@@ -21,7 +23,7 @@ class TransnetController:
         if request.args.get("voltages"):
             voltages = [int(v) for v in request.args.get("voltages").split(',')]
 
-        relations = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages, countries)
+        relations = TransnetRelation.get_filtered_relations(bounds_parts, voltages, countries, zoom)
 
         return Response(json.dumps(relations), mimetype='application/json')
 
@@ -40,7 +42,7 @@ class TransnetController:
         relations = None
         if request.args.get('bounds') is not None:
             bounds_parts = request.args.get("bounds").split(',')
-            relations = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages, countries)
+            relations = TransnetRelation.get_filtered_relations(bounds_parts, voltages, countries, None)
 
         if request.args.get('ids') is not None:
             relations_ids = request.args.get("ids").split(',')
@@ -78,7 +80,7 @@ class TransnetController:
         bounds_parts = None
         countries = request.args.get("countries").split(',')
 
-        return TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages, countries)
+        return TransnetRelation.get_filtered_relations(bounds_parts, voltages, countries, None)
 
     def export_countries_xml(self):
         relations = self.export_countries()

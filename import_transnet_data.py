@@ -6,9 +6,9 @@ from os import walk
 from os.path import dirname
 from os.path import exists
 from os.path import join
+from subprocess import call
 
 import psycopg2
-from subprocess import call
 
 try:
     conn = psycopg2.connect("dbname='gis' user='postgres' host='localhost' password=''")
@@ -116,36 +116,38 @@ def transnet_import_relations(json_file):
         country = json_file.split('/')[-2]
         print('importing relations of {0}'.format(country))
 
-        cur.execute('''DELETE FROM transnet_powerline
-                        WHERE country=%s;''', [
-            country
-        ])
-        cur.execute('''DELETE FROM transnet_station
-                            WHERE country=%s;''', [
-            country
-        ])
-        cur.execute('''DELETE FROM transnet_relation
-                            WHERE country=%s;''', [
-            country
-        ])
+        cur.execute('''DELETE FROM transnet_relation_powerline WHERE country=%s;''', [country])
+        cur.execute('''DELETE FROM transnet_relation_station WHERE country=%s;''', [country])
+        cur.execute('''DELETE FROM transnet_powerline WHERE country=%s;''', [country])
+        cur.execute('''DELETE FROM transnet_station WHERE country=%s;''', [country])
+        cur.execute('''DELETE FROM transnet_relation WHERE country=%s;''', [country])
+
         conn.commit()
 
         query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
                                         VALUES (%s, %s, %s, %s) RETURNING id'''
 
         query_powerline = '''INSERT INTO transnet_powerline(country, geom, tags, raw_geom, voltage, type, nodes,
-                                                                      lat, lon, cables, name, length, osm_id, srs_geom, relation_id)
+                                                                      lat, lon, cables, name, length, osm_id, srs_geom)
                                                         VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s, %s, %s
-                                                        ,%s ,ST_FlipCoordinates(%s), %s)'''
+                                                        ,%s ,ST_FlipCoordinates(%s)) RETURNING id'''
 
         query_station = '''INSERT INTO transnet_station(country, geom, tags, raw_geom, lat, lon, name,
-                                                          length, osm_id, voltage, type, relation_id)
+                                                          length, osm_id, voltage, type)
                                                         VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s
-                                                          , %s, %s)'''
+                                                          , %s) RETURNING id'''
+
+        query_relation_station = '''INSERT INTO transnet_relation_station(country, relation_id, station_id)
+                                                VALUES (%s, %s, %s)'''
+
+        query_relation_powerline = '''INSERT INTO transnet_relation_powerline(country, relation_id, powerline_id)
+                                                VALUES (%s, %s, %s)'''
 
         powerline_tags = ['line', 'cable', 'minor_line']
         station_tags = ['substation', 'station', 'sub_station', 'plant', 'generator']
 
+        station_ids = {}
+        powerline_ids = {}
         with open(json_file, 'r+') as relations_file:
             relations = json.load(relations_file)
             for relation in relations:
@@ -153,41 +155,52 @@ def transnet_import_relations(json_file):
                 relation_id = cur.fetchone()[0]
                 for member in relation['members']:
                     voltages = [try_parse_int(x) for x in member['voltage'].split(';')]
-
                     if member['type'] in powerline_tags:
-                        tags_list = ast.literal_eval(member['tags'])
-                        tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
-                        cur.execute(query_powerline, [country,
-                                                      member['geom'],
-                                                      tags,
-                                                      member['raw_geom'],
-                                                      voltages,
-                                                      member['type'],
-                                                      member['nodes'],
-                                                      member['lat'],
-                                                      member['lon'],
-                                                      try_parse_int(member['cables']),
-                                                      member['name'],
-                                                      member['length'],
-                                                      member['id'],
-                                                      member['srs_geom'],
-                                                      relation_id])
+                        if member['id'] in powerline_ids.keys():
+                            powerline_id = powerline_ids[member['id']]
+                        else:
+                            tags_list = ast.literal_eval(member['tags'])
+                            tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
+                            cur.execute(query_powerline, [country,
+                                                          member['geom'],
+                                                          tags,
+                                                          member['raw_geom'],
+                                                          voltages,
+                                                          member['type'],
+                                                          member['nodes'],
+                                                          member['lat'],
+                                                          member['lon'],
+                                                          try_parse_int(member['cables']),
+                                                          member['name'],
+                                                          member['length'],
+                                                          member['id'],
+                                                          member['srs_geom']])
+                            powerline_id = cur.fetchone()[0]
+                            powerline_ids[member['id']] = powerline_id
+
+                        cur.execute(query_relation_powerline, [country, relation_id, powerline_id])
+
                     elif member['type'] in station_tags:
-                        tags_list = [x.replace('"', "").replace('\\', "") for x in
-                                     member['tags'].replace(',', '=>').split('=>')]
-                        tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
-                        cur.execute(query_station, [country,
-                                                    member['geom'],
-                                                    tags,
-                                                    member['raw_geom'],
-                                                    member['lat'],
-                                                    member['lon'],
-                                                    member['name'],
-                                                    member['length'],
-                                                    member['id'],
-                                                    voltages,
-                                                    member['type'],
-                                                    relation_id])
+                        if member['id'] in station_ids.keys():
+                            station_id = station_ids[member['id']]
+                        else:
+                            tags_list = [x.replace('"', "").replace('\\', "") for x in
+                                         member['tags'].replace(',', '=>').split('=>')]
+                            tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
+                            cur.execute(query_station, [country,
+                                                        member['geom'],
+                                                        tags,
+                                                        member['raw_geom'],
+                                                        member['lat'],
+                                                        member['lon'],
+                                                        member['name'],
+                                                        member['length'],
+                                                        member['id'],
+                                                        voltages,
+                                                        member['type']])
+                            station_id = cur.fetchone()[0]
+                            station_ids[member['id']] = station_id
+                        cur.execute(query_relation_station, [country, relation_id, station_id])
                     conn.commit()
     except Exception as e:
         print(e)
@@ -195,7 +208,7 @@ def transnet_import_relations(json_file):
 
 if __name__ == '__main__':
     # download_latest_relation_files()
-    # find_and_import_relation_files()
-    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+     find_and_import_relation_files()
+    #transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
-     transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
