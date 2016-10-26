@@ -88,6 +88,19 @@ Pgis.Relation.selectionMode = {
 
         });
 
+        $(document).on('click', '.get-stations-info', function () {
+            var relationId = $(this).attr('data-relation-id');
+            $.ajax({
+                url: "/transnet/stations_info",
+                data: {
+                    "relation_id": relationId
+                },
+                success: function (data) {
+                    $('#stations-info').html(data)
+                }
+            })
+        });
+
         $(document).on('click', '.transnet-select-all-countries', function () {
             var continent = $(this).attr('data-continent');
             var countries = $('.country-checkbox-' + continent);

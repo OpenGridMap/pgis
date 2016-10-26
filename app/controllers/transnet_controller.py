@@ -27,6 +27,15 @@ class TransnetController:
 
         return Response(json.dumps(relations), mimetype='application/json')
 
+    def stations_info(self):
+        if not request.args.get('relation_id'):
+            return Response(json.dumps([]), mimetype='application/json')
+        relation_id = request.args.get("relation_id")
+
+        relations = TransnetRelation.get_station_info(relation_id)
+
+        return render_template('stations_info.html', relations=relations)
+
     def export(self):
         if (not request.args.get('bounds') and
                 not request.args.get('ids')):

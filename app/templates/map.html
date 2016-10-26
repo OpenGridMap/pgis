@@ -98,6 +98,10 @@
                         <td>{{this}}</td>
                     </tr>
                     {{/each}}
+                    <tr>
+                        <td>length:</td>
+                        <td>{{relation.length}}</td>
+                    </tr>
                 </table>
             </div>
             <hr/>
@@ -129,6 +133,12 @@
 
             </div>
             {{/if}}
+            {{#if relation.hast_points}}
+            <button class="get-stations-info" data-relation-id="{{ relation.id }}"> Get Stations Info</button>
+            <div id="stations-info">
+
+            </div>
+            {{/if}}
             {{#if relation.powerlines}}
             <hr>
             <div class="sidebar-tags-table">
@@ -151,6 +161,8 @@
 
             </div>
             {{/if}}
+
+
         </div>
     </script>
 

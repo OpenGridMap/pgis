@@ -60,13 +60,22 @@ class TransnetRelation(db.Model):
 
         powerline_relations = powerlines_qry.options(joinedload('relations')).all()
 
-        return TransnetRelation.prepare_relations_for_export(powerline_relations,[], zoom)
+        return TransnetRelation.prepare_relations_for_export(powerline_relations, [], zoom)
 
     @staticmethod
     def relations_for_export(relation_ids):
 
         relations = TransnetRelation.query.filter(
             TransnetRelation.id.in_(relation_ids)
+        ).all()
+
+        return TransnetRelation.prepare_relations_for_export([], relations, None)
+
+    @staticmethod
+    def get_station_info(relation_id):
+
+        relations = TransnetRelation.query.filter(
+            TransnetRelation.id == relation_id
         ).all()
 
         return TransnetRelation.prepare_relations_for_export([], relations, None)
@@ -148,6 +157,10 @@ class TransnetRelation(db.Model):
                             'osmid': station.osm_id,
                         },
                     })
+                else:
+                    relations_to_export[relation.id]['hast_points'] = True
+
+            relations_to_export[relation.id]['length'] = round(relations_to_export[relation.id]['length'])
 
         return relations_to_export
 

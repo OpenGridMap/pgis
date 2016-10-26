@@ -2,18 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="af7c6e6a-9af2-4171-bac9-69eda43d1fae" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/models/transnet_relation_powerline.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/models/transnet_relation_station.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources/6079894e-078b-4ab8-ada0-273f3744e5d1.xml" afterPath="$PROJECT_DIR$/.idea/dataSources/6079894e-078b-4ab8-ada0-273f3744e5d1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/templates/stations_info.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/transnet_controller.py" afterPath="$PROJECT_DIR$/app/controllers/transnet_controller.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/transnet_powerline.py" afterPath="$PROJECT_DIR$/app/models/transnet_powerline.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/transnet_relation.py" afterPath="$PROJECT_DIR$/app/models/transnet_relation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/transnet_station.py" afterPath="$PROJECT_DIR$/app/models/transnet_station.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/javascripts/non-admin/api-service.js" afterPath="$PROJECT_DIR$/app/static/javascripts/non-admin/api-service.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.featureGroup.js" afterPath="$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.featureGroup.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/import_transnet_data.py" afterPath="$PROJECT_DIR$/import_transnet_data.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/migrations/versions/9aaa71af05_create_relations_table_and_its_.py" afterPath="$PROJECT_DIR$/migrations/versions/9aaa71af05_create_relations_table_and_its_.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/routes.py" afterPath="$PROJECT_DIR$/app/routes.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" afterPath="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/map.html" afterPath="$PROJECT_DIR$/app/templates/map.html" />
     </list>
     <ignored path="pgis.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,7 +22,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/pgis$import_transnet.coverage" NAME="import_transnet Coverage Results" MODIFIED="1477483103529" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pgis$pgis.coverage" NAME="pgis Coverage Results" MODIFIED="1477493850324" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pgis$pgis.coverage" NAME="pgis Coverage Results" MODIFIED="1477499187748" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -46,24 +41,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="transnet_relation.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/models/transnet_relation.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1666">
-              <caret line="137" column="51" selection-start-line="137" selection-start-column="51" selection-end-line="137" selection-end-column="51" />
-              <folding>
-                <element signature="e#0#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="transnet_controller.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="transnet_controller.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/controllers/transnet_controller.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
-              <caret line="82" column="94" selection-start-line="82" selection-start-column="94" selection-end-line="82" selection-end-column="94" />
-              <folding />
+            <state relative-caret-position="-270">
+              <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#29#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -85,7 +70,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/migrations/versions/1e0c26b2c59_adding_country_table.py" />
         <option value="$PROJECT_DIR$/migrations/versions/3a359e6c77d_renaming_country_voltage_to_voltages.py" />
         <option value="$PROJECT_DIR$/migrations/versions/20efc53357f_.py" />
         <option value="$PROJECT_DIR$/migrations/versions/d95ebf6984_renaming_country_voltage_to_voltages.py" />
@@ -98,19 +82,16 @@
         <option value="$PROJECT_DIR$/generator_app/app/models/transnet_relation.py" />
         <option value="$PROJECT_DIR$/app/templates/transnetfilter.html" />
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis-map.js" />
-        <option value="$PROJECT_DIR$/app/templates/map.html" />
         <option value="$PROJECT_DIR$/app/utils/CSVWriter.py" />
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/main.js" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/app/templates/transnetvalidations.html" />
         <option value="$PROJECT_DIR$/app/templates/transnetoperations.html" />
-        <option value="$PROJECT_DIR$/app/routes.py" />
         <option value="$PROJECT_DIR$/generator_app/app/controllers/transnet_controller.py" />
         <option value="$PROJECT_DIR$/app/templates/transnet_evaluations.html" />
         <option value="$PROJECT_DIR$/app/static/stylesheets/main.css" />
         <option value="$PROJECT_DIR$/app/utils/csv_writer.py" />
         <option value="$PROJECT_DIR$/data/relations/europe/germany/_relationsaa" />
-        <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" />
         <option value="$PROJECT_DIR$/app/templates/transnet_operations.html" />
         <option value="$PROJECT_DIR$/app/static/javascripts/helpers/misc-helpers.js" />
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.markerClusterGroup.js" />
@@ -134,8 +115,12 @@
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.featureGroup.js" />
         <option value="$PROJECT_DIR$/import_transnet_data.py" />
-        <option value="$PROJECT_DIR$/app/controllers/transnet_controller.py" />
+        <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" />
+        <option value="$PROJECT_DIR$/app/routes.py" />
         <option value="$PROJECT_DIR$/app/models/transnet_relation.py" />
+        <option value="$PROJECT_DIR$/app/controllers/transnet_controller.py" />
+        <option value="$PROJECT_DIR$/app/templates/stations_info.html" />
+        <option value="$PROJECT_DIR$/app/templates/map.html" />
       </list>
     </option>
   </component>
@@ -229,6 +214,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="templates" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -355,9 +358,9 @@
       <recent name="$PROJECT_DIR$/data/relations/asia/china" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/templates" />
       <recent name="$PROJECT_DIR$/app/models" />
       <recent name="$PROJECT_DIR$/app/utils" />
-      <recent name="$PROJECT_DIR$/app/templates" />
       <recent name="$PROJECT_DIR$/app/static/fonts" />
       <recent name="$PROJECT_DIR$/app/static/stylesheets" />
     </key>
@@ -654,7 +657,7 @@
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32881" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37265137" sideWeight="0.5041459" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47599164" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30375782" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.31941545" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32985386" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30167013" sideWeight="0.49585405" order="10" side_tool="false" content_ui="tabs" />
@@ -696,32 +699,11 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="88" />
+      <option name="time" value="90" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/migrations/versions/13d7ddfddbc_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="26" column="14" selection-start-line="26" selection-start-column="14" selection-end-line="26" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/migrations/versions/245a2ea2ba_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/migrations/versions/48782e886c1_.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="41" column="16" selection-start-line="41" selection-start-column="12" selection-end-line="41" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/IDE/miniconda2/envs/pgisenv/lib/python3.4/site-packages/alembic/operations.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="555">
@@ -740,13 +722,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="27" column="79" selection-start-line="27" selection-start-column="79" selection-end-line="27" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/transnet_filter.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="676">
-          <caret line="96" column="20" selection-start-line="96" selection-start-column="20" selection-end-line="96" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -1050,27 +1025,7 @@
         <state relative-caret-position="75">
           <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/application_controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="43" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
-          <folding>
-            <element signature="e#0#33#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/L.Polyline.measuredDistanceInsideBoundingBox.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="33" column="17" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="17" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
+            <element signature="e#0#32#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1090,16 +1045,6 @@
           <folding>
             <marker date="1476695934741" expanded="true" signature="1516:1522" ph="©" />
             <marker date="1476695934741" expanded="true" signature="2018:2024" ph="©" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/routes.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="147" column="24" selection-start-line="147" selection-start-column="16" selection-end-line="147" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#81#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1145,14 +1090,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.featureGroup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="8" column="43" selection-start-line="8" selection-start-column="43" selection-end-line="8" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/pgis-map.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-195">
@@ -1172,20 +1109,88 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/transnet_controller.py">
+    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.featureGroup.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="82" column="94" selection-start-line="82" selection-start-column="94" selection-end-line="82" selection-end-column="94" />
+        <state relative-caret-position="75">
+          <caret line="8" column="43" selection-start-line="8" selection-start-column="43" selection-end-line="8" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/L.Polyline.measuredDistanceInsideBoundingBox.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="33" column="17" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/routes.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
+          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="95" column="32" selection-start-line="95" selection-start-column="21" selection-end-line="95" selection-end-column="32" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/application_controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="11" column="97" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="97" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/transnet_filter.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="164">
+          <caret line="78" column="37" selection-start-line="78" selection-start-column="34" selection-end-line="78" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/stations_info.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/models/transnet_relation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1666">
-          <caret line="137" column="51" selection-start-line="137" selection-start-column="51" selection-end-line="137" selection-end-column="51" />
+        <state relative-caret-position="67">
+          <caret line="87" column="23" selection-start-line="87" selection-start-column="13" selection-end-line="87" selection-end-column="23" />
           <folding>
             <element signature="e#0#33#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="404">
+          <caret line="136" column="27" selection-start-line="136" selection-start-column="27" selection-end-line="136" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/transnet_controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-270">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>

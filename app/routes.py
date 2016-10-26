@@ -151,6 +151,12 @@ def transnet():
     return controller.index()
 
 
+@GisApp.route('/transnet/stations_info')
+def transnet_stations_info():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.stations_info()
+
+
 @GisApp.route('/transnet/export_xml')
 def transnet_export_xml():
     controller = app.controllers.transnet_controller.TransnetController()
