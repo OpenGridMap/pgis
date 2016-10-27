@@ -143,11 +143,15 @@ def transnet_import_relations(json_file):
         query_relation_powerline = '''INSERT INTO transnet_relation_powerline(country, relation_id, powerline_id)
                                                 VALUES (%s, %s, %s)'''
 
+        query_powerline_count = '''SELECT count(id) FROM transnet_powerline WHERE osm_id = %s'''
+        query_station_count = '''SELECT count(id) FROM transnet_station WHERE osm_id = %s'''
+
+        query_powerline_get_one_id = '''SELECT id FROM transnet_powerline WHERE osm_id = %s LIMIT 1'''
+        query_station_get_one_id = '''SELECT id FROM transnet_station WHERE osm_id = %s LIMIT 1'''
+
         powerline_tags = ['line', 'cable', 'minor_line']
         station_tags = ['substation', 'station', 'sub_station', 'plant', 'generator']
 
-        station_ids = {}
-        powerline_ids = {}
         with open(json_file, 'r+') as relations_file:
             relations = json.load(relations_file)
             for relation in relations:
@@ -156,8 +160,12 @@ def transnet_import_relations(json_file):
                 for member in relation['members']:
                     voltages = [try_parse_int(x) for x in member['voltage'].split(';')]
                     if member['type'] in powerline_tags:
-                        if member['id'] in powerline_ids.keys():
-                            powerline_id = powerline_ids[member['id']]
+
+                        cur.execute(query_powerline_count, [member['id']])
+                        powerline_count = cur.fetchone()[0]
+                        if powerline_count:
+                            cur.execute(query_powerline_get_one_id, [member['id']])
+                            powerline_id = cur.fetchone()[0]
                         else:
                             tags_list = ast.literal_eval(member['tags'])
                             tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
@@ -176,13 +184,15 @@ def transnet_import_relations(json_file):
                                                           member['id'],
                                                           member['srs_geom']])
                             powerline_id = cur.fetchone()[0]
-                            powerline_ids[member['id']] = powerline_id
 
                         cur.execute(query_relation_powerline, [country, relation_id, powerline_id])
 
                     elif member['type'] in station_tags:
-                        if member['id'] in station_ids.keys():
-                            station_id = station_ids[member['id']]
+                        cur.execute(query_station_count, [member['id']])
+                        station_count = cur.fetchone()[0]
+                        if station_count:
+                            cur.execute(query_station_get_one_id, [member['id']])
+                            station_id = cur.fetchone()[0]
                         else:
                             tags_list = [x.replace('"', "").replace('\\', "") for x in
                                          member['tags'].replace(',', '=>').split('=>')]
@@ -199,7 +209,6 @@ def transnet_import_relations(json_file):
                                                         voltages,
                                                         member['type']])
                             station_id = cur.fetchone()[0]
-                            station_ids[member['id']] = station_id
                         cur.execute(query_relation_station, [country, relation_id, station_id])
                     conn.commit()
     except Exception as e:
@@ -208,7 +217,7 @@ def transnet_import_relations(json_file):
 
 if __name__ == '__main__':
     # download_latest_relation_files()
-     find_and_import_relation_files()
-    #transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
+    #find_and_import_relation_files()
+    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
-    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
+    transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
