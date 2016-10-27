@@ -260,7 +260,7 @@ class TransnetRelation(db.Model):
 
                 scigrid_all_station_count_query = '''SELECT count(*) as count
                                                                 FROM scigrid_station s
-                                                                WHERE  %s''' % where_clause
+                                                                WHERE s.type ~ 'station|substation|merge|sub_station|plant' and %s''' % where_clause
                 s_count = [x[0] for x in db.engine.execute(scigrid_all_station_count_query)][0]
                 hits = []
                 for station in stations_to_eval:
