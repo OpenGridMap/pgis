@@ -9,7 +9,7 @@ except:
     print("I am unable to connect to the database")
     exit()
 
-base_dir = './scigird'
+base_dir = './resources'
 
 
 def try_parse_int(string):
@@ -36,18 +36,18 @@ def import_files():
         conn.commit()
         query_powerline = '''INSERT INTO
                              scigrid_powerline(l_id, v_id_1, v_id_2, voltage, cables, wires, frequency,
-                             name, operator, ref, length_m, r_ohmkm, x_ohmkm, c_nfkm, i_th_max_a, from_relation, geom)
-                             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,ST_FlipCoordinates(%s))'''
+                             name, operator, ref, length_m, r_ohmkm, x_ohmkm, c_nfkm, i_th_max_a, from_relation, geom, geom_str)
+                             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,ST_FlipCoordinates(%s), %s)'''
 
         query_station = '''INSERT INTO
-                           scigrid_station(v_id, lon, lat, type, voltage, frequency, name, operator, ref, geom)
-                           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,ST_FlipCoordinates(%s))'''
+                           scigrid_station(v_id, lon, lat, type, voltage, frequency, name, operator, ref, geom, geom_str)
+                           VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,ST_FlipCoordinates(%s), %s)'''
         print('Importing lines')
-        with open('{0}/{1}.csv'.format(base_dir, file_names[0])) as lines_file:
+        with open('{0}/scigird/{1}.csv'.format(base_dir, file_names[0])) as lines_file:
             reader = csv.reader(lines_file, delimiter=',', quotechar='"')
             next(reader, None)
             for row in reader:
-                voltages = [try_parse_int(x) for x in row[0].split(';')]
+                voltages = [try_parse_int(x) for x in row[3].split(';')]
                 cables = [try_parse_int(x) for x in row[4].split(';')]
                 wires = [try_parse_int(x) for x in row[5].split(';')]
                 frequency = [try_parse_int(x) for x in row[6].split(';')]
@@ -68,11 +68,12 @@ def import_files():
                                               try_parse_float(str(row[14])),
                                               True if row[15] else False,
                                               row[16],
+                                              str(row[16])
                                               ])
         conn.commit()
 
         print('Importing stations')
-        with open('{0}/{1}.csv'.format(base_dir, file_names[1])) as lines_file:
+        with open('{0}/scigird/{1}.csv'.format(base_dir, file_names[1])) as lines_file:
             reader = csv.reader(lines_file, delimiter=',', quotechar='"')
             next(reader, None)
             for row in reader:
@@ -88,6 +89,7 @@ def import_files():
                                             str(row[7]),
                                             str(row[8]),
                                             row[9],
+                                            str(row[9])
                                             ])
 
         conn.commit()

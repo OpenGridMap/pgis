@@ -25,6 +25,7 @@ class ScigridPowerline(db.Model):
     i_th_max_a = db.Column(db.NUMERIC, nullable=True)
     from_relation = db.Column(db.BOOLEAN, nullable=True)
     geom = db.Column(Geometry('LINESTRING'), nullable=True)
+    geom_str = db.Column(db.String, nullable=True)
 
     def shape(self):
         return to_shape(self.geom)
@@ -43,6 +44,7 @@ class ScigridStation(db.Model):
     operator = db.Column(db.String, nullable=True)
     ref = db.Column(db.String, nullable=True)
     geom = db.Column(Geometry('POINT'), nullable=True)
+    geom_str = db.Column(db.String, nullable=True)
 
     def shape(self):
         return to_shape(self.geom)
