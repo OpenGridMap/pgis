@@ -271,8 +271,7 @@ class TransnetRelation(db.Model):
                     hit = [x[0] for x in db.engine.execute(hit_query)]
                     if len(hit) and hit[0]:
                         hits.append(True)
-
-                country_stat['plant_station_hit_rate'] = len(hits) / s_count
+                country_stat['plant_station_hit_rate'] = (len(hits) / s_count) * 100
 
 
             except Exception as ex:
