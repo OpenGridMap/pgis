@@ -1,64 +1,77 @@
 {% extends 'bootstrap_base.html' %}
 
 {% block styles %}
-        {{ super() }}
-	{% assets "application_css" %}
-	<link rel="stylesheet" href="{{ ASSET_URL }}" />
-	{% endassets %}
-	<style>
-		html, body {
-			width: 100%;
-			height: 100%;
-			margin: 0;
-			padding: 0;
-		}
-		#map {
-			width: 100%;
-			height: 100%;
-		}
-	</style>
+    {{ super() }}
+    {% assets "application_css" %}
+        <link rel="stylesheet" href="{{ ASSET_URL }}"/>
+    {% endassets %}
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 {% endblock %}
 {% block scripts %}
-        {{super()}}
-	<script>
-		APP_IMAGES_URL = "{{ url_for('static', filename='images')}}"
-	</script>
-	{% assets "application_js" %}
-	<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-	{% endassets %}
+    {{ super() }}
+    <script>
+        APP_IMAGES_URL = "{{ url_for('static', filename='images')}}"
+    </script>
+    {% assets "application_js" %}
+        <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
 {% endblock %}
 
 {% block content %}
-<div id="map-control-panel"></div>
-<div id="map"></div>
-<div id="sidebar"></div>
+    <div id="map-control-panel"></div>
+    <div id="map"></div>
+    <div id="sidebar"></div>
+    <div id="transnet-filter-sidebar">
+        {% include 'transnet_filter.html' %}
+    </div>
+    <div id="transnet-operations-sidebar">
+        {% include 'transnet_operations.html' %}
+    </div>
+    <div id="transnet-validations-sidebar">
+        {% include 'transnet_evaluations.html' %}
+    </div>
 
-{% raw %}
-<script id="marker-sidebar-template" type="text/x-handlebars-template">
-        <div class="sidebar"><h1>Point {{  id }}</h1></div>
+    {% raw %}
+    <script id="marker-sidebar-template" type="text/x-handlebars-template">
+        <div class="sidebar"><h1>Point {{ id }}</h1></div>
         <div><p><strong>LatLng:</strong> {{ latlng }}</p>
-                <p><strong>Tags:</strong> {{ json tags }}</p>
-                {{#each pictures}}
-                    <img src="{{ this.filepath }}">
-                {{/each}}
-                <p><a href="index?point_id={{ id }}&lat={{ latlng.[0] }}&long={{ latlng.[1] }}&zoom=18">Permalink</a></p>
-                <p><a href="/admin/points/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p></div>
-                <br/>
-                OSM-ID:
-                <!-- OSMAPI_DOMAIN config variable needs to be rendered by Jinja2
-                templates. So do +endraw+ statement, print the config variable
-                and open +raw+ statement -->
-                <a href="http://{% endraw %}{{ config['OSMAPI_CONFIG']['domain'] }}{% raw %}/node/{{ osmid }}"
-                    target="_blank">
-                  {{ osmid }}
-                </a>
-</script>
-{% endraw %}
-{% raw %}
-<script id="polyline-popup-template" type="text/x-handlebars-template">
+            <p><strong>Tags:</strong> {{ json tags }}</p>
+            {{#each pictures}}
+            <img src="{{ this.filepath }}">
+            {{/each}}
+            <p><a href="index?point_id={{ id }}&lat={{ latlng.[0] }}&long={{ latlng.[1] }}&zoom=18">Permalink</a></p>
+            <p><a href="/admin/points/edit/{{id}}?redirect_back=true">
+                <button class="btn btn-default">Edit</button>
+            </a></p>
+        </div>
+        <br/>
+        OSM-ID:
+        <!-- OSMAPI_DOMAIN config variable needs to be rendered by Jinja2
+        templates. So do +endraw+ statement, print the config variable
+        and open +raw+ statement -->
+        <a href="http://{% endraw %}{{ config['OSMAPI_CONFIG']['domain'] }}{% raw %}/node/{{ osmid }}"
+           target="_blank">
+            {{ osmid }}
+        </a>
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="polyline-popup-template" type="text/x-handlebars-template">
         <div class="panel panel-default">
-          <div class="panel-heading">Powerline {{ id }}</div>
-          <div class="panel-body">
+            <div class="panel-heading">Powerline {{ id }}</div>
+            <div class="panel-body">
                 <p><strong>Tags:</strong> {{ json tags }}</p>
                 <p><a href="/admin/powerlines/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p>
           </div>
@@ -92,6 +105,58 @@
           <br/>
           {{relationSelectionSummaryAndActions}}
         </div>
+
+          {{#if relation.points}}
+            <hr>
+            <div class="sidebar-tags-table">
+                <strong>Stations:</strong>
+                {{#each relation.points}}
+                <hr>
+                <table>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Value</th>
+                    </tr>
+                    {{#each this.properties.tags}}
+                    <tr>
+                        <td>{{@key}}:</td>
+                        <td>{{this}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+                {{/each}}
+
+            </div>
+            {{/if}}
+            {{#if relation.hast_points}}
+            <button class="get-stations-info" data-relation-id="{{ relation.id }}"> Get Stations Info</button>
+            <div id="stations-info">
+
+            </div>
+            {{/if}}
+            {{#if relation.powerlines}}
+            <hr>
+            <div class="sidebar-tags-table">
+                <strong>Power Lines:</strong>
+                {{#each relation.powerlines}}
+                <hr>
+                <table>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Value</th>
+                    </tr>
+                    {{#each this.properties.tags}}
+                    <tr>
+                        <td>{{@key}}:</td>
+                        <td>{{this}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+                {{/each}}
+
+            </div>
+            {{/if}}
+
       </div>
 </script>
 

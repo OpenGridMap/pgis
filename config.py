@@ -4,6 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 import yaml
 
 def read_yaml_configuration_for(config_type):
+
     file_name = "{0}.yml".format(config_type) # example: database.yml
     if os.path.isfile(file_name):
         with open(file_name, 'r') as f:

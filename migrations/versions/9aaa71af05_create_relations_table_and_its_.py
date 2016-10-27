@@ -30,8 +30,7 @@ def upgrade():
             sa.Column('member_type', sa.String(length=64), nullable=False),
             sa.Column('member_role', sa.String(length=64), nullable=False),
             sa.PrimaryKeyConstraint('id'),
-            sa.ForeignKeyConstraint(['power_relation_id'], ['power_relations.id'])
-            )
+            sa.ForeignKeyConstraint(['power_relation_id'], ['power_relations.id']))
     op.execute("CREATE INDEX power_relations_members_osm_idx ON power_relation_members(member_osm_id)")
 
 def downgrade():

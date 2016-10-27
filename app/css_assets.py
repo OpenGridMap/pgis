@@ -5,11 +5,12 @@ common_css_files = [
     'stylesheets/MarkerCluster.Default.css'
 ]
 non_admin_css_files = common_css_files + [
-    'stylesheets/main.less.css',
+    'stylesheets/main.css',
     'stylesheets/Control.Geocoder.css',
     'stylesheets/L.Control.Sidebar.css',
     'stylesheets/Control.Loading.css',
-    'stylesheets/Control.LinkButton.css'
+    'stylesheets/Control.LinkButton.css',
+    'stylesheets/font-awesome.min.css'
 ]
 
 admin_css_files = common_css_files + [

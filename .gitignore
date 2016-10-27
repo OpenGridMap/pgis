@@ -8,4 +8,6 @@ __init__.pyc
 tags
 database.yml
 application.yml
+data
+/models
 .idea/

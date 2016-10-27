@@ -1,0 +1,1 @@
+ST_Intersects(ST_GeographyFromText(s.geom_str),st_transform(st_geomfromtext('MULTIPOLYGON (((-31.5 38.10556, -31.5 40.0757, -24.71814 40.0757, -24.71814 36.67791, -31.5 38.10556)))',4269),4326))

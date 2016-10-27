@@ -1,0 +1,57 @@
+{% for country, country_stat in countries_stats|dictsort %}
+    <div class="panel panel-stats {{ 'panel-primary' if country == 'aaa' else 'panel-info' }}">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                {% if country == 'aaa' %}
+                    Sum of All Selected Countries
+                {% else %}
+                    {{ country|title|replace("-", " ") }}
+                {% endif %}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <dl class="dl-horizontal">
+                        <dt></dt>
+                        <dd><strong>Inferred / Source</strong></dd>
+                        <dt>Plants/Generators Count</dt>
+                        <dd>{{ country_stat['plants_count'] }} / {{ country_stat['plants_count_s'] }}</dd>
+                        <dt>Stations Count</dt>
+                        <dd>{{ country_stat['substations_count'] }} / {{ country_stat['substations_count_s'] }}</dd>
+                        <dt>Powerlines Length</dt>
+                        <dd>{{ "{:,.0f} km".format(country_stat['all_line_length']) }} /
+                            {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}</dd>
+                    </dl>
+                    {% if country_stat['length_by_voltages']|length %}
+                        <div style="overflow-x:auto;">
+                            <table class="table table-hover table-striped table-responsive">
+                                <caption>Powerline length by voltage.</caption>
+                                <thead>
+                                <tr>
+                                    <th>Voltage(v)</th>
+                                    <th>Inferred Shared(km)</th>
+                                    <th>Inferred Single(km)</th>
+                                    <th>Source Shared(km)</th>
+                                    <th>Source Single</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for voltage, length in country_stat['length_by_voltages']|dictsort %}
+                                    <tr>
+                                        <td>{{ "{:,.0f}".format(voltage) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[0]) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[1]) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[2]) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[3]) }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

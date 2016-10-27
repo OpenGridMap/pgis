@@ -122,6 +122,11 @@ class RelationsPresenter:
                     'k': tag,
                     'v': value
                 })
+        for tag, value in tags.items(): # tag.items() because tags is a dict
+            tag_elem = SubElement(parent_xml_element, 'tag', {
+                'key': tag,
+                'value': str(value)
+            })
 
     def __points_for_powerlines(self, powerline_ids):
         query = text("""

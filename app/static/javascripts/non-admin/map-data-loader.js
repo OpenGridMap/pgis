@@ -145,17 +145,17 @@ var MapDataLoader = {
   },
 
   plotRelationsOnMap: function(pgisMap, relations) {
-    pgisMap.overlayLayers.relations.layer.clearLayers();
+    pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].layer.clearLayers();
 
     _.each(relations, function(relation){
       var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
-      pgisMap.overlayLayers.relations.layer.addLayer(relationFeatureLayer);
+      pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].layer.addLayer(relationFeatureLayer);
 
       // if relation with this id was previously selected for sidebar, hightlight it
       //  This is needed because when clicked on a relation, the display of sidebar
       //  moved the map triggering a reload of data and rerender of the layers
-      if(typeof(pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
-        selectedRelationId = pgisMap.overlayLayers.relations
+      if(typeof(pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer) != 'undefined') {
+        selectedRelationId = pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]]
           .lastClickedRelationFeatureLayer.relation.id;
 
         if(relation.id == selectedRelationId) {
@@ -174,8 +174,8 @@ var MapDataLoader = {
 
       relationFeatureLayer.on('click', function(e) {
         // remove any relation layer that is already highlighted for sidebar
-        if(typeof(pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer) != 'undefined') {
-          pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.removeHighlightForSidebar();
+        if(typeof(pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer) != 'undefined') {
+          pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer.removeHighlightForSidebar();
         }
         pgisMap.map.fireEvent("relation-click", { relationFeatureLayer: relationFeatureLayer });
       });

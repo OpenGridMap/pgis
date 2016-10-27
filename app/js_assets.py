@@ -15,6 +15,7 @@ non_admin_js_files = common_js_files + [
     'javascripts/libraries/L.Control.Sidebar.js',
     'javascripts/libraries/Control.Loading.js',
     'javascripts/libraries/Map.SelectArea.min.js',
+    'javascripts/libraries/color-hash.js',
     'javascripts/non-admin/leaflet.pgis.relation.markerClusterGroup.js',
     'javascripts/non-admin/leaflet.pgis.relation.featureGroup.js',
     'javascripts/non-admin/pgis-map.js',

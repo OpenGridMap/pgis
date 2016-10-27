@@ -1,0 +1,102 @@
+<div class="page-header">
+    <h3>Transnet Filters</h3>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#countries" aria-controls="profile" role="tab"
+           data-toggle="tab">Countries</a>
+    </li>
+    <li role="presentation">
+        <a href="#voltages" aria-controls="home" role="tab"
+           data-toggle="tab">Voltages</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="countries">
+        <div class="panel-group" id="accordion-countries" role="tablist" aria-multiselectable="true">
+            {% for continent, countries in world|dictsort %}
+                <div class="panel panel-default">
+                    <div class="panel-heading panel-heading-filter collapsed" role="tab" data-toggle="collapse"
+                         data-parent="#accordion-countries" href="#accor-{{ continent }}"
+                         aria-expanded="false" aria-controls="accor-{{ continent }}">
+                        <h4 class="panel-title">
+                            {% if continent == 'usa' %}
+                                USA
+                            {% else %}
+                                {{ continent|title|replace("-", " ") }}
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <div id="accor-{{ continent }}" class="panel-collapse collapse" role="tabpanel"
+                         aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" class="transnet-select-all-countries"
+                                                   data-continent="{{ continent }}">
+                                            <span class="cr">
+                                                <i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                            Select All
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for country in countries %}
+                                <div class="row">
+                                    <div class="col-xs-9">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" value="{{ country['country'] }}"
+                                                       class="transnet-country-filter country-checkbox-{{ continent }}"
+                                                       data-country="{{ country['country'] }}">
+                                                <span class="cr">
+                                                    <i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                                                {% if country['country'] == 'usa' %}
+                                                    USA
+                                                {% else %}
+                                                    {{ country['country']|title|replace("-", " ") }}
+                                                {% endif %}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <div class="pull-right">
+                                            <a data-toggle="tooltip" data-placement="left" class="country-extra-links"
+                                               title="{{ country['voltages'] }} V">
+                                                <i class="fa fa-bolt" aria-hidden="true"></i>
+                                            </a>
+                                            <a href="https://github.com/OpenGridMap/transnet/tree/master/models/{{ continent }}/{{ country['country'] }}"
+                                               class="country-extra-links"
+                                               target="_blank"> <i class="fa fa-github" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="voltages">
+        <div class="alert alert-info" role="alert">Filter relations based on voltage tag of the relations, stations or
+            powerlines
+        </div>
+
+        {% for voltage in voltages %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="{{ voltage }}" class="transnet-voltage-filter"
+                           data-voltage="{{ voltage }}">
+                    <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                    {{ "{:,.0f}".format(voltage) }} V
+                </label>
+            </div>
+        {% endfor %}
+    </div>
+</div>

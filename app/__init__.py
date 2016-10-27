@@ -1,17 +1,13 @@
+import osmapi
 from flask import Flask
 from flask.ext.assets import Environment, Bundle
-from flask_environments import Environments
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
-from app.js_assets import non_admin_js_files, admin_js_files, gallery_js_files
-from app.css_assets import non_admin_css_files, admin_css_files, gallery_css_files
-import osmapi
-import flask_resize
-
-# for using a current jQuery version from cdn instead of jQuery 1
 from flask_bootstrap import WebCDN
+from flask_environments import Environments
 
-import os
+from app.css_assets import non_admin_css_files, admin_css_files, gallery_css_files
+from app.js_assets import non_admin_js_files, admin_js_files, gallery_js_files
 
 # Create app
 GisApp = Flask(__name__)
@@ -38,10 +34,15 @@ assets.register('application_js', js)
 assets.register('admin_application_js', admin_js)
 assets.register('gallery_application_js', gallery_js)
 
-less = Bundle('stylesheets/leaflet.css', 'stylesheets/main.less.css', 'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css','stylesheets/leaflet.draw.css', 'stylesheets/Control.Geocoder.css','stylesheets/L.Control.Sidebar.css', 'stylesheets/Control.Loading.css', 'stylesheets/Control.LinkButton.css',
+less = Bundle('stylesheets/leaflet.css', 'stylesheets/main.css', 'stylesheets/MarkerCluster.css',
+              'stylesheets/MarkerCluster.Default.css', 'stylesheets/leaflet.draw.css',
+              'stylesheets/Control.Geocoder.css', 'stylesheets/L.Control.Sidebar.css',
+              'stylesheets/Control.Loading.css', 'stylesheets/Control.LinkButton.css',
+              'stylesheets/font-awesome.min.css',
               filters='less,cssmin', output='gen/packed.css')
-admin_less = Bundle('stylesheets/leaflet.css', 'stylesheets/admin_main.less.css','stylesheets/leaflet.draw.css', 'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css',
-              filters='less,cssmin', output='gen/admin_packed.css')
+admin_less = Bundle('stylesheets/leaflet.css', 'stylesheets/admin_main.less.css', 'stylesheets/leaflet.draw.css',
+                    'stylesheets/MarkerCluster.css', 'stylesheets/MarkerCluster.Default.css',
+                    filters='less,cssmin', output='gen/admin_packed.css')
 gallery_less = Bundle(*gallery_css_files, filters='less,cssmin', output='gen/gallery_packed.css')
 
 assets.register('application_css', less)
@@ -56,7 +57,7 @@ from app.helpers import template_filters
 
 # configure OSM Api
 GisApp.osmApiClient = osmapi.OsmApi(
-    api      = GisApp.config['OSMAPI_CONFIG']['domain'],
-    username = GisApp.config['OSMAPI_CONFIG']['username'],
-    password = GisApp.config['OSMAPI_CONFIG']['password']
+    api=GisApp.config['OSMAPI_CONFIG']['domain'],
+    username=GisApp.config['OSMAPI_CONFIG']['username'],
+    password=GisApp.config['OSMAPI_CONFIG']['password']
 )

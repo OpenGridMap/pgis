@@ -1,18 +1,23 @@
 var ApiService = {
-  fetchRelationsData: function(pgisMap, successCallback) {
-    var map = pgisMap.map;
+    fetchRelationsData: function (pgisMap, successCallback) {
+        var map = pgisMap.map;
 
-    map.fireEvent("dataloading");
+        map.fireEvent("dataloading");
 
-    $.ajax({
-      url: "/relations",
-      data: {
-        "bounds": map.getBounds().toBBoxString()
-      },
-      success: function(data) {
-        successCallback(data)
-        map.fireEvent("dataload");
-      }
-    })
-  }
+        var url = "/" + pgisMap.selectedOverlayLayers[0];
+
+        $.ajax({
+            url: url,
+            data: {
+                "bounds": map.getBounds().toBBoxString(),
+                "countries": pgisMap.selectedCountries.toString(),
+                "voltages": pgisMap.selectedVoltages.toString(),
+                "zoom": map.getZoom()
+            },
+            success: function (data) {
+                successCallback(data);
+                map.fireEvent("dataload");
+            }
+        })
+    }
 };

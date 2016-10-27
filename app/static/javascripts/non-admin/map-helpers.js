@@ -14,7 +14,7 @@ var MapHelpers = {
   setSidebarContentToLastClickedRelation: function(pgisMap, selectedRelationId) {
     pgisMap.sidebar.setContent(
       this.getRelationSidebarContent({
-        relation: pgisMap.overlayLayers.relations.lastClickedRelationFeatureLayer.relation,
+        relation: pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer.relation,
         selectedRelationsIds: selectedRelationId
       })
     );
