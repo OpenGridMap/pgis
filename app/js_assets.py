@@ -23,12 +23,24 @@ non_admin_js_files = common_js_files + [
     'javascripts/non-admin/map-data-loader.js',
     'javascripts/non-admin/api-service.js',
     'javascripts/non-admin/pgis.relation.selectionMode.js',
-    'javascripts/non-admin/L.Polyline.measuredDistanceInsideBoundingBox.js',
-    'javascripts/non-admin/statistics.js',
     'javascripts/non-admin/main.js',
 ]
 
 admin_js_files = common_js_files + [
     'javascripts/admin_main.js',
     'javascripts/libraries/leaflet.draw-src.js',
+]
+
+gallery_js_files = common_js_files + [
+    'javascripts/libraries/jquery.justifiedGallery.js',
+    'javascripts/libraries/Control.Loading.js',
+    'javascripts/libraries/Control.Geocoder.js',
+    'javascripts/libraries/lightbox.js',
+    'javascripts/gallery/SubmissionMarker.js',
+    'javascripts/gallery/helpers.js',
+    'javascripts/gallery/handlers.js',
+    'javascripts/gallery/map-data-loader.js',
+    'javascripts/gallery/pgis-submission-gallery-map.js',
+    # 'javascripts/gallery.js',
+    'javascripts/gallery/main.js',
 ]

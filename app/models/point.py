@@ -33,6 +33,15 @@ class Point(db.Model):
             'pictures' : list(map((lambda p: p.serialize()), self.pictures))
         }
 
+    def serialize_for_gallery(self):
+        return {
+            'latlng': [self.shape().x, self.shape().y],
+            'properties': self.properties,
+            'pictures': list(map((lambda p: p.serialize()), self.pictures)),
+            'revised': self.revised,
+            'approved': self.approved
+        }
+
     def shape(self):
         return to_shape(self.geom)
 

@@ -1,0 +1,48 @@
+{% extends 'bootstrap_base.html' %}
+
+{% block styles %}
+        {{ super() }}
+	{% assets "gallery_application_css" %}
+	<link rel="stylesheet" href="{{ ASSET_URL }}" />
+	{% endassets %}
+{% endblock %}
+
+{% block scripts %}
+        {{super()}}
+    <script>
+		APP_IMAGES_URL = "{{ url_for('static', filename='images')}}"
+	</script>
+	{% assets "gallery_application_js" %}
+	<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+	{% endassets %}
+{% endblock %}
+
+{% block content %}
+    <div id="map" class="col-md-9"></div>
+    <div class="container-fluid">
+        <div class="row">
+            <div id="sidebar" class="col-md-3">
+                <div id="sidebar-content"></div>
+            </div>
+        </div>
+    </div>
+
+    {% raw %}
+    <script id="popup-template" type="text/x-handlebars-template">
+        <div>
+            ID : {{ id }} <br/>
+            Accuracy : {{ accuracy }} <br/>
+            Altitude : {{ altitude }} <br/>
+            Approved : {{ approved }} <br/>
+            latlng : {{ latlng }} <br/>
+            Power tag : {{ power-tag power_element_tag }} <br/>
+            <!-- <img src="{{ thumb image_src }}"> -->
+        </div>
+    </script>
+    <script id="gallery-image-template" type="text/x-handlebars-template">
+          <a href="{{ image_src }}" data-lightbox="gallery" data-title="{{ power-tag power_element_tag }}     Taken on {{ date timestamp }}">
+              <img src="{{ thumb image_src }}" alt="{{ power-tag power_element_tag }}"/>
+          </a>
+    </script>
+    {% endraw %}
+{% endblock %}

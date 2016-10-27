@@ -17,5 +17,20 @@ class Submission(db.Model):
     def serialize_for_mobileapp(self):
         return { 'id': self.id, 'user_id': self.user_id, 'user': self.user.email.partition("@")[0][0:6],  "points" : list(map((lambda p: p.serialize_with_properties()), self.points))}
 
+    def serialize_for_gallery(self):
+        points = list(map((lambda p: p.serialize_for_gallery()), self.points))
+
+        return {
+            'id': self.id,
+            'latlng': points[0]['latlng'],
+            'image_src': points[0]['pictures'][0]['filepath'],
+            'accuracy': points[0]['properties']['accuracy'],
+            'altitude': points[0]['properties']['altitude'],
+            'power_element_tag': points[0]['properties']['power_elements_tags'],
+            'timestamp': points[0]['properties']['timestamp'],
+            'revised': points[0]['revised'],
+            'approved': points[0]['approved']
+        }
+
     def images(self):
         pass
