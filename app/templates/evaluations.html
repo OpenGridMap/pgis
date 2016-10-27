@@ -22,6 +22,8 @@
                         <dt>Powerlines Length</dt>
                         <dd>{{ "{:,.0f} km".format(country_stat['all_line_length']) }} /
                             {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}</dd>
+                        <dt>Plants/Stations Hit Rate</dt>
+                        <dd>{{ "{:,.0f} %".format(country_stat['plant_station_hit_rate']) }}</dd>
                     </dl>
                     {% if country_stat['length_by_voltages']|length %}
                         <div style="overflow-x:auto;">
