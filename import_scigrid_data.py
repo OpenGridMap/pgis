@@ -9,7 +9,7 @@ except:
     print("I am unable to connect to the database")
     exit()
 
-base_dir = './data'
+base_dir = './scigird'
 
 
 def try_parse_int(string):
@@ -21,7 +21,7 @@ def try_parse_int(string):
 
 def try_parse_float(string):
     try:
-        return int(string)
+        return float(string)
     except ValueError as e:
         return 0
 
@@ -30,6 +30,8 @@ def import_files():
     try:
         cur.execute('''DELETE FROM scigrid_station;''')
         cur.execute('''DELETE FROM scigrid_powerline;''')
+
+        file_names = ['gridkit_europe-highvoltage-links', 'gridkit_europe-highvoltage-vertices']
 
         conn.commit()
         query_powerline = '''INSERT INTO
@@ -41,11 +43,11 @@ def import_files():
                            scigrid_station(v_id, lon, lat, type, voltage, frequency, name, operator, ref, geom)
                            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,ST_FlipCoordinates(%s))'''
         print('Importing lines')
-        with open('{0}/scigird/gridkit_highvoltage_de_links_160727.csv'.format(base_dir)) as lines_file:
-            reader = csv.reader(lines_file, delimiter=',', quotechar='\'')
+        with open('{0}/{1}.csv'.format(base_dir, file_names[0])) as lines_file:
+            reader = csv.reader(lines_file, delimiter=',', quotechar='"')
             next(reader, None)
             for row in reader:
-                voltages = [try_parse_int(x) for x in row[3].split(';')]
+                voltages = [try_parse_int(x) for x in row[0].split(';')]
                 cables = [try_parse_int(x) for x in row[4].split(';')]
                 wires = [try_parse_int(x) for x in row[5].split(';')]
                 frequency = [try_parse_int(x) for x in row[6].split(';')]
@@ -65,13 +67,13 @@ def import_files():
                                               try_parse_float(str(row[13])),
                                               try_parse_float(str(row[14])),
                                               True if row[15] else False,
-                                              row[16]
+                                              row[16],
                                               ])
         conn.commit()
 
         print('Importing stations')
-        with open('{0}/scigird/gridkit_highvoltage_de_vertices_160727.csv'.format(base_dir)) as lines_file:
-            reader = csv.reader(lines_file, delimiter=',', quotechar='\'')
+        with open('{0}/{1}.csv'.format(base_dir, file_names[1])) as lines_file:
+            reader = csv.reader(lines_file, delimiter=',', quotechar='"')
             next(reader, None)
             for row in reader:
                 voltages = [try_parse_int(x) for x in row[4].split(';')]
@@ -85,7 +87,7 @@ def import_files():
                                             str(row[6]),
                                             str(row[7]),
                                             str(row[8]),
-                                            row[9]
+                                            row[9],
                                             ])
 
         conn.commit()

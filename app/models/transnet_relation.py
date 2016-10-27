@@ -180,7 +180,6 @@ class TransnetRelation(db.Model):
                 'length_by_voltages': {}
             }
             try:
-
                 country_stat['all_line_length'] = \
                     db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country)[0][0] / 1000
