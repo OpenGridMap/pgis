@@ -5,7 +5,6 @@ from geoalchemy2 import func
 from sqlalchemy import cast
 from sqlalchemy import or_
 from sqlalchemy.orm import joinedload, load_only
-from sqlalchemy.sql.expression import any_, all_
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
@@ -262,17 +261,24 @@ class TransnetRelation(db.Model):
                                                                 FROM scigrid_station s
                                                                 WHERE s.type ~ 'station|substation|merge|sub_station|plant' and %s''' % where_clause
                 s_count = [x[0] for x in db.engine.execute(scigrid_all_station_count_query)][0]
-                hits = []
-                for station in stations_to_eval:
-                    hit_query = '''SELECT count(*)
-                                FROM scigrid_station s
-                                WHERE st_dwithin(ST_GeographyFromText('SRID=4326;POINT({0} {1})'), ST_GeographyFromText(s.geom_str), 100)'''.format(
-                        station.lon, station.lat)
-                    hit = [x[0] for x in db.engine.execute(hit_query)]
-                    if len(hit) and hit[0]:
-                        hits.append(True)
-                country_stat['plant_station_hit_rate'] = (len(hits) / s_count) * 100
 
+                transnet_hit_join_count_query = '''SELECT count(*)
+                                        FROM (
+                                          SELECT t.lon, t.lat
+                                          FROM transnet_station t
+                                          WHERE t.country = '%s'
+                                        ) ts
+                                        JOIN (
+                                            SELECT s.geom_str
+                                            FROM scigrid_station s
+                                            WHERE s.type ~ 'station|substation|merge|sub_station|plant' and %s
+                                        ) ss ON st_dwithin(ST_GeographyFromText('SRID=4326;POINT(' || ts.lon || ' ' || ts.lat || ')'),
+                                                          ST_GeographyFromText(ss.geom_str), 100);''' % (
+                    country, where_clause)
+
+                transnet_hit_join_count_count = [x[0] for x in db.engine.execute(transnet_hit_join_count_query)][0]
+
+                country_stat['plant_station_hit_rate'] = (transnet_hit_join_count_count / s_count) * 100
 
             except Exception as ex:
                 print(ex)
