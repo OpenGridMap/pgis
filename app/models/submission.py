@@ -23,7 +23,7 @@ class Submission(db.Model):
         print(points)
 
         serialized_submission = {
-            'id': self.id
+            'id': self.id,
             'latlng': points[0]['latlng'],
             'image_src': points[0]['pictures'][0]['filepath'],
             'altitude': points[0]['properties']['tags']['altitude'],
