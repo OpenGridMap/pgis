@@ -92,6 +92,13 @@ def download_latest_relation_files():
 
 def find_and_import_relation_files():
     try:
+        cur.execute('''DELETE FROM transnet_relation_powerline;''')
+        cur.execute('''DELETE FROM transnet_relation_station ''')
+        cur.execute('''DELETE FROM transnet_powerline ''')
+        cur.execute('''DELETE FROM transnet_station ''')
+        cur.execute('''DELETE FROM transnet_relation ''')
+
+        conn.commit()
         dirs = [x[0] for x in walk(join(dirname(__file__), '{0}/relations/'.format(base_dir)))]
         for dir in dirs[1:]:
             relation_path = '{0}/relations.json'.format(dir)
@@ -116,13 +123,13 @@ def transnet_import_relations(json_file):
         country = json_file.split('/')[-2]
         print('importing relations of {0}'.format(country))
 
-        cur.execute('''DELETE FROM transnet_relation_powerline WHERE country=%s;''', [country])
-        cur.execute('''DELETE FROM transnet_relation_station WHERE country=%s;''', [country])
-        cur.execute('''DELETE FROM transnet_powerline WHERE country=%s;''', [country])
-        cur.execute('''DELETE FROM transnet_station WHERE country=%s;''', [country])
-        cur.execute('''DELETE FROM transnet_relation WHERE country=%s;''', [country])
-
-        conn.commit()
+        # cur.execute('''DELETE FROM transnet_relation_powerline WHERE country=%s;''', [country])
+        # cur.execute('''DELETE FROM transnet_relation_station WHERE country=%s;''', [country])
+        # cur.execute('''DELETE FROM transnet_powerline WHERE country=%s;''', [country])
+        # cur.execute('''DELETE FROM transnet_station WHERE country=%s;''', [country])
+        # cur.execute('''DELETE FROM transnet_relation WHERE country=%s;''', [country])
+        #
+        # conn.commit()
 
         query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
                                         VALUES (%s, %s, %s, %s) RETURNING id'''
@@ -216,7 +223,7 @@ def transnet_import_relations(json_file):
 
 
 if __name__ == '__main__':
-    # download_latest_relation_files()
+    download_latest_relation_files()
     find_and_import_relation_files()
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
