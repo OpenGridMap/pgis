@@ -20,6 +20,8 @@ class Submission(db.Model):
     def serialize_for_gallery(self):
         points = list(map((lambda p: p.serialize_for_gallery()), self.points))
 
+        print(points)
+
         return {
             'id': self.id,
             'latlng': points[0]['latlng'],
