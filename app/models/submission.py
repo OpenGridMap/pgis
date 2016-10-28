@@ -22,17 +22,20 @@ class Submission(db.Model):
 
         print(points)
 
-        return {
+        serialized_submission = {
             'id': self.id,
             'latlng': points[0]['latlng'],
             'image_src': points[0]['pictures'][0]['filepath'],
-            # 'accuracy': points[0]['properties']['accuracy'],
-            'altitude': points[0]['properties']['altitude'],
-            'power_element_tag': points[0]['properties']['power_elements_tags'],
-            'timestamp': points[0]['properties']['timestamp'],
             'revised': points[0]['revised'],
             'approved': points[0]['approved']
         }
+        if 'properties' in points[0].keys():
+            serialized_submission['accuracy'] = points[0]['properties']['accuracy']
+            serialized_submission['altitude'] = points[0]['properties']['altitude']
+            serialized_submission['power_element_tag'] = points[0]['properties']['power_elements_tags']
+            serialized_submission['timestamp'] = points[0]['properties']['timestamp']
+
+        return serialized_submission
 
     def images(self):
         pass
