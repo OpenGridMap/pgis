@@ -23,6 +23,8 @@ non_admin_js_files = common_js_files + [
     'javascripts/non-admin/map-data-loader.js',
     'javascripts/non-admin/api-service.js',
     'javascripts/non-admin/pgis.relation.selectionMode.js',
+    'javascripts/non-admin/L.Polyline.measuredDistanceInsideBoundingBox.js',
+    'javascripts/non-admin/statistics.js',
     'javascripts/non-admin/main.js',
 ]
 

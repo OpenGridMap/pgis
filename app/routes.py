@@ -19,6 +19,7 @@ import app.controllers.relations_controller
 import app.controllers.submissions_controller
 import app.controllers.transnet_controller
 import app.controllers.userprofile_controller
+import app.controllers.gallery_controller
 import app.models.point
 import app.models.powerline
 import app.models.user
@@ -204,6 +205,22 @@ def admin_login():
     controller = app.controllers.admin.application_controller.ApplicationController()
     return controller.login()
 
+@GisApp.route('/gallery')
+def gallery_index():
+    controller = app.controllers.gallery_controller.GalleryController()
+    return controller.index()
+
+@GisApp.route('/gallery/data')
+def gallery_data():
+    controller = app.controllers.gallery_controller.GalleryController()
+    response = controller.data()
+    # response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+
+@GisApp.route('/gallery/thumb/<path:path>')
+def gallery_thumb(path):
+    controller = app.controllers.gallery_controller.GalleryController()
+    return controller.thumb(path)
 
 @GisApp.route('/admin/do_login')
 def admin_do_login():
