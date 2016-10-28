@@ -19,6 +19,7 @@ import app.controllers.relations_controller
 import app.controllers.submissions_controller
 import app.controllers.transnet_controller
 import app.controllers.userprofile_controller
+import app.controllers.gallery_controller
 import app.models.point
 import app.models.powerline
 import app.models.user
