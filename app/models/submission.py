@@ -24,7 +24,7 @@ class Submission(db.Model):
             'id': self.id,
             'latlng': points[0]['latlng'],
             'image_src': points[0]['pictures'][0]['filepath'],
-            'accuracy': points[0]['properties']['accuracy'],
+            # 'accuracy': points[0]['properties']['accuracy'],
             'altitude': points[0]['properties']['altitude'],
             'power_element_tag': points[0]['properties']['power_elements_tags'],
             'timestamp': points[0]['properties']['timestamp'],

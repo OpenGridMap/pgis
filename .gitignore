@@ -10,4 +10,4 @@ database.yml
 application.yml
 data
 /models
-.idea/
+.idea
