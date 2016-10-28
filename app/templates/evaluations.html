@@ -22,6 +22,8 @@
                         <dt>Powerlines Length</dt>
                         <dd>{{ "{:,.0f} km".format(country_stat['all_line_length']) }} /
                             {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}</dd>
+                        <dt>Plants/Stations Hit Rate</dt>
+                        <dd>{{ "{0:.2f} %".format(country_stat['plant_station_hit_rate']) }}</dd>
                     </dl>
                     {% if country_stat['length_by_voltages']|length %}
                         <div style="overflow-x:auto;">
@@ -31,8 +33,8 @@
                                 <tr>
                                     <th>Voltage(v)</th>
                                     <th>Inferred Shared(km)</th>
-                                    <th>Inferred Single(km)</th>
                                     <th>Source Shared(km)</th>
+                                    <th>Inferred Single(km)</th>
                                     <th>Source Single</th>
                                 </tr>
                                 </thead>
@@ -41,8 +43,8 @@
                                     <tr>
                                         <td>{{ "{:,.0f}".format(voltage) }}</td>
                                         <td>{{ "{:,.0f}".format(length[0]) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[1]) }}</td>
                                         <td>{{ "{:,.0f}".format(length[2]) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[1]) }}</td>
                                         <td>{{ "{:,.0f}".format(length[3]) }}</td>
                                     </tr>
                                 {% endfor %}

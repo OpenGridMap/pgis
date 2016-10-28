@@ -4,8 +4,7 @@ from geoalchemy2 import Geography
 from geoalchemy2 import func
 from sqlalchemy import cast
 from sqlalchemy import or_
-from sqlalchemy.orm import joinedload
-from sqlalchemy.sql.expression import any_, all_
+from sqlalchemy.orm import joinedload, load_only
 
 from app import db
 from app.models.transnet_powerline import TransnetPowerline
@@ -182,6 +181,8 @@ class TransnetRelation(db.Model):
                 'plants_count_s': 0,
                 'substations_count': 0,
                 'substations_count_s': 0,
+                'plant_station_hit_rate': 0,
+                'plant_station_hit_rate_s': 0,
                 'length_by_voltages': {}
             }
             try:
@@ -219,7 +220,6 @@ class TransnetRelation(db.Model):
                     country_stat['length_by_voltages'][voltage[0]] = []
                     length_shared = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country).filter(TransnetPowerline.voltage.any(voltage[0]))
-                    print(length_shared.count())
                     if length_shared.count() and length_shared[0][0]:
                         country_stat['length_by_voltages'][voltage[0]].append(length_shared[0][0] / 1000)
                     else:
@@ -254,8 +254,34 @@ class TransnetRelation(db.Model):
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
 
+                # stations_to_eval = TransnetStation.query.filter(TransnetStation.country == country).options(
+                #     load_only("lon", "lat")).all()
+                #
+                # scigrid_all_station_count_query = '''SELECT count(*) as count
+                #                                                 FROM scigrid_station s
+                #                                                 WHERE s.type ~ 'station|substation|merge|sub_station|plant' and %s''' % where_clause
+                # s_count = [x[0] for x in db.engine.execute(scigrid_all_station_count_query)][0]
+                #
+                # transnet_hit_join_count_query = '''SELECT count(*)
+                #                         FROM (
+                #                           SELECT t.lon, t.lat
+                #                           FROM transnet_station t
+                #                           WHERE t.country = '%s'
+                #                         ) ts
+                #                         JOIN (
+                #                             SELECT s.geom_str
+                #                             FROM scigrid_station s
+                #                             WHERE s.type ~ 'station|substation|merge|sub_station|plant' and %s
+                #                         ) ss ON st_dwithin(ST_GeographyFromText('SRID=4326;POINT(' || ts.lon || ' ' || ts.lat || ')'),
+                #                                           ST_GeographyFromText(ss.geom_str), 100);''' % (
+                #     country, where_clause)
+                #
+                # transnet_hit_join_count_count = [x[0] for x in db.engine.execute(transnet_hit_join_count_query)][0]
+                #
+                # country_stat['plant_station_hit_rate'] = (transnet_hit_join_count_count / s_count) * 100
+
             except Exception as ex:
-                pass
+                print(ex)
             countries_stats[country] = country_stat
 
         if len(countries) > 1:
@@ -266,6 +292,10 @@ class TransnetRelation(db.Model):
             country_stat['plants_count_s'] = sum([cn['plants_count_s'] for cn in countries_stats.values()])
             country_stat['substations_count'] = sum([cn['substations_count'] for cn in countries_stats.values()])
             country_stat['substations_count_s'] = sum([cn['substations_count_s'] for cn in countries_stats.values()])
+            country_stat['plant_station_hit_rate'] = sum(
+                [cn['plant_station_hit_rate'] for cn in countries_stats.values()]) / len(countries_stats)
+            country_stat['plant_station_hit_rate_s'] = sum(
+                [cn['plant_station_hit_rate_s'] for cn in countries_stats.values()]) / len(countries_stats)
             country_stat['length_by_voltages'] = {}
             for cn in countries_stats.values():
                 for voltage in cn['length_by_voltages']:
