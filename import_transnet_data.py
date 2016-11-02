@@ -73,6 +73,15 @@ def download_latest_relation_files():
                         cur.execute(query_country, [continent, country, voltages])
                         conn.commit()
 
+                        if continent == 'germany':
+                            cur.execute('''DELETE FROM transnet_country WHERE continent=%s AND country=%s;''', [
+                                'europe', 'germany'
+                            ])
+                            voltages = [try_parse_int(x) for x in countries[country]['voltages'].split('|')]
+                            cur.execute(query_country, ['europe', 'germany', voltages])
+                            conn.commit()
+
+
                         country_folder = '{0}/relations/{1}/{2}/'.format(base_dir, continent, country)
                         if not exists(country_folder):
                             makedirs(country_folder)
