@@ -71,89 +71,90 @@ class CSVWriter:
                                    'i_th_max_km', 'not_accurate'])
 
             for key, circuit in self.circuits.items():
-                station1 = circuit['points'][0] if circuit['points'][0]['id'] < circuit['points'][1]['id'] \
-                    else circuit['points'][1]
-                station2 = circuit['points'][1] if circuit['points'][0]['id'] < circuit['points'][1]['id'] \
-                    else circuit['points'][0]
-                line_length = 0
-                voltages = set()
-                cables = set()
-                frequencies = set()
-                names = set()
-                operators = set()
-                r_ohm_kms = set()
-                x_ohm_kms = set()
-                c_nf_kms = set()
-                i_th_max_kms = set()
-                types = set()
-                not_accurate = False
+                if len(circuit['points']) == 2:
+                    station1 = circuit['points'][0] if circuit['points'][0]['id'] < circuit['points'][1]['id'] \
+                        else circuit['points'][1]
+                    station2 = circuit['points'][1] if circuit['points'][0]['id'] < circuit['points'][1]['id'] \
+                        else circuit['points'][0]
+                    line_length = 0
+                    voltages = set()
+                    cables = set()
+                    frequencies = set()
+                    names = set()
+                    operators = set()
+                    r_ohm_kms = set()
+                    x_ohm_kms = set()
+                    c_nf_kms = set()
+                    i_th_max_kms = set()
+                    types = set()
+                    not_accurate = False
 
-                for line_part in circuit['powerlines']:
-                    line_length += line_part['properties']['tags']['length']
-                    line_tags_keys = line_part['properties']['tags'].keys()
-                    if 'voltage' in line_tags_keys:
-                        voltages.update(line_part['properties']['tags']['voltage'])
-                    if 'cables' in line_tags_keys:
-                        cables.update([CSVWriter.try_parse_int(line_part['properties']['tags']['cables'])])
-                    if 'frequency' in line_tags_keys:
-                        frequencies.update([CSVWriter.try_parse_int(line_part['properties']['tags']['frequency'])])
-                    if 'operator' in line_tags_keys:
-                        operators.update([CSVWriter.sanitize_csv(
-                            line_part['properties']['tags']['operator'] if line_part['properties']['tags'][
-                                'operator'] else '')])
-                    if 'name' in line_tags_keys:
-                        names.update([CSVWriter.sanitize_csv(line_part['properties']['tags']['name']) if
-                                      line_part['properties']['tags']['name'] != 'None' else ''])
-                    if 'type' in line_tags_keys:
-                        types.update([line_part['properties']['tags']['type']])
+                    for line_part in circuit['powerlines']:
+                        line_length += line_part['properties']['tags']['length']
+                        line_tags_keys = line_part['properties']['tags'].keys()
+                        if 'voltage' in line_tags_keys:
+                            voltages.update(line_part['properties']['tags']['voltage'])
+                        if 'cables' in line_tags_keys:
+                            cables.update([CSVWriter.try_parse_int(line_part['properties']['tags']['cables'])])
+                        if 'frequency' in line_tags_keys:
+                            frequencies.update([CSVWriter.try_parse_int(line_part['properties']['tags']['frequency'])])
+                        if 'operator' in line_tags_keys:
+                            operators.update([CSVWriter.sanitize_csv(
+                                line_part['properties']['tags']['operator'] if line_part['properties']['tags'][
+                                    'operator'] else '')])
+                        if 'name' in line_tags_keys:
+                            names.update([CSVWriter.sanitize_csv(line_part['properties']['tags']['name']) if
+                                          line_part['properties']['tags']['name'] != 'None' else ''])
+                        if 'type' in line_tags_keys:
+                            types.update([line_part['properties']['tags']['type']])
 
-                if len(voltages) > 1 or len(cables) > 1 or len(frequencies) > 1 or len(types) > 1:
-                    not_accurate = True
+                    if len(voltages) > 1 or len(cables) > 1 or len(frequencies) > 1 or len(types) > 1:
+                        not_accurate = True
 
-                for station in [station1, station2]:
-                    if station['id'] not in id_by_station_dict:
-                        id_by_station_dict[station['id']] = station['id']
-                        station_tags_keys = station['properties']['tags'].keys()
-                        station_voltages = []
-                        if 'voltage' in station_tags_keys:
-                            station_voltages = station['properties']['tags']['voltage']
-                        not_accurate_node = False
-                        if len(station_voltages) > 1:
-                            not_accurate_node = True
+                    for station in [station1, station2]:
+                        if station['id'] not in id_by_station_dict:
+                            id_by_station_dict[station['id']] = station['id']
+                            station_tags_keys = station['properties']['tags'].keys()
+                            station_voltages = []
+                            if 'voltage' in station_tags_keys:
+                                station_voltages = station['properties']['tags']['voltage']
+                            not_accurate_node = False
+                            if len(station_voltages) > 1:
+                                not_accurate_node = True
 
-                        nodes_writer.writerow(
-                            [str(station['id']),
-                             str(station['properties']['tags']['lon']),
-                             str(station['properties']['tags']['lat']),
-                             str(station['properties']['tags']['type']),
-                             CSVWriter.convert_min_set_to_string(station_voltages),
-                             str(station['properties']['tags'][
-                                     'frequency']) if 'frequency' in station_tags_keys else '',
-                             CSVWriter.sanitize_csv(
-                                 station['properties']['tags']['name']) if 'name' in station_tags_keys
-                                                                           and station['properties']['tags'][
-                                                                                   'name'] != 'None' else '',
-                             CSVWriter.sanitize_csv(station['properties']['tags'][
-                                                        'operator']) if 'operator' in station_tags_keys else '',
-                             'Yes' if not_accurate_node else ''])
+                            nodes_writer.writerow(
+                                [str(station['id']),
+                                 str(station['properties']['tags']['lon']),
+                                 str(station['properties']['tags']['lat']),
+                                 str(station['properties']['tags']['type']),
+                                 CSVWriter.convert_min_set_to_string(station_voltages),
+                                 str(station['properties']['tags'][
+                                         'frequency']) if 'frequency' in station_tags_keys else '',
+                                 CSVWriter.sanitize_csv(
+                                     station['properties']['tags']['name']) if 'name' in station_tags_keys
+                                                                               and station['properties']['tags'][
+                                                                                       'name'] != 'None' else '',
+                                 CSVWriter.sanitize_csv(station['properties']['tags'][
+                                                            'operator']) if 'operator' in station_tags_keys else '',
+                                 'Yes' if not_accurate_node else ''])
 
-                lines_writer.writerow([str(line_counter),
-                                       str(station1['id']),
-                                       str(station2['id']),
-                                       CSVWriter.convert_min_set_to_string(voltages),
-                                       CSVWriter.convert_min_set_to_string(cables),
-                                       CSVWriter.convert_min_set_to_string(types),
-                                       CSVWriter.convert_min_set_to_string(frequencies),
-                                       CSVWriter.convert_set_to_string(names),
-                                       CSVWriter.convert_set_to_string(operators),
-                                       str(round(line_length)),
-                                       CSVWriter.convert_min_set_to_string(r_ohm_kms),
-                                       # http://www.electricalengineeringtoolbox.com/2009/11/calculation-of-cable-resistance.html
-                                       CSVWriter.convert_min_set_to_string(x_ohm_kms),
-                                       CSVWriter.convert_min_set_to_string(c_nf_kms),
-                                       CSVWriter.convert_min_set_to_string(i_th_max_kms),
-                                       'Yes' if not_accurate else ''])
-                line_counter += 1
+                    lines_writer.writerow([str(line_counter),
+                                           str(station1['id']),
+                                           str(station2['id']),
+                                           CSVWriter.convert_min_set_to_string(voltages),
+                                           CSVWriter.convert_min_set_to_string(cables),
+                                           CSVWriter.convert_min_set_to_string(types),
+                                           CSVWriter.convert_min_set_to_string(frequencies),
+                                           CSVWriter.convert_set_to_string(names),
+                                           CSVWriter.convert_set_to_string(operators),
+                                           str(round(line_length)),
+                                           CSVWriter.convert_min_set_to_string(r_ohm_kms),
+                                           # http://www.electricalengineeringtoolbox.com/2009/11/calculation-of-cable-resistance.html
+                                           CSVWriter.convert_min_set_to_string(x_ohm_kms),
+                                           CSVWriter.convert_min_set_to_string(c_nf_kms),
+                                           CSVWriter.convert_min_set_to_string(i_th_max_kms),
+                                           'Yes' if not_accurate else ''])
+                    line_counter += 1
 
         in_memory = BytesIO()
         zip_cim = ZipFile(in_memory, "a")

@@ -1,7 +1,8 @@
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring
-import json
-from app import db
+from xml.etree.ElementTree import Element, SubElement, tostring
+
 from sqlalchemy.sql import text
+
+from app import db
 
 
 # Presenter logic for Relations (plural).
@@ -29,7 +30,7 @@ class RelationsPresenter:
                 'timestamp': ""
             })
             self.__buildXmlSubElementForTags(
-                relation['properties']['tags'],
+                {key: str(relation['properties']['tags'][key]) for key in relation['properties']['tags'].keys()},
                 relation_elem
             )
 
@@ -43,7 +44,7 @@ class RelationsPresenter:
                     'timestamp': ""
                 })
                 self.__buildXmlSubElementForTags(
-                    point['properties']['tags'],
+                    {key: str(point['properties']['tags'][key]) for key in point['properties']['tags'].keys()},
                     point_elem
                 )
                 relation_member_node_osmids.append(str(point['properties']['osmid']))
@@ -79,7 +80,7 @@ class RelationsPresenter:
                 powerline_xml_elems[int(powerline['id'])] = powerline_elem
 
                 self.__buildXmlSubElementForTags(
-                    powerline['properties']['tags'],
+                    {key: str(powerline['properties']['tags'][key]) for key in powerline['properties']['tags'].keys()},
                     powerline_elem
                 )
 
@@ -206,4 +207,3 @@ class RelationsPresenter:
             })
 
         return ref_points
-
