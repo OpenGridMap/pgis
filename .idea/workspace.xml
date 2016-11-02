@@ -3,7 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="af7c6e6a-9af2-4171-bac9-69eda43d1fae" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/transnet_controller.py" afterPath="$PROJECT_DIR$/app/controllers/transnet_controller.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/transnet_relation.py" afterPath="$PROJECT_DIR$/app/models/transnet_relation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" afterPath="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/evaluations.html" afterPath="$PROJECT_DIR$/app/templates/evaluations.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/transnet_filter.html" afterPath="$PROJECT_DIR$/app/templates/transnet_filter.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/transnet_operations.html" afterPath="$PROJECT_DIR$/app/templates/transnet_operations.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/import_transnet_data.py" afterPath="$PROJECT_DIR$/import_transnet_data.py" />
     </list>
     <ignored path="pgis.iws" />
@@ -18,7 +23,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/pgis$import_transnet.coverage" NAME="import_transnet Coverage Results" MODIFIED="1477483103529" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/pgis$pgis.coverage" NAME="pgis Coverage Results" MODIFIED="1477653965533" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/pgis$pgis.coverage" NAME="pgis Coverage Results" MODIFIED="1478079108849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -37,21 +42,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="console.sql" pinned="false" current-in-tab="false">
-        <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6079894e-078b-4ab8-ada0-273f3744e5d1/console.sql">
+      <file leaf-file-name="transnet_operations.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/templates/transnet_operations.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1860">
-              <caret line="124" column="58" selection-start-line="113" selection-start-column="0" selection-end-line="124" selection-end-column="58" />
+            <state relative-caret-position="583">
+              <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="where_clause" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/resources/europe/austria/where_clause">
+      <file leaf-file-name="evaluations.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/templates/evaluations.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="8701" />
+            <state relative-caret-position="273">
+              <caret line="25" column="73" selection-start-line="25" selection-start-column="73" selection-end-line="25" selection-end-column="73" />
               <folding />
             </state>
           </provider>
@@ -60,98 +65,38 @@
       <file leaf-file-name="transnet_relation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/models/transnet_relation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="553">
-              <caret line="280" column="35" selection-start-line="256" selection-start-column="18" selection-end-line="280" selection-end-column="35" />
+            <state relative-caret-position="4197">
+              <caret line="290" column="49" selection-start-line="290" selection-start-column="49" selection-end-line="290" selection-end-column="49" />
               <folding>
                 <element signature="e#0#33#0" expanded="true" />
-                <marker date="1477656015678" expanded="true" signature="7229:7377" ph="SELECT sum(s... scigrid_powerline" />
-                <marker date="1477656015678" expanded="true" signature="7629:7831" ph="SELECT count... scigrid_station" />
-                <marker date="1477656015678" expanded="true" signature="8041:8212" ph="SELECT count... scigrid_station" />
-                <marker date="1477656015678" expanded="true" signature="9930:10132" ph="SELECT sum(s... scigrid_powerline" />
-                <marker date="1477656015678" expanded="true" signature="11203:11388" ph="SELECT sum(s... scigrid_powerline" />
-                <marker date="1477656015678" expanded="true" signature="12114:12358" ph="SELECT count... scigrid_station" />
-                <marker date="1477656015678" expanded="true" signature="12548:12564" ph="SELECT count... transnet_station" />
-                <marker date="1477656015678" expanded="true" signature="12548:13390" ph="SELECT count... lon" />
-                <marker date="1477656015678" expanded="true" signature="12548:13391" ph="SELECT count... transnet_station" />
-                <marker date="1477656015678" expanded="true" signature="12657:12806" ph="SELECT t.lon... transnet_station" />
-                <marker date="1477656015678" expanded="true" signature="12657:12807" ph="SELECT t.lon... transnet_station" />
-                <marker date="1477656015678" expanded="true" signature="12657:12811" ph="SELECT t.lon... transnet_station" />
-                <marker date="1477656015678" expanded="true" signature="12954:13146" ph="SELECT s.geo... scigrid_station" />
-                <marker date="1477656015678" expanded="true" signature="12954:13150" ph="SELECT s.geo... scigrid_station" />
-                <marker date="1477656015678" expanded="true" signature="12954:13151" ph="SELECT s.geo... scigrid_station" />
+                <marker date="1478079651254" expanded="true" signature="7058:7206" ph="SELECT sum(s... scigrid_powerline" />
+                <marker date="1478079651254" expanded="true" signature="7458:7660" ph="SELECT count... scigrid_station" />
+                <marker date="1478079651254" expanded="true" signature="7870:8041" ph="SELECT count... scigrid_station" />
+                <marker date="1478079651254" expanded="true" signature="9759:9961" ph="SELECT sum(s... scigrid_powerline" />
+                <marker date="1478079651254" expanded="true" signature="11032:11217" ph="SELECT sum(s... scigrid_powerline" />
+                <marker date="1478079651254" expanded="true" signature="11809:12065" ph="SELECT count... scigrid_station" />
+                <marker date="1478079651254" expanded="true" signature="12250:12266" ph="SELECT count... transnet_station" />
+                <marker date="1478079651254" expanded="true" signature="12250:13158" ph="SELECT count... lon" />
+                <marker date="1478079651254" expanded="true" signature="12250:13159" ph="SELECT count... transnet_station" />
+                <marker date="1478079651254" expanded="true" signature="12371:12532" ph="SELECT t.lon... transnet_station" />
+                <marker date="1478079651254" expanded="true" signature="12371:12533" ph="SELECT t.lon... transnet_station" />
+                <marker date="1478079651254" expanded="true" signature="12371:12537" ph="SELECT t.lon... transnet_station" />
+                <marker date="1478079651254" expanded="true" signature="12698:12902" ph="SELECT s.geo... scigrid_station" />
+                <marker date="1478079651254" expanded="true" signature="12698:12906" ph="SELECT s.geo... scigrid_station" />
+                <marker date="1478079651254" expanded="true" signature="12698:12907" ph="SELECT s.geo... scigrid_station" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="import_scigrid_data.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/import_scigrid_data.py">
+      <file leaf-file-name="pgis.relation.selectionMode.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-272">
-              <caret line="49" column="59" selection-start-line="49" selection-start-column="59" selection-end-line="49" selection-end-column="59" />
+            <state relative-caret-position="502">
+              <caret line="223" column="66" selection-start-line="223" selection-start-column="66" selection-end-line="223" selection-end-column="66" />
               <folding>
-                <marker date="1477587336820" expanded="true" signature="522:549" ph="DELETE FROM " />
-                <marker date="1477587336820" expanded="true" signature="578:607" ph="DELETE FROM " />
-                <marker date="1477587336820" expanded="true" signature="763:1120" ph="INSERT INTO scigrid_powerline" />
-                <marker date="1477587336820" expanded="true" signature="1152:1375" ph="INSERT INTO scigrid_station" />
+                <element signature="n#!!doc" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="import_transnet_data.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/import_transnet_data.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="225" column="5" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
-              <folding>
-                <marker date="1477656079994" expanded="true" signature="1860:1982" ph="INSERT INTO transnet_country... " />
-                <marker date="1477656079994" expanded="true" signature="2857:2963" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="4222:4261" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="4290:4327" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="4356:4386" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="4415:4443" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="4472:4501" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="5227:5283" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="5325:5379" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="5421:5468" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="5510:5555" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="5597:5643" ph="DELETE FROM " />
-                <marker date="1477656079994" expanded="true" signature="5723:5858" ph="INSERT INTO transnet_relation... " />
-                <marker date="1477656079994" expanded="true" signature="5892:6322" ph="INSERT INTO transnet_powerline... " />
-                <marker date="1477656079994" expanded="true" signature="6354:6716" ph="INSERT INTO transnet_station... " />
-                <marker date="1477656079994" expanded="true" signature="6757:6896" ph="INSERT INTO transnet_relation_station... " />
-                <marker date="1477656079994" expanded="true" signature="6939:7082" ph="INSERT INTO transnet_relation_powerline... " />
-                <marker date="1477656079994" expanded="true" signature="7122:7180" ph="SELECT count... transnet_powerline" />
-                <marker date="1477656079994" expanded="true" signature="7217:7273" ph="SELECT count... transnet_station" />
-                <marker date="1477656079994" expanded="true" signature="7318:7377" ph="SELECT id FR... transnet_powerline" />
-                <marker date="1477656079994" expanded="true" signature="7419:7476" ph="SELECT id FR... transnet_station" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="evaluations.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/templates/evaluations.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="439">
-              <caret line="45" column="82" selection-start-line="45" selection-start-column="82" selection-end-line="45" selection-end-column="82" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gis.public.transnet_station" pinned="false" current-in-tab="false">
-        <entry file="dbDummy://dbtable:/7278ee9a/6079894e-078b-4ab8-ada0-273f3744e5d1/gis.public.transnet_station">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -188,11 +133,9 @@
         <option value="$PROJECT_DIR$/app/static/stylesheets/main.css" />
         <option value="$PROJECT_DIR$/app/utils/csv_writer.py" />
         <option value="$PROJECT_DIR$/data/relations/europe/germany/_relationsaa" />
-        <option value="$PROJECT_DIR$/app/templates/transnet_operations.html" />
         <option value="$PROJECT_DIR$/app/static/javascripts/helpers/misc-helpers.js" />
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.markerClusterGroup.js" />
         <option value="$PROJECT_DIR$/migrations/versions/566d8ab0906_indices.py" />
-        <option value="$PROJECT_DIR$/app/templates/transnet_filter.html" />
         <option value="$PROJECT_DIR$/app/models/transnet.py" />
         <option value="$PROJECT_DIR$/app/models/transnet_relation_mapper.py" />
         <option value="$PROJECT_DIR$/migrations/versions/564d4b52ea2_many_to_many_relations.py" />
@@ -205,9 +148,7 @@
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/api-service.js" />
         <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/leaflet.pgis.relation.featureGroup.js" />
-        <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" />
         <option value="$PROJECT_DIR$/app/routes.py" />
-        <option value="$PROJECT_DIR$/app/controllers/transnet_controller.py" />
         <option value="$PROJECT_DIR$/app/templates/stations_info.html" />
         <option value="$PROJECT_DIR$/app/templates/map.html" />
         <option value="$PROJECT_DIR$/migrations/versions/e5558f7f27_scigrid.py" />
@@ -221,8 +162,12 @@
         <option value="$PROJECT_DIR$/app/controllers/application_controller.py" />
         <option value="$PROJECT_DIR$/import_scigrid_data.py" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/6079894e-078b-4ab8-ada0-273f3744e5d1/console.sql" />
-        <option value="$PROJECT_DIR$/app/models/transnet_relation.py" />
         <option value="$PROJECT_DIR$/import_transnet_data.py" />
+        <option value="$PROJECT_DIR$/app/templates/transnet_filter.html" />
+        <option value="$PROJECT_DIR$/app/controllers/transnet_controller.py" />
+        <option value="$PROJECT_DIR$/app/templates/transnet_operations.html" />
+        <option value="$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js" />
+        <option value="$PROJECT_DIR$/app/models/transnet_relation.py" />
         <option value="$PROJECT_DIR$/app/templates/evaluations.html" />
       </list>
     </option>
@@ -286,6 +231,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -301,78 +248,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="scigird" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="europe" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="europe" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="austria" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pgis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -422,7 +297,91 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="javascripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="static" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="javascripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="non-admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pgis" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="helpers" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -446,8 +405,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -766,7 +723,7 @@
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22443339" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2299613" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32881" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30375782" sideWeight="0.5041459" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27915975" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
@@ -774,7 +731,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.31941545" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.32985386" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2498618" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34446764" sideWeight="0.49585405" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34446764" sideWeight="0.49585405" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39561588" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -800,13 +757,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/app/models/transnet_relation.py</url>
-          <line>256</line>
-          <option name="timeStamp" value="98" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -822,35 +772,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/data/scigird/gridkit_europe-highvoltage-links.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/scigird/gridkit_europe-highvoltage-vertices.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/scigird/gridkit_highvoltage_de_links_160727.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scigird/gridkit_highvoltage_de_links_160727.csv" />
-    <entry file="file://$PROJECT_DIR$/app/static/javascripts/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="23" column="19" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/map-helpers.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="538">
@@ -862,13 +783,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-556">
           <caret line="41" column="41" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/controllers/transnet_controller.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="523">
-          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -922,7 +836,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="299">
           <caret line="31" column="5" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -984,13 +897,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/transnet_powerline.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="5" column="18" selection-start-line="5" selection-start-column="18" selection-end-line="5" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/IDE/miniconda2/envs/pgisenv/lib/python3.4/site-packages/flask_sqlalchemy/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="212">
@@ -1016,13 +922,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="21" selection-start-line="0" selection-start-column="21" selection-end-line="0" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/relation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="83" column="32" selection-start-line="83" selection-start-column="32" selection-end-line="83" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -1125,14 +1024,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6079894e-078b-4ab8-ada0-273f3744e5d1/console.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1860">
-          <caret line="124" column="58" selection-start-line="113" selection-start-column="0" selection-end-line="124" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="dbDummy://dbtable:/7278ee9a/6079894e-078b-4ab8-ada0-273f3744e5d1/gis.public.transnet_station">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
@@ -1146,34 +1037,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/models/transnet_relation.py">
+    <entry file="file://$PROJECT_DIR$/app/controllers/relations_controller.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="553">
-          <caret line="280" column="35" selection-start-line="256" selection-start-column="18" selection-end-line="280" selection-end-column="35" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#33#0" expanded="true" />
-            <marker date="1477656015678" expanded="true" signature="7229:7377" ph="SELECT sum(s... scigrid_powerline" />
-            <marker date="1477656015678" expanded="true" signature="7629:7831" ph="SELECT count... scigrid_station" />
-            <marker date="1477656015678" expanded="true" signature="8041:8212" ph="SELECT count... scigrid_station" />
-            <marker date="1477656015678" expanded="true" signature="9930:10132" ph="SELECT sum(s... scigrid_powerline" />
-            <marker date="1477656015678" expanded="true" signature="11203:11388" ph="SELECT sum(s... scigrid_powerline" />
-            <marker date="1477656015678" expanded="true" signature="12114:12358" ph="SELECT count... scigrid_station" />
-            <marker date="1477656015678" expanded="true" signature="12548:12564" ph="SELECT count... transnet_station" />
-            <marker date="1477656015678" expanded="true" signature="12548:13390" ph="SELECT count... lon" />
-            <marker date="1477656015678" expanded="true" signature="12548:13391" ph="SELECT count... transnet_station" />
-            <marker date="1477656015678" expanded="true" signature="12657:12806" ph="SELECT t.lon... transnet_station" />
-            <marker date="1477656015678" expanded="true" signature="12657:12807" ph="SELECT t.lon... transnet_station" />
-            <marker date="1477656015678" expanded="true" signature="12657:12811" ph="SELECT t.lon... transnet_station" />
-            <marker date="1477656015678" expanded="true" signature="12954:13146" ph="SELECT s.geo... scigrid_station" />
-            <marker date="1477656015678" expanded="true" signature="12954:13150" ph="SELECT s.geo... scigrid_station" />
-            <marker date="1477656015678" expanded="true" signature="12954:13151" ph="SELECT s.geo... scigrid_station" />
+            <element signature="e#0#40#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/relation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="83" column="32" selection-start-line="83" selection-start-column="32" selection-end-line="83" selection-end-column="32" />
+          <folding>
+            <marker date="1474532742574" expanded="true" signature="2205:2729" ph="SELECT r.id powerline" />
+            <marker date="1474532742574" expanded="true" signature="4125:4652" ph="SELECT r.id point" />
+            <marker date="1474532742574" expanded="true" signature="5705:6454" ph="SELECT pr.id... power_relations" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/6079894e-078b-4ab8-ada0-273f3744e5d1/console.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/import_scigrid_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-272">
+        <state relative-caret-position="705">
           <caret line="49" column="59" selection-start-line="49" selection-start-column="59" selection-end-line="49" selection-end-column="59" />
           <folding>
             <marker date="1477587336820" expanded="true" signature="522:549" ph="DELETE FROM " />
@@ -1186,38 +1082,117 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/import_transnet_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="225" column="5" selection-start-line="225" selection-start-column="5" selection-end-line="225" selection-end-column="5" />
+        <state relative-caret-position="898">
+          <caret line="219" column="33" selection-start-line="219" selection-start-column="33" selection-end-line="219" selection-end-column="33" />
           <folding>
-            <marker date="1477656079994" expanded="true" signature="1860:1982" ph="INSERT INTO transnet_country... " />
-            <marker date="1477656079994" expanded="true" signature="2857:2963" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="4222:4261" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="4290:4327" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="4356:4386" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="4415:4443" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="4472:4501" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="5227:5283" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="5325:5379" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="5421:5468" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="5510:5555" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="5597:5643" ph="DELETE FROM " />
-            <marker date="1477656079994" expanded="true" signature="5723:5858" ph="INSERT INTO transnet_relation... " />
-            <marker date="1477656079994" expanded="true" signature="5892:6322" ph="INSERT INTO transnet_powerline... " />
-            <marker date="1477656079994" expanded="true" signature="6354:6716" ph="INSERT INTO transnet_station... " />
-            <marker date="1477656079994" expanded="true" signature="6757:6896" ph="INSERT INTO transnet_relation_station... " />
-            <marker date="1477656079994" expanded="true" signature="6939:7082" ph="INSERT INTO transnet_relation_powerline... " />
-            <marker date="1477656079994" expanded="true" signature="7122:7180" ph="SELECT count... transnet_powerline" />
-            <marker date="1477656079994" expanded="true" signature="7217:7273" ph="SELECT count... transnet_station" />
-            <marker date="1477656079994" expanded="true" signature="7318:7377" ph="SELECT id FR... transnet_powerline" />
-            <marker date="1477656079994" expanded="true" signature="7419:7476" ph="SELECT id FR... transnet_station" />
+            <marker date="1477656200130" expanded="true" signature="1860:1982" ph="INSERT INTO transnet_country... " />
+            <marker date="1477656200130" expanded="true" signature="2857:2963" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="4222:4261" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="4290:4327" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="4356:4386" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="4415:4443" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="4472:4501" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="5227:5283" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="5325:5379" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="5421:5468" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="5510:5555" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="5597:5643" ph="DELETE FROM " />
+            <marker date="1477656200130" expanded="true" signature="5723:5858" ph="INSERT INTO transnet_relation... " />
+            <marker date="1477656200130" expanded="true" signature="5892:6322" ph="INSERT INTO transnet_powerline... " />
+            <marker date="1477656200130" expanded="true" signature="6354:6716" ph="INSERT INTO transnet_station... " />
+            <marker date="1477656200130" expanded="true" signature="6757:6896" ph="INSERT INTO transnet_relation_station... " />
+            <marker date="1477656200130" expanded="true" signature="6939:7082" ph="INSERT INTO transnet_relation_powerline... " />
+            <marker date="1477656200130" expanded="true" signature="7122:7180" ph="SELECT count... transnet_powerline" />
+            <marker date="1477656200130" expanded="true" signature="7217:7273" ph="SELECT count... transnet_station" />
+            <marker date="1477656200130" expanded="true" signature="7318:7377" ph="SELECT id FR... transnet_powerline" />
+            <marker date="1477656200130" expanded="true" signature="7419:7476" ph="SELECT id FR... transnet_station" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/transnet_powerline.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="6" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#32#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/map-data-loader.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/transnet_filter.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="57" column="84" selection-start-line="57" selection-start-column="84" selection-end-line="57" selection-end-column="84" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/controllers/transnet_controller.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="98" column="71" selection-start-line="98" selection-start-column="71" selection-end-line="98" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/transnet_operations.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/models/transnet_relation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4197">
+          <caret line="290" column="49" selection-start-line="290" selection-start-column="49" selection-end-line="290" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#33#0" expanded="true" />
+            <marker date="1478079651254" expanded="true" signature="7058:7206" ph="SELECT sum(s... scigrid_powerline" />
+            <marker date="1478079651254" expanded="true" signature="7458:7660" ph="SELECT count... scigrid_station" />
+            <marker date="1478079651254" expanded="true" signature="7870:8041" ph="SELECT count... scigrid_station" />
+            <marker date="1478079651254" expanded="true" signature="9759:9961" ph="SELECT sum(s... scigrid_powerline" />
+            <marker date="1478079651254" expanded="true" signature="11032:11217" ph="SELECT sum(s... scigrid_powerline" />
+            <marker date="1478079651254" expanded="true" signature="11809:12065" ph="SELECT count... scigrid_station" />
+            <marker date="1478079651254" expanded="true" signature="12250:12266" ph="SELECT count... transnet_station" />
+            <marker date="1478079651254" expanded="true" signature="12250:13158" ph="SELECT count... lon" />
+            <marker date="1478079651254" expanded="true" signature="12250:13159" ph="SELECT count... transnet_station" />
+            <marker date="1478079651254" expanded="true" signature="12371:12532" ph="SELECT t.lon... transnet_station" />
+            <marker date="1478079651254" expanded="true" signature="12371:12533" ph="SELECT t.lon... transnet_station" />
+            <marker date="1478079651254" expanded="true" signature="12371:12537" ph="SELECT t.lon... transnet_station" />
+            <marker date="1478079651254" expanded="true" signature="12698:12902" ph="SELECT s.geo... scigrid_station" />
+            <marker date="1478079651254" expanded="true" signature="12698:12906" ph="SELECT s.geo... scigrid_station" />
+            <marker date="1478079651254" expanded="true" signature="12698:12907" ph="SELECT s.geo... scigrid_station" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/static/javascripts/non-admin/pgis.relation.selectionMode.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="502">
+          <caret line="223" column="66" selection-start-line="223" selection-start-column="66" selection-end-line="223" selection-end-column="66" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/evaluations.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="45" column="82" selection-start-line="45" selection-start-column="82" selection-end-line="45" selection-end-column="82" />
+        <state relative-caret-position="273">
+          <caret line="25" column="73" selection-start-line="25" selection-start-column="73" selection-end-line="25" selection-end-column="73" />
           <folding />
         </state>
       </provider>

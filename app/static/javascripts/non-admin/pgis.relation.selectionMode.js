@@ -206,6 +206,8 @@ Pgis.Relation.selectionMode = {
             var validationLoading = $('#validation-loading');
             var validationSection = $('#validation-section');
 
+            var hitRateCheckbox = $('#transnet-evaluation-hit-rate-checkbox');
+
             if (_this.pgisMap.transnetValidationsSidebar.isVisible()) {
                 _this.pgisMap.transnetValidationsSidebar.hide();
                 validationSection.html('');
@@ -218,7 +220,8 @@ Pgis.Relation.selectionMode = {
                 $.ajax({
                     url: "/transnet/evaluations",
                     data: {
-                        "countries": _this.pgisMap.selectedCountries.toString()
+                        "countries": _this.pgisMap.selectedCountries.toString(),
+                        "hit_rate": hitRateCheckbox.is(':checked')
                     },
                     success: function (data) {
                         validationLoading.hide();
