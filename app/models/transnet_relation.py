@@ -1,4 +1,4 @@
-from os.path import join, dirname
+from os.path import join, dirname, exists
 
 from geoalchemy2 import Geography
 from geoalchemy2 import func
@@ -184,23 +184,6 @@ class TransnetRelation(db.Model):
             }
             try:
 
-                with open(join(dirname(__file__), '../../resources/europe/{0}/where_clause'.format(country))) as w_s:
-                    where_clause = w_s.readline()
-                scigrid_length_query = '''SELECT sum(s.length_m) AS length
-                                          FROM scigrid_powerline s
-                                          WHERE %s''' % where_clause
-                country_stat['all_line_length_s'] = [round(x[0]) for x in db.engine.execute(scigrid_length_query)][
-                                                        0] / 1000
-                scigrid_station_count_query = '''SELECT count(*) as count
-                                                FROM scigrid_station s
-                                                WHERE s.type ~ 'station|substation|merge|sub_station' and %s''' % where_clause
-                country_stat['substations_count_s'] = \
-                    [x[0] for x in db.engine.execute(scigrid_station_count_query)][0]
-                scigrid_plant_count_query = '''SELECT count(*) as count
-                                                FROM scigrid_station s
-                                                WHERE s.type ~ 'plant' and %s''' % where_clause
-                country_stat['plants_count_s'] = [x[0] for x in db.engine.execute(scigrid_plant_count_query)][0]
-
                 country_stat['all_line_length'] = \
                     db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country)[0][0] / 1000
@@ -213,6 +196,12 @@ class TransnetRelation(db.Model):
                 country_stat['length_by_voltages'] = {}
                 voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
                     TransnetPowerline.country == country).distinct()
+                file_path = join(dirname(__file__), '../../resources/europe/{0}/where_clause'.format(country))
+                where_clause = ''
+                if exists(file_path):
+                    with open(join(dirname(__file__), file_path)) as w_s:
+                        where_clause = w_s.readline()
+
                 for voltage in voltages:
                     country_stat['length_by_voltages'][voltage[0]] = []
                     length_shared = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
@@ -221,15 +210,17 @@ class TransnetRelation(db.Model):
                         country_stat['length_by_voltages'][voltage[0]].append(length_shared[0][0] / 1000)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
+                    if where_clause:
+                        scigrid_voltage_any = '''SELECT sum(s.length_m) as length
+                                                        FROM scigrid_powerline s
+                                                        WHERE s.voltage @> ARRAY[%s]::int[] and %s''' % \
+                                              (voltage[0], where_clause)
+                        scigrid_temp_voltage_any = [x[0] for x in db.engine.execute(scigrid_voltage_any)]
 
-                    scigrid_voltage_any = '''SELECT sum(s.length_m) as length
-                                                    FROM scigrid_powerline s
-                                                    WHERE s.voltage @> ARRAY[%s]::int[] and %s''' % \
-                                          (voltage[0], where_clause)
-                    scigrid_temp_voltage_any = [x[0] for x in db.engine.execute(scigrid_voltage_any)]
-
-                    if len(scigrid_temp_voltage_any) and scigrid_temp_voltage_any[0]:
-                        country_stat['length_by_voltages'][voltage[0]].append(scigrid_temp_voltage_any[0] / 1000)
+                        if len(scigrid_temp_voltage_any) and scigrid_temp_voltage_any[0]:
+                            country_stat['length_by_voltages'][voltage[0]].append(scigrid_temp_voltage_any[0] / 1000)
+                        else:
+                            country_stat['length_by_voltages'][voltage[0]].append(0)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
 
@@ -240,16 +231,34 @@ class TransnetRelation(db.Model):
                         country_stat['length_by_voltages'][voltage[0]].append(length_single_value[0][0] / 1000)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
-
-                    scigrid_voltage_all = '''SELECT sum(s.length_m) as length
-                                            FROM scigrid_powerline s
-                                            WHERE s.voltage = ARRAY[%s]::int[] and %s''' % \
-                                          (voltage[0], where_clause)
-                    scigrid_temp_voltage_all = [x[0] for x in db.engine.execute(scigrid_voltage_all)]
-                    if len(scigrid_temp_voltage_all) and scigrid_temp_voltage_all[0]:
-                        country_stat['length_by_voltages'][voltage[0]].append(scigrid_temp_voltage_all[0] / 1000)
+                    if where_clause:
+                        scigrid_voltage_all = '''SELECT sum(s.length_m) as length
+                                                FROM scigrid_powerline s
+                                                WHERE s.voltage = ARRAY[%s]::int[] and %s''' % \
+                                              (voltage[0], where_clause)
+                        scigrid_temp_voltage_all = [x[0] for x in db.engine.execute(scigrid_voltage_all)]
+                        if len(scigrid_temp_voltage_all) and scigrid_temp_voltage_all[0]:
+                            country_stat['length_by_voltages'][voltage[0]].append(scigrid_temp_voltage_all[0] / 1000)
+                        else:
+                            country_stat['length_by_voltages'][voltage[0]].append(0)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
+                if where_clause:
+                    scigrid_length_query = '''SELECT sum(s.length_m) AS length
+                                              FROM scigrid_powerline s
+                                              WHERE %s''' % where_clause
+                    country_stat['all_line_length_s'] = [round(x[0]) for x in db.engine.execute(scigrid_length_query)][
+                                                            0] / 1000
+                    scigrid_station_count_query = '''SELECT count(*) as count
+                                                    FROM scigrid_station s
+                                                    WHERE s.type ~ 'station|substation|merge|sub_station' and %s''' % where_clause
+                    country_stat['substations_count_s'] = \
+                        [x[0] for x in db.engine.execute(scigrid_station_count_query)][0]
+                    scigrid_plant_count_query = '''SELECT count(*) as count
+                                                    FROM scigrid_station s
+                                                    WHERE s.type ~ 'plant' and %s''' % where_clause
+                    country_stat['plants_count_s'] = [x[0] for x in db.engine.execute(scigrid_plant_count_query)][0]
+
                     if hit_rate == 'true':
                         scigrid_all_station_count_query = '''SELECT count(*) as count
                                                                         FROM scigrid_station s
