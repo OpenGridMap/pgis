@@ -11,3 +11,6 @@ application.yml
 data
 /models
 .idea/
+resources/matlab/models
+resources/matlab/logs
+!resources/matlab/models/README.md

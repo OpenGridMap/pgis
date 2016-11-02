@@ -155,7 +155,8 @@ Pgis.Relation.selectionMode = {
             }
             window.open(
                 '/transnet' +
-                '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
         });
@@ -167,7 +168,8 @@ Pgis.Relation.selectionMode = {
             }
             window.open(
                 '/transnet' +
-                '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
 
@@ -191,7 +193,8 @@ Pgis.Relation.selectionMode = {
             }
             window.open(
                 'http://127.0.0.1:8000/transnet' +
-                '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
         });

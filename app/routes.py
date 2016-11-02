@@ -194,6 +194,11 @@ def transnet_evaluations():
     return controller.evaluations()
 
 
+@GisApp.route('/transnet/matlab_scripts')
+def transnet_matlab_scripts():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.matlab_scripts()
+
 @GisApp.route('/relations')
 def relations():
     controller = app.controllers.relations_controller.RelationsController()

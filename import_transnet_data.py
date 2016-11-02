@@ -39,7 +39,7 @@ def download_large_relations(base_url, continent, country):
 
 def download_latest_relation_files():
     try:
-        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/planet-models'
+        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/master'
 
         # Download planet json to get the list of continent
         planet_folder = '{0}/planet_json/'.format(base_dir)
@@ -223,7 +223,7 @@ def transnet_import_relations(json_file):
 
 
 if __name__ == '__main__':
-    #download_latest_relation_files()
+    download_latest_relation_files()
     find_and_import_relation_files()
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')

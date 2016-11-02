@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from flask import render_template
+from flask import render_template, send_from_directory
 from flask import request, json, Response
+from os.path import join, dirname
 
 from app.models.transnet_relation import TransnetRelation
 from app.presenters.relations_presenter import RelationsPresenter
@@ -88,6 +89,8 @@ class TransnetController:
         voltages = None
         bounds_parts = None
         countries = request.args.get("countries").split(',')
+        if request.args.get("voltages"):
+            voltages = [int(v) for v in request.args.get("voltages").split(',')]
 
         return TransnetRelation.get_filtered_relations(bounds_parts, voltages, countries, None)
 
@@ -119,3 +122,6 @@ class TransnetController:
 
         return render_template('evaluations.html', countries_stats=TransnetRelation.get_evaluations(
             request.args.get("countries").split(','), request.args.get("hit_rate")))
+
+    def matlab_scripts(self):
+        return send_from_directory(join(dirname(__file__), '../../resources/'), 'matlab.zip')
