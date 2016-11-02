@@ -67,8 +67,8 @@ class TransnetController:
             'Content-Disposition': 'attachment; filename=relations.xml'
         }
 
-        presenter = RelationsPresenter(relations)
-        return Response(presenter.as_xml_element(), headers=headers)
+        presenter = RelationsPresenter(relations, transnet=True)
+        return Response(presenter.as_osm_xml(), headers=headers)
 
     def export_csv(self):
         relations = self.export()
@@ -99,8 +99,8 @@ class TransnetController:
             'Content-Disposition': 'attachment; filename=relations.xml'
         }
 
-        presenter = RelationsPresenter(relations)
-        return Response(presenter.as_xml_element(), headers=headers)
+        presenter = RelationsPresenter(relations, transnet=True)
+        return Response(presenter.as_osm_xml(), headers=headers)
 
     def export_countries_csv(self):
         relations = self.export_countries()
@@ -118,4 +118,4 @@ class TransnetController:
             return Response(json.dumps([]), mimetype='application/json')
 
         return render_template('evaluations.html', countries_stats=TransnetRelation.get_evaluations(
-            request.args.get("countries").split(','),request.args.get("hit_rate") ))
+            request.args.get("countries").split(','), request.args.get("hit_rate")))

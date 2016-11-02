@@ -38,9 +38,7 @@ Pgis.Relation.selectionMode = {
         return function () {
             window.open(
                 '/' + _this.pgisMap.selectedOverlayLayers[0] +
-                '/export?ids=' + _this._getSelectedRelations().join(',')
-                + '&countries=' + this.pgisMap.selectedCountries
-                + '&voltages=' + this.pgisMap.selectedVoltages,
+                '/export?ids=' + _this._getSelectedRelations().join(','),
                 '_blank'
             );
         }
