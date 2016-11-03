@@ -53,6 +53,8 @@ def download_latest_relation_files():
         query_country = '''INSERT INTO transnet_country(continent, country, voltages)
                                             VALUES (%s, %s, %s);'''
 
+        cur.execute('''DELETE FROM transnet_country;''')
+        conn.commit()
         # For each continent in the planet json, we should now download the continent json
         # and then for each country in the continent download the relations file.
 
@@ -65,23 +67,9 @@ def download_latest_relation_files():
                 with open('{0}/planet_json/{1}.json'.format(base_dir, continent), 'r+') as continent_file:
                     countries = json.load(continent_file)
                     for country in countries:
-                        cur.execute('''DELETE FROM transnet_country
-                                            WHERE continent=%s AND country=%s;''', [
-                            continent, country
-                        ])
                         voltages = [try_parse_int(x) for x in countries[country]['voltages'].split('|')]
                         cur.execute(query_country, [continent, country, voltages])
                         conn.commit()
-
-                        if continent == 'germany':
-                            cur.execute('''DELETE FROM transnet_country WHERE continent=%s AND country=%s;''', [
-                                'europe', 'germany'
-                            ])
-                            voltages = [try_parse_int(x) for x in countries[country]['voltages'].split('|')]
-                            cur.execute(query_country, ['europe', 'germany', voltages])
-                            conn.commit()
-
-
                         country_folder = '{0}/relations/{1}/{2}/'.format(base_dir, continent, country)
                         if not exists(country_folder):
                             makedirs(country_folder)

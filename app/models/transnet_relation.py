@@ -197,6 +197,8 @@ class TransnetRelation(db.Model):
                 voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
                     TransnetPowerline.country == country).distinct()
                 file_path = join(dirname(__file__), '../../resources/europe/{0}/where_clause'.format(country))
+                if not exists(file_path):
+                    file_path = join(dirname(__file__), '../../resources/germany/{0}/where_clause'.format(country))
                 where_clause = ''
                 if exists(file_path):
                     with open(join(dirname(__file__), file_path)) as w_s:

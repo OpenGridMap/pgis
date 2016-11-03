@@ -215,6 +215,7 @@ Pgis.Relation.selectionMode = {
             }
             else {
                 validationLoading.show();
+                validationSection.html('');
                 _this.pgisMap.transnetValidationsSidebar.show();
                 _this.pgisMap.transnetFilterSidebar.hide();
 
