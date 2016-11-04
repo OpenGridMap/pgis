@@ -49,6 +49,9 @@ class TransnetController:
         voltages = None
         bounds_parts = None
         countries = request.args.get("countries").split(',')
+        if request.args.get("voltages"):
+            voltages = [int(v) for v in request.args.get("voltages").split(',')]
+
 
         relations, map_centroid = TransnetRelation.with_points_and_lines_in_bounds(bounds_parts, voltages,
                                                                                    countries)

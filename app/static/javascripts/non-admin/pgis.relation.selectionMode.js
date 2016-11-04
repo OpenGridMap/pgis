@@ -38,9 +38,7 @@ Pgis.Relation.selectionMode = {
         return function () {
             window.open(
                 '/' + _this.pgisMap.selectedOverlayLayers[0] +
-                '/export?ids=' + _this._getSelectedRelations().join(',')
-                + '&countries=' + this.pgisMap.selectedCountries
-                + '&voltages=' + this.pgisMap.selectedVoltages,
+                '/export?ids=' + _this._getSelectedRelations().join(','),
                 '_blank'
             );
         }
@@ -157,7 +155,8 @@ Pgis.Relation.selectionMode = {
             }
             window.open(
                 '/transnet' +
-                '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
         });
@@ -169,7 +168,8 @@ Pgis.Relation.selectionMode = {
             }
             window.open(
                 '/transnet' +
-                '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
 
@@ -193,7 +193,8 @@ Pgis.Relation.selectionMode = {
             }
             window.open(
                 'http://127.0.0.1:8000/transnet' +
-                '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString(),
+                '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString()
+                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
             )
         });
@@ -206,19 +207,23 @@ Pgis.Relation.selectionMode = {
             var validationLoading = $('#validation-loading');
             var validationSection = $('#validation-section');
 
+            var hitRateCheckbox = $('#transnet-evaluation-hit-rate-checkbox');
+
             if (_this.pgisMap.transnetValidationsSidebar.isVisible()) {
                 _this.pgisMap.transnetValidationsSidebar.hide();
                 validationSection.html('');
             }
             else {
                 validationLoading.show();
+                validationSection.html('');
                 _this.pgisMap.transnetValidationsSidebar.show();
                 _this.pgisMap.transnetFilterSidebar.hide();
 
                 $.ajax({
                     url: "/transnet/evaluations",
                     data: {
-                        "countries": _this.pgisMap.selectedCountries.toString()
+                        "countries": _this.pgisMap.selectedCountries.toString(),
+                        "hit_rate": hitRateCheckbox.is(':checked')
                     },
                     success: function (data) {
                         validationLoading.hide();

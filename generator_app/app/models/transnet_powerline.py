@@ -22,8 +22,6 @@ class TransnetPowerline(db.Model):
     name = db.Column(db.String, nullable=True)
     length = db.Column(db.NUMERIC, nullable=True)
     osm_id = db.Column(db.INTEGER, nullable=True)
-    relation_id = db.Column(db.Integer, db.ForeignKey('transnet_relation.id'))
-    relation = db.relationship('TransnetRelation', back_populates='powerlines')
 
     def shape(self):
         return to_shape(self.geom)

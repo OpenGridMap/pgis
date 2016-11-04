@@ -12,12 +12,14 @@
     </a>
     <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-relations-countries-xml">
         <h4 class="list-group-item-heading">Export Relations of Countries (XML)</h4>
-        <p class="list-group-item-text">export relations of selected countries from the Transnet filters in XML
+        <p class="list-group-item-text">export relations of selected countries and voltages from the Transnet filters in
+            XML
             format</p>
     </a>
     <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-relations-countries-csv">
         <h4 class="list-group-item-heading">Export Relations of Countries (CSV)</h4>
-        <p class="list-group-item-text">export relations of selected countries from the Transnet filters in CSV
+        <p class="list-group-item-text">export relations of selected countries and voltages from the Transnet filters in
+            CSV
             format</p>
     </a>
     <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-cim-bound">
@@ -26,11 +28,24 @@
     </a>
     <a type="button" class="list-group-item " href="javascript:void(0)" id="transnet-export-cim-countries">
         <h4 class="list-group-item-heading">Export CIM Models of Countries</h4>
-        <p class="list-group-item-text">export CIM models of selected countries from the Transnet filters in XML
+        <p class="list-group-item-text">export CIM models of selected countries and voltages from the Transnet filters
+            in XML
             format</p>
     </a>
     <a type="button" class="list-group-item " href="javascript:void(0)" id="transnet-validations">
         <h4 class="list-group-item-heading">Show Evaluations of Countries</h4>
         <p class="list-group-item-text">show evaluations of inferred relations for selected countries</p>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox"
+                       id="transnet-evaluation-hit-rate-checkbox">
+                <span class="cr"> <i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Enable Hit Rate
+            </label>
+        </div>
+    </a>
+    <a type="button" class="list-group-item " href="{{ url_for('transnet_matlab_scripts') }}" target="_blank">
+        <h4 class="list-group-item-heading">Download MATLAB Scripts</h4>
+        <p class="list-group-item-text">Download MATLAB script needed for generating Simulink models</p>
     </a>
 </div>

@@ -158,6 +158,12 @@ def transnet_stations_info():
     return controller.stations_info()
 
 
+@GisApp.route('/transnet/export')
+def transnet_export():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.export_xml()
+
+
 @GisApp.route('/transnet/export_xml')
 def transnet_export_xml():
     controller = app.controllers.transnet_controller.TransnetController()
@@ -188,6 +194,11 @@ def transnet_evaluations():
     return controller.evaluations()
 
 
+@GisApp.route('/transnet/matlab_scripts')
+def transnet_matlab_scripts():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.matlab_scripts()
+
 @GisApp.route('/relations')
 def relations():
     controller = app.controllers.relations_controller.RelationsController()
@@ -205,10 +216,12 @@ def admin_login():
     controller = app.controllers.admin.application_controller.ApplicationController()
     return controller.login()
 
+
 @GisApp.route('/gallery')
 def gallery_index():
     controller = app.controllers.gallery_controller.GalleryController()
     return controller.index()
+
 
 @GisApp.route('/gallery/data')
 def gallery_data():
@@ -217,10 +230,12 @@ def gallery_data():
     # response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+
 @GisApp.route('/gallery/thumb/<path:path>')
 def gallery_thumb(path):
     controller = app.controllers.gallery_controller.GalleryController()
     return controller.thumb(path)
+
 
 @GisApp.route('/admin/do_login')
 def admin_do_login():
