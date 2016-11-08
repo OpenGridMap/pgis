@@ -177,7 +177,7 @@ Pgis.Relation.selectionMode = {
 
         $(document).on('click', '#transnet-export-cim-bound', function () {
             window.open(
-                'http://127.0.0.1:8000/transnet' +
+                'http://vmjacobsen39.informatik.tu-muenchen.de:9000/transnet' +
                 '/export_cim?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
                 + '&zoom=' + _this.pgisMap.map.getZoom()
                 + '&countries=' + _this.pgisMap.selectedCountries.toString()
@@ -192,7 +192,7 @@ Pgis.Relation.selectionMode = {
                 return;
             }
             window.open(
-                'http://127.0.0.1:8000/transnet' +
+                'http://vmjacobsen39.informatik.tu-muenchen.de:9000/transnet' +
                 '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString()
                 + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
                 '_blank'
