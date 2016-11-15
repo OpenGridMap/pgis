@@ -33,7 +33,7 @@ var MapDataLoader = {
           markers.clearLayers();
           clusterGroup.clearLayers();
 
-          // don't delete a selected point from pgisMap.markerMap
+          // don't delete a selected point from map.markerMap
           if (pgisMap.selectedPoint != null) {
             selectedPointReference = pgisMap.markerMap[pgisMap.selectedPoint];
             pgisMap.markerMap = {};

@@ -1,95 +1,126 @@
 var GalleryHandler = {
     markerLayer: null,
     galleryContainer: null,
+    gallery: null,
     data: null,
     current_points: [],
-    pgisMap: null,
+    map: null,
     n: 0,
+    nBatch: 100,
     galleryOptions: {
         rowHeight: 50,
         margins: 2,
-        border: 5
+        border: 5,
+        sort: function (a, b) {
+            a = $(a).data('timestamp');
+            b = $(b).data('timestamp');
+
+            return a - b;
+        },
+        cssAnimation: true
     },
-    initialize: function (markerLayer) {
+    initialize: function (markerLayer, map, galleryContainer, gallery) {
         this.markerLayer = markerLayer;
-        this.pgisMap = window.pgisMap;
+        this.map = map;
+        this.galleryContainer = galleryContainer;
+        this.gallery = gallery;
         this.handleGalleryUpdate();
     },
-    // renderGallery: function () {
-        // if (this.current_points != null) {
-        //     var diff = (visible_points, this.current_points);
-        //     var intersection = _.intersection(visible_points, this.current_points);
-        //     var pointsToBeRemoved = _.difference(visible_points, intersection);
-        //     var pointsToBeAdded = _.difference(this.current_points, intersection);
-        //
-            // var n = pointsToBeRemoved.length;
-            // for (var i = 0; i < n; i++) {
-            //     var item = $('a[data-lightbox="' + pointsToBeRemoved[i] + '"]');
-            //     item.remove();
-            // }
-            //
-            // this.current_points = _.union(intersection, pointsToBeAdded);
-        // }
-    // },
-    renderGallery: function (galleryContainer, onscroll) {
-        var nBatch = 100;
-
+    renderGallery: function (onscroll) {
         if (onscroll == true)
             this.n++;
+        else
+            onscroll = false;
 
-        var min = this.n * nBatch;
-        var max =  min + nBatch <= this.current_points.length ? min + nBatch : this.current_points.length;
+        var min = this.n * this.nBatch;
+        var max =  min + this.nBatch <= this._getTotalImageCount() ? min + this.nBatch : this._getTotalImageCount();
+        var galleryOptions = this.galleryOptions;
+        var _this = this;
 
-        if (onscroll == true) {
-            if (min > max) {
+        if (onscroll) {
+            if (min > max)
                 return;
-            }
+
+            galleryOptions = 'norewind';
         } else {
-            galleryContainer.empty();
+            this.gallery.empty();
         }
 
         for (var i = min; i < max; i++) {
-            var point = pgisMap.data[this.current_points[i]];
-            galleryContainer.append(MapHelpers.getGalleryImageContent(point));
+            var point = this.map.data[this.current_points[i]];
+            this.gallery.append(MapHelpers.getGalleryImageContent(point));
         }
 
-        if (onscroll)
-            galleryContainer.justifiedGallery('norewind');
-        else
-            galleryContainer.justifiedGallery(this.galleryOptions);
-    },
-    handleGalleryUpdate: function () {
-        var visible_points = [];
-        var sidebar = $('#sidebar');
-        var galleryContainer = $('#sidebar-content');
+        this.gallery.justifiedGallery(galleryOptions);
 
-        this.n = 0;
-
-        var i = 0;
-
-        pgisMap.markerLayers.markers.eachLayer(function (layer) {
-            if ((layer instanceof SubmissionMarker)) {
-                if (pgisMap.map.getBounds().contains(layer.getLatLng())) {
-                    var pid = layer.options.point_id;
-                    visible_points.push(pid);
-                    i++;
+        this.gallery.on('jg.complete', function () {
+            if (_this._galleryHeight() < _this._galleryContainerHeight()) {
+                if (_this._getVisibleImageCount() <= _this._getTotalImageCount()) {
+                    _this.renderGallery(true);
                 }
             }
         });
+    },
+    handleGalleryUpdate: function () {
+        var visible_points = this._getVisibleMarkers();
+        this.n = 0;
 
-        console.log(i);
+        if (this._isRenderRequired(visible_points)) {
+            var _this = this;
+            this.current_points = visible_points;
+            this.renderGallery();
 
-        this.current_points = visible_points.sort().reverse();
-        this.renderGallery(galleryContainer);
+            this.galleryContainer.on('scroll', function () {
+                if(_this._galleryScrollTop() + _this._galleryContainerHeight() == _this._galleryHeight()) {
+                    _this.renderGallery(true);
+                }
+            });
+        }
 
+
+    },
+    _getVisibleMarkers: function () {
+        var visible_points = [];
+        // var i = 0;
         var _this = this;
 
-        sidebar.scroll(function () {
-            var scrollTop = sidebar.scrollTop();
-            console.log(sidebar.scrollTop());
-            if(sidebar.scrollTop() + sidebar.height() == galleryContainer.height()) {
-                _this.renderGallery(galleryContainer, true);
+       _this.map.markerLayers.markers.eachLayer(function (layer) {
+            if ((layer instanceof SubmissionMarker)) {
+                if (_this.map.map.getBounds().contains(layer.getLatLng())) {
+                    var pid = layer.options.point_id;
+                    visible_points.push(pid);
+                    // i++;
+                }
             }
-        })
+        });
+        // console.log(i);
+        return visible_points.sort().reverse();
+    },
+    _isRenderRequired: function (visiblePoints) {
+        if (this.current_points != null) {
+            var diff = _.union(
+                _.difference(this.current_points, visiblePoints),
+                _.difference(visiblePoints, this.current_points)
+            );
+
+            if (diff.length > 0) return true;
+        }
+
+        return false;
+    },
+    _galleryScrollTop: function () {
+        return this.galleryContainer.scrollTop();
+    },
+    _galleryContainerHeight: function () {
+        return this.galleryContainer.height();
+    },
+    _galleryHeight: function () {
+        return this.gallery.height();
+    },
+    _getVisibleImageCount: function () {
+        return this.gallery.children().length;
+    },
+    _getTotalImageCount: function () {
+        return this.current_points.length;
     }
 };

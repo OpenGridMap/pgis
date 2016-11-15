@@ -1,5 +1,5 @@
 var MapDataLoader = {
-    loadBaseMapDataForMapFragment: function (pgisMap, markerLayer, galleryContainer) {
+    loadBaseMapDataForMapFragment: function (pgisMap, markerLayer, galleryContainer, gallery) {
         var map = pgisMap.map;
         var verifiedIcon = L.icon({
             iconUrl: 'static/images/marker-icon-dark-green-2x.png',
@@ -35,14 +35,16 @@ var MapDataLoader = {
                 markerLayer.clearLayers();
 
                 data.forEach(function (point) {
-                    var popupHtml = MapHelpers.getPointPopupContent(point)
+                    var popupHtml = MapHelpers.getPointPopupContent(point);
                     var latlng = point['latlng'];
                     var icon;
 
                     if (point['approved'])
                         icon = verifiedIcon;
-                    else
+                    else {
                         icon = unverifiedIcon;
+
+                    }
 
                     var marker = new SubmissionMarker(latlng, {
                         icon: icon,
@@ -55,6 +57,24 @@ var MapDataLoader = {
                         },
                         'mouseout': function (event, data) {
                             // TODO Gallery integration of mouseout
+                        },
+                        'popupopen': function (event, data) {
+                            var marker = this;
+                            var pointCopy = point;
+
+                            pointCopy['isPopupThumbVisible'] = true;
+                            var popupContent = MapHelpers.getPointPopupContent(pointCopy);
+                            marker.setPopupContent(popupContent);
+
+                            var id = '#' + $(popupContent).children('img')[0].id;
+
+                            $(id).on('click', function () {
+                                $('#gallery-thumb-' + pointCopy.id).trigger('click');
+                            });
+                        },
+                        'popupclose': function (event, data) {
+                            // console.log(point);
+                            marker.setPopupContent(popupHtml);
                         }
                     });
 
@@ -72,7 +92,7 @@ var MapDataLoader = {
                     pgisMap.data[point.id] = point;
                 });
 
-                GalleryHandler.initialize(markerLayer);
+                GalleryHandler.initialize(markerLayer, pgisMap, galleryContainer, gallery);
 
                 pgisMap.map.on({'moveend': function () {
                     GalleryHandler.handleGalleryUpdate();
@@ -83,7 +103,6 @@ var MapDataLoader = {
         // $.getJSON({
         //     url: countries_layer_data_url,
         //     success: function (data) {
-        //         co
         //     }
         // });
 

@@ -19,11 +19,11 @@ $(document).ready(function() {
         name: 'markers',
         layer: new L.MarkerClusterGroup()
     });
-    // pgisMap.addMarkerLayer({
+    // map.addMarkerLayer({
     //     name: 'clusterGroup',
     //     layer: new L.LayerGroup()
     // });
-    // pgisMap.addMarkerLayer({
+    // map.addMarkerLayer({
     //     name: 'powerlinesLayerGroup',
     //     layer: new L.LayerGroup()
     // });
@@ -34,7 +34,8 @@ $(document).ready(function() {
         MapDataLoader.loadBaseMapDataForMapFragment(
             pgisMap,
             this.markerLayers.markers,
-            this.galleryContainer
+            GalleryHelpers.getGalleryContainer(),
+            GalleryHelpers.getGallery()
         );
     };
 

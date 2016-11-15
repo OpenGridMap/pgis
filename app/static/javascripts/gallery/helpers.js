@@ -1,44 +1,3 @@
-// function getJson(url, callback) {
-//     var xhr;
-//
-//     if (typeof XMLHttpRequest !== 'undefined') {
-//         xhr = new XMLHttpRequest();
-//     } else {
-//         var versions = ["MSXML2.XmlHttp.5.0",
-//             "MSXML2.XmlHttp.4.0",
-//             "MSXML2.XmlHttp.3.0",
-//             "MSXML2.XmlHttp.2.0",
-//             "Microsoft.XmlHttp"
-//         ];
-//
-//         for (var i = 0, len = versions.length; i < len; i++) {
-//             try {
-//                 xhr = new ActiveXObject(versions[i]);
-//                 break;
-//             } catch (e) {}
-//         }
-//     }
-//
-//     xhr.onreadystatechange = ensureReadiness;
-//
-//     function ensureReadiness() {
-//         if (xhr.readyState < 4) {
-//             return;
-//         }
-//
-//         if (xhr.status !== 200) {
-//             return;
-//         }
-//
-//         if (xhr.readyState === 4) {
-//             callback(JSON.parse(xhr.responseText));
-//         }
-//     }
-//
-//     xhr.open('GET', url, true);
-//     xhr.send('');
-// }
-
 var registerHandleBarHelpers = function () {
     Handlebars.registerHelper('thumb', function (img) {
         if (img == undefined)
@@ -47,7 +6,7 @@ var registerHandleBarHelpers = function () {
         return 'gallery/thumb/' + img;
     });
 
-    Handlebars.registerHelper('power-tag', function (powerTag) {
+    Handlebars.registerHelper('power_tag', function (powerTag) {
         var powerTags = {
             "power=transformer": "Transformer",
             "power=substation": "Substation",
@@ -61,8 +20,10 @@ var registerHandleBarHelpers = function () {
     });
 
     Handlebars.registerHelper('date', function (epochTime) {
-        var date = new Date(epochTime);
-        return date.getDay() + '.' +  date.getMonth() + '.' + date.getFullYear();
+        var date = new Date(0);
+        date.setUTCSeconds(epochTime);
+        // return date.getDate() + '.' +  (date.getMonth() + 1) + '.' + date.getFullYear();
+        return date.toLocaleDateString();
     });
 };
 
@@ -103,3 +64,12 @@ var MapHelpers = {
         );
     }
 };
+
+var GalleryHelpers = {
+    getGalleryContainer: function () {
+        return $('#sidebar');
+    },
+    getGallery: function () {
+        return $('#sidebar-content');
+    }
+}
