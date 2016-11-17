@@ -19,20 +19,15 @@ class Submission(db.Model):
 
     def serialize_for_gallery(self):
         points = list(map((lambda p: p.serialize_for_gallery()), self.points))
-
         point = points[0]
-
-        if 'tags' in point.keys():
-            properties = point['properties']['tags']
-        else:
-            properties = point['properties']
+        properties = point['properties']['tags']
 
         serialized_submission = {
             'id': self.id,
             'latlng': point['latlng'],
             'image_src': point['pictures'][0]['filepath'],
             'altitude': properties['altitude'],
-            'power_element_tag': properties['power_elements_tags'],
+            'power_element_tag': properties['power_element_tags'],
             'timestamp': properties['timestamp'],
             'revised': point['revised'],
             'approved': point['approved']

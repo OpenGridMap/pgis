@@ -20,46 +20,45 @@ var GalleryHandler = {
         cssAnimation: true
     },
     initialize: function (markerLayer, map, galleryContainer, gallery) {
+        var _this = this;
         this.markerLayer = markerLayer;
         this.map = map;
         this.galleryContainer = galleryContainer;
         this.gallery = gallery;
+
+        this.gallery.on('jg.complete', function () {
+            _this._handleJGComplete(_this);
+        });
+
         this.handleGalleryUpdate();
-    },
-    renderGallery: function (onscroll) {
+
+        return this;
+    }, renderGallery: function (onscroll) {
         if (onscroll == true)
             this.n++;
         else
             onscroll = false;
 
         var min = this.n * this.nBatch;
+
         var max =  min + this.nBatch <= this._getTotalImageCount() ? min + this.nBatch : this._getTotalImageCount();
-        var galleryOptions = this.galleryOptions;
-        var _this = this;
+        var norewind = false;
 
         if (onscroll) {
             if (min > max)
                 return;
 
-            galleryOptions = 'norewind';
+            norewind = true;
         } else {
             this.gallery.empty();
         }
 
         for (var i = min; i < max; i++) {
             var point = this.map.data[this.current_points[i]];
-            this.gallery.append(MapHelpers.getGalleryImageContent(point));
+            this._addPointToGallery(point);
         }
 
-        this.gallery.justifiedGallery(galleryOptions);
-
-        this.gallery.on('jg.complete', function () {
-            if (_this._galleryHeight() < _this._galleryContainerHeight()) {
-                if (_this._getVisibleImageCount() <= _this._getTotalImageCount()) {
-                    _this.renderGallery(true);
-                }
-            }
-        });
+        this._handleGalleryRender(norewind);
     },
     handleGalleryUpdate: function () {
         var visible_points = this._getVisibleMarkers();
@@ -71,17 +70,52 @@ var GalleryHandler = {
             this.renderGallery();
 
             this.galleryContainer.on('scroll', function () {
-                if(_this._galleryScrollTop() + _this._galleryContainerHeight() == _this._galleryHeight()) {
+                if(_this._galleryScrollTop() + _this._galleryContainerHeight() == _this._contentHeight()) {
                     _this.renderGallery(true);
                 }
             });
         }
+    },
+    addPoint: function (point) {
+        this._addPointToGallery(point);
+        this._handleGalleryRender(true);
+    },
+    _addPointToGallery: function (point) {
+        this.gallery.append(GalleryHelpers.getGalleryImageContent(point));
+    },
+    _handleGalleryRender: function (norewind) {
+        var _this = this;
+        var galleryOptions = null;
 
+        if (norewind == true) {
+            galleryOptions = 'norewind';
+        }
+        else {
+            galleryOptions = this.galleryOptions;
+            norewind = false;
+        }
 
+        this.gallery.justifiedGallery(galleryOptions);
+
+        // if (!norewind) {
+        //     this.gallery.on('jg.complete', function () {
+        //         if (_this._contentHeight() < _this._galleryContainerHeight()) {
+        //             if (_this._getVisibleImageCount() <= _this._getTotalImageCount()) {
+        //                 _this.renderGallery(true);
+        //             }
+        //         }
+        //     });
+        // }
+    },
+    _handleJGComplete: function () {
+        if (this._contentHeight() < this._galleryContainerHeight()) {
+            if (this._getVisibleImageCount() <= this._getTotalImageCount()) {
+                this.renderGallery(true);
+            }
+        }
     },
     _getVisibleMarkers: function () {
         var visible_points = [];
-        // var i = 0;
         var _this = this;
 
        _this.map.markerLayers.markers.eachLayer(function (layer) {
@@ -89,11 +123,9 @@ var GalleryHandler = {
                 if (_this.map.map.getBounds().contains(layer.getLatLng())) {
                     var pid = layer.options.point_id;
                     visible_points.push(pid);
-                    // i++;
                 }
             }
         });
-        // console.log(i);
         return visible_points.sort().reverse();
     },
     _isRenderRequired: function (visiblePoints) {
@@ -114,7 +146,7 @@ var GalleryHandler = {
     _galleryContainerHeight: function () {
         return this.galleryContainer.height();
     },
-    _galleryHeight: function () {
+    _contentHeight: function () {
         return this.gallery.height();
     },
     _getVisibleImageCount: function () {

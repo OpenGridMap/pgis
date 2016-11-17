@@ -18,6 +18,13 @@
 {% endblock %}
 
 {% block content %}
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-screen-logo">
+            <img class="" src="{{ url_for('static', filename='images/icon_4928.svg') }}">
+            <h2>OpenGridMap</h2>
+        </div>
+        <div class="splash-screen-spinner"></div>
+    </div>
     <div id="map" class="col-md-9"></div>
     <div class="container-fluid">
         <div class="row">
@@ -38,7 +45,9 @@
             Power tag : {{ power_tag power_element_tag }} <br/>
 
             {{#if isPopupThumbVisible }}
-            <img id="marker-thumb-{{ id }}" src="{{ thumb image_src }}"/>
+            <a href="{{ image_src }}" data-lightbox="marker-thumb-{{ id }}" data-title="{{ power_tag power_element_tag }} <span class='pull-right'>Taken on {{ date timestamp }}</span>">
+                <img id="marker-thumb-{{ id }}" src="{{ thumb image_src }}"/>
+            </a>
             {{/if }}
         </div>
     </script>

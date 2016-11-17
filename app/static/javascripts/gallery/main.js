@@ -35,7 +35,8 @@ $(document).ready(function() {
             pgisMap,
             this.markerLayers.markers,
             GalleryHelpers.getGalleryContainer(),
-            GalleryHelpers.getGallery()
+            GalleryHelpers.getGallery(),
+            MapHelpers.getSplashScreen()
         );
     };
 

@@ -1,5 +1,5 @@
 var MapDataLoader = {
-    loadBaseMapDataForMapFragment: function (pgisMap, markerLayer, galleryContainer, gallery) {
+    loadBaseMapDataForMapFragment: function (pgisMap, markerLayer, galleryContainer, gallery, splashScreen) {
         var map = pgisMap.map;
         var verifiedIcon = L.icon({
             iconUrl: 'static/images/marker-icon-dark-green-2x.png',
@@ -28,6 +28,8 @@ var MapDataLoader = {
         var submission_data_url = '/gallery/data';
         var states_layer_data_url = '/static/javascripts/gallery/states.geo.json';
         var countries_layer_data_url = '/static/javascripts/gallery/countries.geo.json';
+
+        var galleryHandler = null;
 
         $.getJSON({
             url: submission_data_url,
@@ -60,20 +62,11 @@ var MapDataLoader = {
                         },
                         'popupopen': function (event, data) {
                             var marker = this;
-                            var pointCopy = point;
+                            var popupContent = MapHelpers.getPointPopupContent(point, true);
 
-                            pointCopy['isPopupThumbVisible'] = true;
-                            var popupContent = MapHelpers.getPointPopupContent(pointCopy);
                             marker.setPopupContent(popupContent);
-
-                            var id = '#' + $(popupContent).children('img')[0].id;
-
-                            $(id).on('click', function () {
-                                $('#gallery-thumb-' + pointCopy.id).trigger('click');
-                            });
                         },
                         'popupclose': function (event, data) {
-                            // console.log(point);
                             marker.setPopupContent(popupHtml);
                         }
                     });
@@ -89,22 +82,18 @@ var MapDataLoader = {
 
                     markerLayer.addLayer(marker);
 
+                    if (splashScreen != undefined)
+                        splashScreen.hide();
+
                     pgisMap.data[point.id] = point;
                 });
 
-                GalleryHandler.initialize(markerLayer, pgisMap, galleryContainer, gallery);
+                galleryHandler = GalleryHandler.initialize(markerLayer, pgisMap, galleryContainer, gallery);
 
                 pgisMap.map.on({'moveend': function () {
-                    GalleryHandler.handleGalleryUpdate();
+                    galleryHandler.handleGalleryUpdate();
                 }});
             }
         });
-
-        // $.getJSON({
-        //     url: countries_layer_data_url,
-        //     success: function (data) {
-        //     }
-        // });
-
     }
 };

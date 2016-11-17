@@ -28,17 +28,17 @@ var registerHandleBarHelpers = function () {
 };
 
 var MapHelpers = {
-    getPointPopupContent: function(pointData) {
+    getPointPopupContent: function(pointData, isPopupThumbVisible) {
         var source = $("#popup-template").html();
         var popupTemplate = Handlebars.compile(source);
 
+        if (isPopupThumbVisible == true)
+            pointData['isPopupThumbVisible'] = true;
+
         return popupTemplate(pointData);
     },
-    getGalleryImageContent: function (imageData) {
-        var source = $("#gallery-image-template").html();
-        var imageTemplate = Handlebars.compile(source);
-
-        return imageTemplate(imageData);
+    getSplashScreen: function () {
+        return $('#splash-screen')
     },
     getOsmTile: function() {
         return L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -66,10 +66,16 @@ var MapHelpers = {
 };
 
 var GalleryHelpers = {
+    getGalleryImageContent: function (imageData) {
+        var source = $("#gallery-image-template").html();
+        var imageTemplate = Handlebars.compile(source);
+
+        return imageTemplate(imageData);
+    },
     getGalleryContainer: function () {
         return $('#sidebar');
     },
     getGallery: function () {
         return $('#sidebar-content');
     }
-}
+};
