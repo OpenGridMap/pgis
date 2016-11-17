@@ -13,7 +13,12 @@ var registerHandleBarHelpers = function () {
             "power=plant": "Power Plant",
             "power=generator;generator:method=photovoltaic;generator:source=solar": "Solar PV",
             "power=generator;generator:method=wind_turbine;generator:source=wind": "Wind Turbine",
-            "other": "Other"
+            "other": "Other",
+            "Transformer": "Transformer",
+            "Substation": "Substation",
+            "Generator": "Generator",
+            "PV or Wind Farm": "PV or Wind Farm",
+            "Other": "Other"
         };
 
         return powerTags[powerTag];
@@ -22,8 +27,8 @@ var registerHandleBarHelpers = function () {
     Handlebars.registerHelper('date', function (epochTime) {
         var date = new Date(0);
         date.setUTCSeconds(epochTime);
-        // return date.getDate() + '.' +  (date.getMonth() + 1) + '.' + date.getFullYear();
-        return date.toLocaleDateString();
+        return date.getDate() + '.' +  (date.getMonth() + 1) + '.' + date.getFullYear();
+        // return date.toLocaleDateString();
     });
 };
 
