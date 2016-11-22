@@ -74,6 +74,8 @@ class Point(db.Model):
         GisApp.osmApiClient.ChangesetClose()
 
     def deleteOnOSM(self):
+        if not 'osm_id' in self.properties:
+            return
         GisApp.osmApiClient.ChangesetCreate()
         # Get the Node's current OSM data so that we have the version number to
         #   perform the update request.
