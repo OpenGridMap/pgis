@@ -18,11 +18,18 @@
 {% endblock %}
 
 {% block content %}
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-screen-logo">
+            <img class="" src="{{ url_for('static', filename='images/icon_4928.svg') }}">
+            <h2>OpenGridMap</h2>
+        </div>
+        <div class="splash-screen-spinner"></div>
+    </div>
     <div id="map" class="col-md-9"></div>
     <div class="container-fluid">
         <div class="row">
             <div id="sidebar" class="col-md-3">
-                <div id="sidebar-content"></div>
+                <div id="sidebar-content" class="justified-gallery"></div>
             </div>
         </div>
     </div>
@@ -35,14 +42,19 @@
             Altitude : {{ altitude }} <br/>
             Approved : {{ approved }} <br/>
             latlng : {{ latlng }} <br/>
-            Power tag : {{ power-tag power_element_tag }} <br/>
-            <!-- <img src="{{ thumb image_src }}"> -->
+            Power tag : {{ power_tag power_element_tag }} <br/>
+
+            {{#if isPopupThumbVisible }}
+            <a href="{{ image_src }}" data-lightbox="marker-thumb-{{ id }}" data-title="{{ power_tag power_element_tag }} <span class='pull-right'>Taken on {{ date timestamp }}</span>">
+                <img id="marker-thumb-{{ id }}" src="{{ thumb image_src }}"/>
+            </a>
+            {{/if }}
         </div>
     </script>
     <script id="gallery-image-template" type="text/x-handlebars-template">
-          <a href="{{ image_src }}" data-lightbox="gallery" data-title="{{ power-tag power_element_tag }}     Taken on {{ date timestamp }}">
-              <img src="{{ thumb image_src }}" alt="{{ power-tag power_element_tag }}"/>
-          </a>
+        <a href="{{ image_src }}" data-lightbox="gallery" data-title="{{ power_tag power_element_tag }} <span class='pull-right'>Taken on {{ date timestamp }}</span>" data-timestamp="{{ timestamp }}">
+            <img id="gallery-thumb-{{ id }}" src="{{ thumb image_src }}" alt="{{ power_tag power_element_tag }}"/>
+        </a>
     </script>
     {% endraw %}
 {% endblock %}

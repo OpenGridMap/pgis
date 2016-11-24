@@ -73,10 +73,11 @@ class PointsController:
         except OsmApiError as e:
             print("Exception while trying OSM Api call")
             print(e)
-        submission = Submission.query.get(point.submission_id)
         db.session.query(Picture).filter(Picture.point_id == point.id).delete()
         db.session.delete(point)
-        if submission != None and db.session.query(Point).filter(Point.submission_id == submission.id).count == 0:
-            db.session.query(Submission).filter(Submission.id == point.submission_id).delete()
+        if point.submission_id is not None:
+            submission = Submission.query.get(point.submission_id)
+            if submission is not None and db.session.query(Point).filter(Point.submission_id == submission.id).count == 0:
+                db.session.query(Submission).filter(Submission.id == point.submission_id).delete()
         db.session.commit()
         return redirect(url_for('admin_points'))

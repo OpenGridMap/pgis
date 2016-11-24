@@ -43,6 +43,5 @@ gallery_js_files = common_js_files + [
     'javascripts/gallery/handlers.js',
     'javascripts/gallery/map-data-loader.js',
     'javascripts/gallery/pgis-submission-gallery-map.js',
-    # 'javascripts/gallery.js',
     'javascripts/gallery/main.js',
 ]

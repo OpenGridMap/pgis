@@ -92,12 +92,21 @@ $(document).ready(function () {
 
     var statisticLinkProperties = {
         ref: 'statistic',
-        text: 'Open statistic',
+        text: 'Open statistics',
         onclick: function () {
             Statistics.countPowerObjects(pgisMap);
         }
     };
     pgisMap.addLinkButton(statisticLinkProperties);
+
+    var galleryLinkProperties = {
+        ref: 'gallery',
+        text: 'Gallery',
+        onclick: function () {
+            window.location.href = '/gallery';
+        }
+    };
+    pgisMap.addLinkButton(galleryLinkProperties);
 
     pgisMap.addLinkButton({
         ref: 'exportRelations',

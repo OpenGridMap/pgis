@@ -19,32 +19,19 @@ class Submission(db.Model):
 
     def serialize_for_gallery(self):
         points = list(map((lambda p: p.serialize_for_gallery()), self.points))
-
-        print(points)
+        point = points[0]
+        properties = point['properties']['tags']
 
         serialized_submission = {
             'id': self.id,
-            'latlng': points[0]['latlng'],
-            'image_src': points[0]['pictures'][0]['filepath'],
-            'altitude': points[0]['properties']['tags']['altitude'],
-            'power_element_tag': points[0]['properties']['tags']['power_element_tags'],
-            'timestamp': points[0]['properties']['tags']['timestamp'],
-            'revised': points[0]['revised'],
-            'approved': points[0]['approved']
+            'latlng': point['latlng'],
+            'image_src': point['pictures'][0]['filepath'],
+            'altitude': properties['altitude'],
+            'power_element_tag': properties['power_element_tags'],
+            'timestamp': properties['timestamp'],
+            'revised': point['revised'],
+            'approved': point['approved']
         }
-
-        # serialized_submission = {
-        #     'id': self.id,
-        #     'latlng': points[0]['latlng'],
-        #     'image_src': points[0]['pictures'][0]['filepath'],
-        #     'revised': points[0]['revised'],
-        #     'approved': points[0]['approved']
-        # }
-        # if 'properties' in points[0].keys():
-        #     serialized_submission['accuracy'] = points[0]['properties']['accuracy']
-        #     serialized_submission['altitude'] = points[0]['properties']['altitude']
-        #     serialized_submission['power_element_tag'] = points[0]['properties']['power_elements_tags']
-        #     serialized_submission['timestamp'] = points[0]['properties']['timestamp']
 
         return serialized_submission
 

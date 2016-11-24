@@ -1,44 +1,3 @@
-// function getJson(url, callback) {
-//     var xhr;
-//
-//     if (typeof XMLHttpRequest !== 'undefined') {
-//         xhr = new XMLHttpRequest();
-//     } else {
-//         var versions = ["MSXML2.XmlHttp.5.0",
-//             "MSXML2.XmlHttp.4.0",
-//             "MSXML2.XmlHttp.3.0",
-//             "MSXML2.XmlHttp.2.0",
-//             "Microsoft.XmlHttp"
-//         ];
-//
-//         for (var i = 0, len = versions.length; i < len; i++) {
-//             try {
-//                 xhr = new ActiveXObject(versions[i]);
-//                 break;
-//             } catch (e) {}
-//         }
-//     }
-//
-//     xhr.onreadystatechange = ensureReadiness;
-//
-//     function ensureReadiness() {
-//         if (xhr.readyState < 4) {
-//             return;
-//         }
-//
-//         if (xhr.status !== 200) {
-//             return;
-//         }
-//
-//         if (xhr.readyState === 4) {
-//             callback(JSON.parse(xhr.responseText));
-//         }
-//     }
-//
-//     xhr.open('GET', url, true);
-//     xhr.send('');
-// }
-
 var registerHandleBarHelpers = function () {
     Handlebars.registerHelper('thumb', function (img) {
         if (img == undefined)
@@ -47,37 +6,44 @@ var registerHandleBarHelpers = function () {
         return 'gallery/thumb/' + img;
     });
 
-    Handlebars.registerHelper('power-tag', function (powerTag) {
+    Handlebars.registerHelper('power_tag', function (powerTag) {
         var powerTags = {
             "power=transformer": "Transformer",
             "power=substation": "Substation",
             "power=plant": "Power Plant",
             "power=generator;generator:method=photovoltaic;generator:source=solar": "Solar PV",
             "power=generator;generator:method=wind_turbine;generator:source=wind": "Wind Turbine",
-            "other": "Other"
+            "other": "Other",
+            "Transformer": "Transformer",
+            "Substation": "Substation",
+            "Generator": "Generator",
+            "PV or Wind Farm": "PV or Wind Farm",
+            "Other": "Other"
         };
 
         return powerTags[powerTag];
     });
 
     Handlebars.registerHelper('date', function (epochTime) {
-        var date = new Date(epochTime);
-        return date.getDay() + '.' +  date.getMonth() + '.' + date.getFullYear();
+        var date = new Date(0);
+        date.setUTCSeconds(epochTime);
+        return date.getDate() + '.' +  (date.getMonth() + 1) + '.' + date.getFullYear();
+        // return date.toLocaleDateString();
     });
 };
 
 var MapHelpers = {
-    getPointPopupContent: function(pointData) {
+    getPointPopupContent: function(pointData, isPopupThumbVisible) {
         var source = $("#popup-template").html();
         var popupTemplate = Handlebars.compile(source);
 
+        if (isPopupThumbVisible == true)
+            pointData['isPopupThumbVisible'] = true;
+
         return popupTemplate(pointData);
     },
-    getGalleryImageContent: function (imageData) {
-        var source = $("#gallery-image-template").html();
-        var imageTemplate = Handlebars.compile(source);
-
-        return imageTemplate(imageData);
+    getSplashScreen: function () {
+        return $('#splash-screen')
     },
     getOsmTile: function() {
         return L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -101,5 +67,20 @@ var MapHelpers = {
                 minZoom: 2
             }
         );
+    }
+};
+
+var GalleryHelpers = {
+    getGalleryImageContent: function (imageData) {
+        var source = $("#gallery-image-template").html();
+        var imageTemplate = Handlebars.compile(source);
+
+        return imageTemplate(imageData);
+    },
+    getGalleryContainer: function () {
+        return $('#sidebar');
+    },
+    getGallery: function () {
+        return $('#sidebar-content');
     }
 };

@@ -1,5 +1,5 @@
 var MapDataLoader = {
-    loadBaseMapDataForMapFragment: function (pgisMap, markerLayer, galleryContainer) {
+    loadBaseMapDataForMapFragment: function (pgisMap, markerLayer, galleryContainer, gallery, splashScreen) {
         var map = pgisMap.map;
         var verifiedIcon = L.icon({
             iconUrl: 'static/images/marker-icon-dark-green-2x.png',
@@ -29,20 +29,24 @@ var MapDataLoader = {
         var states_layer_data_url = '/static/javascripts/gallery/states.geo.json';
         var countries_layer_data_url = '/static/javascripts/gallery/countries.geo.json';
 
+        var galleryHandler = null;
+
         $.getJSON({
             url: submission_data_url,
             success: function (data) {
                 markerLayer.clearLayers();
 
                 data.forEach(function (point) {
-                    var popupHtml = MapHelpers.getPointPopupContent(point)
+                    var popupHtml = MapHelpers.getPointPopupContent(point);
                     var latlng = point['latlng'];
                     var icon;
 
                     if (point['approved'])
                         icon = verifiedIcon;
-                    else
+                    else {
                         icon = unverifiedIcon;
+
+                    }
 
                     var marker = new SubmissionMarker(latlng, {
                         icon: icon,
@@ -55,6 +59,15 @@ var MapDataLoader = {
                         },
                         'mouseout': function (event, data) {
                             // TODO Gallery integration of mouseout
+                        },
+                        'popupopen': function (event, data) {
+                            var marker = this;
+                            var popupContent = MapHelpers.getPointPopupContent(point, true);
+
+                            marker.setPopupContent(popupContent);
+                        },
+                        'popupclose': function (event, data) {
+                            marker.setPopupContent(popupHtml);
                         }
                     });
 
@@ -69,23 +82,18 @@ var MapDataLoader = {
 
                     markerLayer.addLayer(marker);
 
+                    if (splashScreen != undefined)
+                        splashScreen.hide();
+
                     pgisMap.data[point.id] = point;
                 });
 
-                GalleryHandler.initialize(markerLayer);
+                galleryHandler = GalleryHandler.initialize(markerLayer, pgisMap, galleryContainer, gallery);
 
                 pgisMap.map.on({'moveend': function () {
-                    GalleryHandler.handleGalleryUpdate();
+                    galleryHandler.handleGalleryUpdate();
                 }});
             }
         });
-
-        // $.getJSON({
-        //     url: countries_layer_data_url,
-        //     success: function (data) {
-        //         co
-        //     }
-        // });
-
     }
 };
