@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import JSON
 
 from app import db
 
+
 class TransnetPowerline(db.Model):
     __tablename__ = 'transnet_powerline'
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +22,7 @@ class TransnetPowerline(db.Model):
     name = db.Column(db.String, nullable=True)
     length = db.Column(db.NUMERIC, nullable=True)
     osm_id = db.Column(db.INTEGER, nullable=True)
+    osm_replication = db.Column(db.Integer, nullable=True, default=1)
 
     def shape(self):
         return to_shape(self.geom)

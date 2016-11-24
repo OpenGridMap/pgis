@@ -6,6 +6,7 @@ from sqlalchemy import cast
 from sqlalchemy.orm import joinedload
 
 from app import db
+from app.models.transnet_country import TransnetCountry
 from app.models.transnet_powerline import TransnetPowerline
 from app.models.transnet_relation_powerline import TransnetRelationPowerline
 from app.models.transnet_relation_station import TransnetRelationStation
@@ -173,29 +174,43 @@ class TransnetRelation(db.Model):
         for country in countries:
 
             country_stat = {
-                'all_line_length': 0,
+                'all_line_length_with_duplicates': 0,
                 'all_line_length_s': 0,
+                'all_line_length_without_duplicates': 0,
                 'plants_count': 0,
                 'plants_count_s': 0,
                 'substations_count': 0,
                 'substations_count_s': 0,
                 'plant_station_hit_rate': -1,
-                'length_by_voltages': {}
+                'scigrid_available': False,
+                'length_by_voltages': {},
+                'relation_length_by_voltages': {}
             }
             try:
 
-                country_stat['all_line_length'] = \
+                country_stat['all_line_length_with_duplicates'] = \
+                    db.session.query(func.sum(TransnetPowerline.length * TransnetPowerline.osm_replication).label(
+                        'sum_line')).filter(
+                        TransnetPowerline.country == country)[0][0] / 1000
+
+                country_stat['all_line_length_without_duplicates'] = \
                     db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country)[0][0] / 1000
+
                 country_stat['plants_count'] = db.session.query(func.count(TransnetStation.id)).filter(
                     TransnetStation.country == country).filter(
                     TransnetStation.type.in_(plant_tags))[0][0]
+
                 country_stat['substations_count'] = db.session.query(func.count(TransnetStation.id)).filter(
                     TransnetStation.country == country).filter(
                     TransnetStation.type.in_(station_tags))[0][0]
-                country_stat['length_by_voltages'] = {}
+
                 voltages = db.session.query(func.unnest(TransnetPowerline.voltage)).filter(
                     TransnetPowerline.country == country).distinct()
+
+                relations_voltages = db.session.query(func.unnest(TransnetCountry.voltages)).filter(
+                    TransnetCountry.country == country).distinct()
+
                 file_path = join(dirname(__file__), '../../resources/europe/{0}/where_clause'.format(country))
                 if not exists(file_path):
                     file_path = join(dirname(__file__), '../../resources/germany/{0}/where_clause'.format(country))
@@ -203,15 +218,49 @@ class TransnetRelation(db.Model):
                 if exists(file_path):
                     with open(join(dirname(__file__), file_path)) as w_s:
                         where_clause = w_s.readline()
+                        country_stat['scigrid_available'] = True
+                        #where_clause = 'True'
+
+                for voltage in relations_voltages:
+                    country_stat['relation_length_by_voltages'][voltage[0]] = []
+
+                    length_without_dup = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                        TransnetPowerline.country == country).filter(
+                        TransnetPowerline.relations.any(TransnetRelation.voltage.in_([voltage])))
+                    if length_without_dup.count() and length_without_dup[0][0]:
+                        country_stat['relation_length_by_voltages'][voltage[0]].append(length_without_dup[0][0] / 1000)
+                    else:
+                        country_stat['relation_length_by_voltages'][voltage[0]].append(0)
+
+                    length_with_dup = db.session.query(
+                        func.sum(TransnetPowerline.length * TransnetPowerline.osm_replication).label(
+                            'sum_line')).filter(
+                        TransnetPowerline.country == country).filter(
+                        TransnetPowerline.relations.any(TransnetRelation.voltage.in_([voltage])))
+                    if length_with_dup.count() and length_with_dup[0][0]:
+                        country_stat['relation_length_by_voltages'][voltage[0]].append(length_with_dup[0][0] / 1000)
+                    else:
+                        country_stat['relation_length_by_voltages'][voltage[0]].append(0)
 
                 for voltage in voltages:
                     country_stat['length_by_voltages'][voltage[0]] = []
-                    length_shared = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                    length_shared_without_dup = db.session.query(
+                        func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country).filter(TransnetPowerline.voltage.any(voltage[0]))
-                    if length_shared.count() and length_shared[0][0]:
-                        country_stat['length_by_voltages'][voltage[0]].append(length_shared[0][0] / 1000)
+                    if length_shared_without_dup.count() and length_shared_without_dup[0][0]:
+                        country_stat['length_by_voltages'][voltage[0]].append(length_shared_without_dup[0][0] / 1000)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
+
+                    length_shared_with_dup = db.session.query(
+                        func.sum(TransnetPowerline.length * TransnetPowerline.osm_replication).label(
+                            'sum_line')).filter(
+                        TransnetPowerline.country == country).filter(TransnetPowerline.voltage.any(voltage[0]))
+                    if length_shared_with_dup.count() and length_shared_with_dup[0][0]:
+                        country_stat['length_by_voltages'][voltage[0]].append(length_shared_with_dup[0][0] / 1000)
+                    else:
+                        country_stat['length_by_voltages'][voltage[0]].append(0)
+
                     if where_clause:
                         scigrid_voltage_any = '''SELECT sum(s.length_m) as length
                                                         FROM scigrid_powerline s
@@ -226,13 +275,26 @@ class TransnetRelation(db.Model):
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
 
-                    length_single_value = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
+                    length_single_value_without_dup = db.session.query(
+                        func.sum(TransnetPowerline.length).label('sum_line')).filter(
                         TransnetPowerline.country == country).filter(TransnetPowerline.voltage.all(voltage[0]))
 
-                    if length_single_value.count() and length_single_value[0][0]:
-                        country_stat['length_by_voltages'][voltage[0]].append(length_single_value[0][0] / 1000)
+                    if length_single_value_without_dup.count() and length_single_value_without_dup[0][0]:
+                        country_stat['length_by_voltages'][voltage[0]].append(
+                            length_single_value_without_dup[0][0] / 1000)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
+
+                    length_single_value_with_dup = db.session.query(
+                        func.sum(TransnetPowerline.length * TransnetPowerline.osm_replication).label(
+                            'sum_line')).filter(
+                        TransnetPowerline.country == country).filter(TransnetPowerline.voltage.all(voltage[0]))
+
+                    if length_single_value_with_dup.count() and length_single_value_with_dup[0][0]:
+                        country_stat['length_by_voltages'][voltage[0]].append(length_single_value_with_dup[0][0] / 1000)
+                    else:
+                        country_stat['length_by_voltages'][voltage[0]].append(0)
+
                     if where_clause:
                         scigrid_voltage_all = '''SELECT sum(s.length_m) as length
                                                 FROM scigrid_powerline s
@@ -245,12 +307,14 @@ class TransnetRelation(db.Model):
                             country_stat['length_by_voltages'][voltage[0]].append(0)
                     else:
                         country_stat['length_by_voltages'][voltage[0]].append(0)
+
                 if where_clause:
                     scigrid_length_query = '''SELECT sum(s.length_m) AS length
                                               FROM scigrid_powerline s
                                               WHERE %s''' % where_clause
-                    country_stat['all_line_length_s'] = [round(x[0]) for x in db.engine.execute(scigrid_length_query)][
-                                                            0] / 1000
+                    country_stat['all_line_length_s'] = \
+                        [round(x[0]) for x in db.engine.execute(scigrid_length_query)][
+                            0] / 1000
                     scigrid_station_count_query = '''SELECT count(*) as count
                                                     FROM scigrid_station s
                                                     WHERE s.type ~ 'station|substation|merge|sub_station' and %s''' % where_clause
@@ -292,8 +356,12 @@ class TransnetRelation(db.Model):
 
         if len(countries) > 1:
             country_stat = {}
-            country_stat['all_line_length'] = sum([cn['all_line_length'] for cn in countries_stats.values()])
-            country_stat['all_line_length_s'] = sum([cn['all_line_length_s'] for cn in countries_stats.values()])
+            country_stat['all_line_length_with_duplicates'] = sum(
+                [cn['all_line_length_with_duplicates'] for cn in countries_stats.values()])
+            country_stat['all_line_length_s'] = sum(
+                [cn['all_line_length_s'] for cn in countries_stats.values()])
+            country_stat['all_line_length_without_duplicates'] = sum(
+                [cn['all_line_length_without_duplicates'] for cn in countries_stats.values()])
             country_stat['plants_count'] = sum([cn['plants_count'] for cn in countries_stats.values()])
             country_stat['plants_count_s'] = sum([cn['plants_count_s'] for cn in countries_stats.values()])
             country_stat['substations_count'] = sum([cn['substations_count'] for cn in countries_stats.values()])
@@ -308,12 +376,30 @@ class TransnetRelation(db.Model):
                         country_stat['length_by_voltages'][voltage][1] += cn['length_by_voltages'][voltage][1]
                         country_stat['length_by_voltages'][voltage][2] += cn['length_by_voltages'][voltage][2]
                         country_stat['length_by_voltages'][voltage][3] += cn['length_by_voltages'][voltage][3]
+                        country_stat['length_by_voltages'][voltage][4] += cn['length_by_voltages'][voltage][4]
+                        country_stat['length_by_voltages'][voltage][5] += cn['length_by_voltages'][voltage][5]
                     else:
                         country_stat['length_by_voltages'][voltage] = []
                         country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][0])
                         country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][1])
                         country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][2])
                         country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][3])
+                        country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][4])
+                        country_stat['length_by_voltages'][voltage].append(cn['length_by_voltages'][voltage][5])
+            country_stat['relation_length_by_voltages'] = {}
+            for cn in countries_stats.values():
+                for voltage in cn['relation_length_by_voltages']:
+                    if voltage in country_stat['relation_length_by_voltages'].keys():
+                        country_stat['relation_length_by_voltages'][voltage][0] += \
+                            cn['relation_length_by_voltages'][voltage][0]
+                        country_stat['relation_length_by_voltages'][voltage][1] += \
+                            cn['relation_length_by_voltages'][voltage][1]
+                    else:
+                        country_stat['relation_length_by_voltages'][voltage] = []
+                        country_stat['relation_length_by_voltages'][voltage].append(
+                            cn['relation_length_by_voltages'][voltage][0])
+                        country_stat['relation_length_by_voltages'][voltage].append(
+                            cn['relation_length_by_voltages'][voltage][1])
 
             countries_stats['aaa'] = country_stat
 
