@@ -3,8 +3,9 @@
     <div class="container">
       <h1 class="h1">Welcome to your profile</h1>
       <h2 class="h2">Your points</h2>
-      <span>Your Points: {{ user.activity_points  }}<br>
-      Your rank: {{ ranking }}</span>
+      <span>Your points of current campaign: {{ user.activity_points  }}<br>
+      Your rank: {{ ranking }}<br>
+      Your total points: {{ user.activity_points_total  }}</span>
       <div>
        {% if pictures %}
          <h2 class="h2">Your uploaded pictures</h2>

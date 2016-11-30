@@ -7,7 +7,8 @@ class User(db.Model):
     password            = db.Column(db.String) 
     authenticated       = db.Column(db.Boolean, default=False) 
     action_permissions  = db.Column(JSON)
-    activity_points     = db.Column(db.INTEGER, default=0)
+    activity_points     = db.Column(db.Numeric, default=0.0)
+    activity_points_total = db.Column(db.Numeric, default=0.0)
     submissions         = db.relationship('Submission', back_populates='user')
 
     def is_authenticated(self):

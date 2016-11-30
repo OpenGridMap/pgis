@@ -18,7 +18,10 @@ import flask_resize
 
 # Predefined activity points
 class Activity(Enum):
-    new_point = 1
+    new_transformer = 2
+    existing_tranformer = 1
+    new_other_point = 1
+    existing_other_point = 0.5
     revise_submission = 1 # revise submission not implemented at moment
 
 class SubmissionsController:
@@ -66,8 +69,13 @@ class SubmissionsController:
 
             # add activity points for submitter
             user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
+            power_element_tag = point.properties.get('tags', {}).get('power_element_tags', None)
+            if 'transformer' in power_element_tag:
+                activityPoints = Activity.new_transformer.value
+            else:
+                activityPoints = Activity.new_other_point.value
             db.session.query(User).filter(User.id == user_id)\
-                .update({User.activity_points: User.activity_points + Activity.new_point.value}, synchronize_session=False)
+                .update({User.activity_points: User.activity_points + activityPoints}, synchronize_session=False)
 
             db.session.commit()
             if request.form.get('btn') == 'accept_go_next':
@@ -85,10 +93,7 @@ class SubmissionsController:
         db.session.query(Point).filter(Point.submission_id == id).update({Point.revised: True, Point.approved: False}, synchronize_session=False)
         db.session.commit()
         submission = db.session.query(Submission).filter(Submission.revised == False).first()
-        if submission is not None:
-            return redirect(url_for('submissions_revise', id=submission.id))
-        else:
-            return redirect(url_for('submissions_index'))
+        return redirect(url_for('submissions_index'))
 
     def merge(self, id):
         form = PointForm()
@@ -124,8 +129,13 @@ class SubmissionsController:
             user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
 
             # Add activity points for submitter
-            db.session.query(User).filter(User.id == user_id)\
-                .update({User.activity_points: User.activity_points + Activity.new_point.value}, synchronize_session=False)
+            power_element_tag = new_point.properties.get('tags', {}).get('power_element_tags', None)
+            if 'transformer' in power_element_tag:
+                activityPoints = Activity.existing_tranformer.value
+            else:
+                activityPoints = Activity.existing_other_point.value
+            db.session.query(User).filter(User.id == user_id) \
+                .update({User.activity_points: User.activity_points + activityPoints}, synchronize_session=False)
 
             db.session.commit()
             # copy the necessary rows in picture table and adapt them
