@@ -20,6 +20,7 @@ class TransnetStation(db.Model):
     osm_id = db.Column(db.INTEGER, nullable=True)
     voltage = db.Column(ARRAY(db.INTEGER), nullable=True)
     type = db.Column(db.String, nullable=True)
+    osm_replication = db.Column(db.Integer, nullable=True, default=1)
 
     def shape(self):
         return to_shape(self.geom)

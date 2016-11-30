@@ -31,7 +31,8 @@ def import_files():
         cur.execute('''DELETE FROM scigrid_station;''')
         cur.execute('''DELETE FROM scigrid_powerline;''')
 
-        file_names = ['gridkit_europe-highvoltage-links', 'gridkit_europe-highvoltage-vertices']
+        file_names = ['gridkit_eu_links', 'gridkit_eu_vertices', 'gridkit_de_links', 'gridkit_de_vertices',
+                      'scigrid_eu_links', 'scigrid_eu_vertices', 'scigrid_de_links', 'scigrid_de_vertices']
 
         conn.commit()
         query_powerline = '''INSERT INTO
@@ -43,8 +44,8 @@ def import_files():
                            scigrid_station(v_id, lon, lat, type, voltage, frequency, name, operator, ref, geom, geom_str)
                            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,ST_FlipCoordinates(%s), %s)'''
         print('Importing lines')
-        with open('{0}/scigird/{1}.csv'.format(base_dir, file_names[0])) as lines_file:
-            reader = csv.reader(lines_file, delimiter=',', quotechar='"')
+        with open('{0}/scigird/{1}.csv'.format(base_dir, file_names[4])) as lines_file:
+            reader = csv.reader(lines_file, delimiter=',', quotechar="'")
             next(reader, None)
             for row in reader:
                 voltages = [try_parse_int(x) for x in row[3].split(';')]
@@ -73,8 +74,8 @@ def import_files():
         conn.commit()
 
         print('Importing stations')
-        with open('{0}/scigird/{1}.csv'.format(base_dir, file_names[1])) as lines_file:
-            reader = csv.reader(lines_file, delimiter=',', quotechar='"')
+        with open('{0}/scigird/{1}.csv'.format(base_dir, file_names[5])) as lines_file:
+            reader = csv.reader(lines_file, delimiter=',', quotechar="'")
             next(reader, None)
             for row in reader:
                 voltages = [try_parse_int(x) for x in row[4].split(';')]
