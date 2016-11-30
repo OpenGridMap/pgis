@@ -22,12 +22,12 @@
                         <dt>Stations Count</dt>
                         <dd>{{ country_stat['substations_count'] }} {% if country_stat['scigrid_available'] %}/
                             {{ country_stat['substations_count_s'] }}{% endif %}</dd>
-                        <dt>Powerlines Length with Circuit Duplicates</dt>
+                        <dt>Powerlines Length <br> with  Circuit Duplicates</dt>
                         <dd>{{ "{:,.0f} km".format(country_stat['all_line_length_with_duplicates']) }}
                             {% if country_stat['scigrid_available'] %}/
                                 {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}{% endif %}
                         </dd>
-                        <dt>Powerlines Length without Circuit Duplicates</dt>
+                        <dt>Powerlines Length <br> without Circuit Duplicates</dt>
                         <dd>{{ "{:,.0f} km".format(country_stat['all_line_length_without_duplicates']) }}
                             {% if country_stat['scigrid_available'] %}/
                                 {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}{% endif %}
