@@ -39,7 +39,7 @@ def download_large_relations(base_url, continent, country):
 
 def download_latest_relation_files():
     try:
-        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/master'
+        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/planet-models'
 
         # Download planet json to get the list of continent
         planet_folder = '{0}/planet_json/'.format(base_dir)
@@ -96,6 +96,7 @@ def find_and_import_relation_files():
         cur.execute('''DELETE FROM transnet_relation ''')
 
         conn.commit()
+
         dirs = [x[0] for x in walk(join(dirname(__file__), '{0}/relations/'.format(base_dir)))]
         for dir in dirs[1:]:
             relation_path = '{0}/relations.json'.format(dir)
@@ -115,31 +116,33 @@ def try_parse_int(string):
         return 0
 
 
+def transnet_delete_country(country):
+    cur.execute('''DELETE FROM transnet_relation_powerline WHERE country=%s;''', [country])
+    cur.execute('''DELETE FROM transnet_relation_station WHERE country=%s;''', [country])
+    cur.execute('''DELETE FROM transnet_powerline WHERE country=%s;''', [country])
+    cur.execute('''DELETE FROM transnet_station WHERE country=%s;''', [country])
+    cur.execute('''DELETE FROM transnet_relation WHERE country=%s;''', [country])
+
+    conn.commit()
+
+
 def transnet_import_relations(json_file):
     try:
         country = json_file.split('/')[-2]
         print('importing relations of {0}'.format(country))
 
-        # cur.execute('''DELETE FROM transnet_relation_powerline WHERE country=%s;''', [country])
-        # cur.execute('''DELETE FROM transnet_relation_station WHERE country=%s;''', [country])
-        # cur.execute('''DELETE FROM transnet_powerline WHERE country=%s;''', [country])
-        # cur.execute('''DELETE FROM transnet_station WHERE country=%s;''', [country])
-        # cur.execute('''DELETE FROM transnet_relation WHERE country=%s;''', [country])
-        #
-        # conn.commit()
-
         query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
                                         VALUES (%s, %s, %s, %s) RETURNING id'''
 
         query_powerline = '''INSERT INTO transnet_powerline(country, geom, tags, raw_geom, voltage, type, nodes,
-                                                                      lat, lon, cables, name, length, osm_id, srs_geom)
-                                                        VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s, %s, %s
-                                                        ,%s ,ST_FlipCoordinates(%s)) RETURNING id'''
+                                                                      lat, lon, cables, name, length, osm_id, srs_geom, osm_replication)
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s  , %s,%s, %s, %s, %s,%s, %s, %s, %s
+                                                        ,%s ,ST_FlipCoordinates(%s), %s) RETURNING id'''
 
         query_station = '''INSERT INTO transnet_station(country, geom, tags, raw_geom, lat, lon, name,
-                                                          length, osm_id, voltage, type)
+                                                          length, osm_id, voltage, type, osm_replication)
                                                         VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s
-                                                          , %s) RETURNING id'''
+                                                          , %s, %s) RETURNING id'''
 
         query_relation_station = '''INSERT INTO transnet_relation_station(country, relation_id, station_id)
                                                 VALUES (%s, %s, %s)'''
@@ -152,6 +155,9 @@ def transnet_import_relations(json_file):
 
         query_powerline_get_one_id = '''SELECT id FROM transnet_powerline WHERE osm_id = %s LIMIT 1'''
         query_station_get_one_id = '''SELECT id FROM transnet_station WHERE osm_id = %s LIMIT 1'''
+
+        query_powerline_increment_osm_rep = '''UPDATE transnet_powerline SET osm_replication = osm_replication + 1 WHERE id = %s'''
+        query_station_increment_osm_rep = '''UPDATE transnet_station SET osm_replication = osm_replication + 1 WHERE id = %s'''
 
         powerline_tags = ['line', 'cable', 'minor_line']
         station_tags = ['substation', 'station', 'sub_station', 'plant', 'generator']
@@ -170,6 +176,7 @@ def transnet_import_relations(json_file):
                         if powerline_count:
                             cur.execute(query_powerline_get_one_id, [member['id']])
                             powerline_id = cur.fetchone()[0]
+                            cur.execute(query_powerline_increment_osm_rep, [powerline_id])
                         else:
                             tags_list = ast.literal_eval(member['tags'])
                             tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
@@ -186,7 +193,8 @@ def transnet_import_relations(json_file):
                                                           member['name'],
                                                           member['length'],
                                                           member['id'],
-                                                          member['srs_geom']])
+                                                          member['srs_geom'],
+                                                          1])
                             powerline_id = cur.fetchone()[0]
 
                         cur.execute(query_relation_powerline, [country, relation_id, powerline_id])
@@ -197,6 +205,7 @@ def transnet_import_relations(json_file):
                         if station_count:
                             cur.execute(query_station_get_one_id, [member['id']])
                             station_id = cur.fetchone()[0]
+                            cur.execute(query_station_increment_osm_rep, [station_id])
                         else:
                             tags_list = [x.replace('"', "").replace('\\', "") for x in
                                          member['tags'].replace(',', '=>').split('=>')]
@@ -211,7 +220,8 @@ def transnet_import_relations(json_file):
                                                         member['length'],
                                                         member['id'],
                                                         voltages,
-                                                        member['type']])
+                                                        member['type'],
+                                                        1])
                             station_id = cur.fetchone()[0]
                         cur.execute(query_relation_station, [country, relation_id, station_id])
                     conn.commit()
@@ -222,6 +232,10 @@ def transnet_import_relations(json_file):
 if __name__ == '__main__':
     download_latest_relation_files()
     find_and_import_relation_files()
-    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/austria/relations.json')
-    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/china/relations.json')
-    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/europe/germany/relations.json')
+    # transnet_delete_country('germany')
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/germany/relations.json')
+    # transnet_delete_country('usa')
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/usa/relations.json')
+    # transnet_delete_country('india')
+    # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/india/relations.json')
+

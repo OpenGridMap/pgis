@@ -1,4 +1,3 @@
-
 {% for country, country_stat in countries_stats|dictsort %}
     <div class="panel panel-stats {{ 'panel-primary' if country == 'aaa' else 'panel-info' }}">
         <div class="panel-heading">
@@ -15,45 +14,95 @@
                 <div class="col-md-12">
                     <dl class="dl-horizontal">
                         <dt></dt>
-                        <dd><strong>Inferred / Source</strong></dd>
+                        <dd><strong>Inferred {% if country_stat['scigrid_available'] %} / Source*{% endif %} </strong>
+                        </dd>
                         <dt>Plants/Generators Count</dt>
-                        <dd>{{ country_stat['plants_count'] }} / {{ country_stat['plants_count_s'] }}</dd>
+                        <dd>{{ country_stat['plants_count'] }} {% if country_stat['scigrid_available'] %}/
+                            {{ country_stat['plants_count_s'] }}{% endif %}</dd>
                         <dt>Stations Count</dt>
-                        <dd>{{ country_stat['substations_count'] }} / {{ country_stat['substations_count_s'] }}</dd>
-                        <dt>Powerlines Length</dt>
-                        <dd>{{ "{:,.0f} km".format(country_stat['all_line_length']) }} /
-                            {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}</dd>
+                        <dd>{{ country_stat['substations_count'] }} {% if country_stat['scigrid_available'] %}/
+                            {{ country_stat['substations_count_s'] }}{% endif %}</dd>
+                        <dt>Powerlines Length with Circuit Duplicates</dt>
+                        <dd>{{ "{:,.0f} km".format(country_stat['all_line_length_with_duplicates']) }}
+                            {% if country_stat['scigrid_available'] %}/
+                                {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}{% endif %}
+                        </dd>
+                        <dt>Powerlines Length without Circuit Duplicates</dt>
+                        <dd>{{ "{:,.0f} km".format(country_stat['all_line_length_without_duplicates']) }}
+                            {% if country_stat['scigrid_available'] %}/
+                                {{ "{:,.0f} km".format(country_stat['all_line_length_s']) }}{% endif %}
+                        </dd>
                         {% if country_stat['plant_station_hit_rate'] > -1 %}
-                        <dt>Plants/Stations Hit Rate</dt>
-                        <dd>{{ "{0:.2f} %".format(country_stat['plant_station_hit_rate']) }}</dd>
+                            <dt>Plants/Stations Hit Rate</dt>
+                            <dd>{{ "{0:.2f} %".format(country_stat['plant_station_hit_rate']) }}</dd>
                         {% endif %}
                     </dl>
                     {% if country_stat['length_by_voltages']|length %}
                         <div style="overflow-x:auto;">
+                            <h5>Powerline length by voltage of powerline.</h5>
                             <table class="table table-hover table-striped table-responsive">
-                                <caption>Powerline length by voltage.</caption>
                                 <thead>
                                 <tr>
                                     <th>Voltage(v)</th>
-                                    <th>Inferred Shared(km)</th>
-                                    <th>Source Shared(km)</th>
-                                    <th>Inferred Single(km)</th>
-                                    <th>Source Single</th>
+                                    <th>Inferred Shared without Duplicates(km)</th>
+                                    <th>Inferred Shared with Duplicates(km)</th>
+                                    {% if country_stat['scigrid_available'] %}
+                                        <th>Source Shared(km)</th>{% endif %}
+                                    <th>Inferred Single without Duplicates(km)</th>
+                                    <th>Inferred Single with Duplicates(km)</th>
+                                    {% if country_stat['scigrid_available'] %}
+                                        <th>Source Single(km)</th>{% endif %}
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for voltage, length in country_stat['length_by_voltages']|dictsort %}
                                     <tr>
                                         <td>{{ "{:,.0f}".format(voltage) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[0]) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[2]) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[1]) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[3]) }}</td>
+                                        {% if country_stat['scigrid_available'] %}
+                                            <td>{{ "{:,.0f}".format(length[0]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[1]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[2]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[3]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[4]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[5]) }}</td>
+                                        {% else %}
+                                            <td>{{ "{:,.0f}".format(length[0]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[1]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[3]) }}</td>
+                                            <td>{{ "{:,.0f}".format(length[4]) }}</td>
+                                        {% endif %}
                                     </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                         </div>
+                    {% endif %}
+                    {% if country_stat['relation_length_by_voltages']|length %}
+                        <div style="overflow-x:auto;">
+                            <h5>Powerline length by voltage of power circuit.</h5>
+                            <table class="table table-hover table-striped table-responsive">
+                                <thead>
+                                <tr>
+                                    <th>Voltage(v)</th>
+                                    <th>Inferred without Duplicates(km)</th>
+                                    <th>Inferred with Duplicates(km)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for voltage, length in country_stat['relation_length_by_voltages']|dictsort %}
+                                    <tr>
+                                        <td>{{ "{:,.0f}".format(voltage) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[0]) }}</td>
+                                        <td>{{ "{:,.0f}".format(length[1]) }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+                    {% if country_stat['scigrid_available'] %}
+                        <small>* current source is <a href="http://www.scigrid.de/" target="_blank">SciGrid</a></small>
                     {% endif %}
                 </div>
             </div>
