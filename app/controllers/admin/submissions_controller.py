@@ -83,6 +83,7 @@ class SubmissionsController:
     def reject_submission(self, id):
         db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True, Submission.approved: False}, synchronize_session=False)
         db.session.query(Point).filter(Point.submission_id == id).update({Point.revised: True, Point.approved: False}, synchronize_session=False)
+        db.session.commit()
         submission = db.session.query(Submission).filter(Submission.revised == False).first()
         if submission is not None:
             return redirect(url_for('submissions_revise', id=submission.id))
