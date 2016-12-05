@@ -69,8 +69,8 @@ class SubmissionsController:
 
             # add activity points for submitter
             user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
-            power_element_tag = point.properties.get('tags', {}).get('power_element_tags', None)
-            if 'transformer' in power_element_tag:
+            power_element_tags = point.properties.get('tags', {}).get('power_element_tags', None)
+            if 'power=transformer' in power_element_tags:
                 activityPoints = Activity.new_transformer.value
             else:
                 activityPoints = Activity.new_other_point.value
@@ -133,17 +133,17 @@ class SubmissionsController:
             user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
 
             # Add activity points for submitter
-            power_element_tag = new_point.properties.get('tags', {}).get('power_element_tags', None)
+            power_element_tags = new_point.properties.get('tags', {}).get('power_element_tags', None)
 
             # if old point not submitted by app (= no picture exists)
             if old_point.submission_id == None:
-                if 'transformer' in power_element_tag:
+                if 'power=transformer' in power_element_tags:
                     activityPoints = Activity.new_transformer.value
                 else:
                     activityPoints = Activity.new_other_point.value
 
             else:
-                if 'transformer' in power_element_tag:
+                if 'power=transformer' in power_element_tags:
                     activityPoints = Activity.existing_transformer.value
                 else:
                     activityPoints = Activity.existing_other_point.value
