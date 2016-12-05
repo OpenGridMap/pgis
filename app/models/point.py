@@ -30,7 +30,8 @@ class Point(db.Model):
             'id': self.id,
             'latlng': [self.shape().x, self.shape().y],
             'properties' : self.properties,
-            'pictures' : list(map((lambda p: p.serialize()), self.pictures))
+            'pictures' : list(map((lambda p: p.serialize()), self.pictures)),
+            'approved': self.approved
         }
 
     def serialize_for_gallery(self):

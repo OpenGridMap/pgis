@@ -272,25 +272,27 @@ function toggle_merge_active() {
             markers.clearLayers();
             clusterGroup.clearLayers();
             for(var i = 0; i < data.length; i++){
-              var marker = new L.Marker(data[i]['latlng']);
-              var popup = L.popup().setContent(markerPopupTemplate(data[i]));
-              // popup.setLatLng(marker.getLatLng());
-              marker.point_id = data[i]['id'];
-              marker.properties = data[i]['properties'];
-              marker.bindPopup(popup);
-              marker.on('click', function(e){
-                if (merge_active) {
-                  $('#mergeModalForm').modal('toggle');
-                  $('.modal-body #old_point_lng').html(e.latlng.lng);
-                  $('.modal-body #old_point_lat').html(e.latlng.lat);
-                  $('.modal-body #old_point_properties').html(JSON.stringify(e.target.properties, null, 1));
-                  $('.modal-body #merge_with').val(e.target.point_id);
-                  $('.modal-title #old_point_number').html(e.target.point_id);
-                } else {
-                  // popup.setLatLng(e.latlng).openOn(map);
-                }
-              });
-              markers.addLayer(marker);
+              if (data[i].approved == true) {
+                var marker = new L.Marker(data[i]['latlng']);
+                var popup = L.popup().setContent(markerPopupTemplate(data[i]));
+                // popup.setLatLng(marker.getLatLng());
+                marker.point_id = data[i]['id'];
+                marker.properties = data[i]['properties'];
+                marker.bindPopup(popup);
+                marker.on('click', function(e){
+                  if (merge_active) {
+                    $('#mergeModalForm').modal('toggle');
+                    $('.modal-body #old_point_lng').html(e.latlng.lng);
+                    $('.modal-body #old_point_lat').html(e.latlng.lat);
+                    $('.modal-body #old_point_properties').html(JSON.stringify(e.target.properties, null, 1));
+                    $('.modal-body #merge_with').val(e.target.point_id);
+                    $('.modal-title #old_point_number').html(e.target.point_id);
+                  } else {
+                    // popup.setLatLng(e.latlng).openOn(map);
+                  }
+                });
+                markers.addLayer(marker);
+              }
             }
             markers.addLayer(newMarker);
           }
