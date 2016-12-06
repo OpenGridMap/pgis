@@ -224,16 +224,17 @@ function toggle_merge_active() {
 
 
     var redIcon = new L.Icon.Default({iconUrl: '/static/images/marker-icon-red-2x.png'});
-    var newMarkers = [];
+    //var newMarkers = [];
     var pointData = {{ point.serialize() | tojson }};
     var popupData = { submission: {{ submission.serialize() | tojson }}, point : pointData };
     var popup = newMarkerPopupTemplate(popupData);
     // set zIndexOffset to set the new marker on top of any other markers or cluster groups
-    var newMarker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}], {icon: redIcon, zIndexOffset: 1000});
+    //var newMarker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}], {icon: redIcon, zIndexOffset: 1000});
+    var newMarker = new L.Marker([{{ point.latitude }}, {{ point.longitude }}], {icon: redIcon});
     newMarker.bindPopup(popup);
-    newMarkers.push(newMarker);
+    //newMarkers.push(newMarker);
 
-    var map = L.map('map').setView([48.11, 11.0], 5);
+    var map = L.map('map').setView([{{ point.latitude }}, {{ point.longitude }}], 18);
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18
@@ -249,10 +250,9 @@ function toggle_merge_active() {
     // Initialise the FeatureGroup to store editable layers
     var drawnItems = new L.FeatureGroup();
     map.addLayer(drawnItems);
-    for(var i = 0; i < newMarkers.length; i++){
-      drawnItems.addLayer(newMarkers[i]);
-    }
-    map.fitBounds(drawnItems.getBounds());
+    //for(var i = 0; i < newMarkers.length; i++){
+    //  drawnItems.addLayer(newMarkers[i]);
+    //}
 
     // update markers on map movement
     var loadFragmentDebounced = _.debounce(loadMapFragment, 1000);
@@ -272,6 +272,7 @@ function toggle_merge_active() {
             markers.clearLayers();
             clusterGroup.clearLayers();
             for(var i = 0; i < data.length; i++){
+
               var marker = new L.Marker(data[i]['latlng']);
               var popup = L.popup().setContent(markerPopupTemplate(data[i]));
               // popup.setLatLng(marker.getLatLng());
@@ -292,6 +293,7 @@ function toggle_merge_active() {
               });
               markers.addLayer(marker);
             }
+            markers.addLayer(newMarker);
           }
         });
       } else {

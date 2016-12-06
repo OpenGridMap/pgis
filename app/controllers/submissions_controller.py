@@ -45,24 +45,25 @@ class SubmissionsController:
                 db.session.commit()
 
             submission = Submission.query.filter(Submission.user_id == user.id, Submission.submission_id == int(json_data['submission_id'])).first()
+            # to avoid doubled submission because of network issues
             if submission is None:
                 submission = self.__make_submission(json_data, user)
                 db.session.add(submission)
                 db.session.flush()
-            new_point = self.__make_point(json_data, submission)
-            db.session.add(new_point)
-            db.session.flush()
+                new_point = self.__make_point(json_data, submission)
+                db.session.add(new_point)
+                db.session.flush()
 
-            if "image" in json_data:
-                new_picture = self.__make_picture(submission.id, new_point.id, user.id)
-                new_picture.filepath = self.__save_image(submission.id, new_point.id, json_data['image'])
-                db.session.add(new_picture)
-            db.session.commit()
+                if "image" in json_data:
+                    new_picture = self.__make_picture(submission.id, new_point.id, user.id)
+                    new_picture.filepath = self.__save_image(submission.id, new_point.id, json_data['image'])
+                    db.session.add(new_picture)
+                db.session.commit()
 
-            hashing = Hashing(GisApp)
-            # json_data_dump = json.dumps(json_data)
-            # json_data_hash = hashing.hash_value(json_data_dump, '')
-            # json_data_hash = hashlib.sha256(json_data_dump)
+                hashing = Hashing(GisApp)
+                # json_data_dump = json.dumps(json_data)
+                # json_data_hash = hashing.hash_value(json_data_dump, '')
+                # json_data_hash = hashlib.sha256(json_data_dump)
 
             return Response(json.dumps({ "status" : "ok", "received_data" : "json_data_hash", "point" : str(new_point) }))
         except Exception as e:

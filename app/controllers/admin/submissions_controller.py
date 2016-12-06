@@ -19,7 +19,7 @@ import flask_resize
 # Predefined activity points
 class Activity(Enum):
     new_transformer = 2
-    existing_tranformer = 1
+    existing_transformer = 1
     new_other_point = 1
     existing_other_point = 0.5
     revise_submission = 1 # revise submission not implemented at moment
@@ -69,13 +69,15 @@ class SubmissionsController:
 
             # add activity points for submitter
             user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
-            power_element_tag = point.properties.get('tags', {}).get('power_element_tags', None)
-            if 'transformer' in power_element_tag:
+            power_element_tags = point.properties.get('tags', {}).get('power_element_tags', None)
+            if 'power=transformer' in power_element_tags:
                 activityPoints = Activity.new_transformer.value
             else:
                 activityPoints = Activity.new_other_point.value
             db.session.query(User).filter(User.id == user_id)\
-                .update({User.activity_points: User.activity_points + activityPoints}, synchronize_session=False)
+                .update({User.activity_points: User.activity_points + activityPoints,
+                         User.activity_points_total: User.activity_points_total + activityPoints},
+                        synchronize_session=False)
 
             db.session.commit()
             if request.form.get('btn') == 'accept_go_next':
@@ -89,8 +91,10 @@ class SubmissionsController:
         return 'Error'
 
     def reject_submission(self, id):
-        db.session.query(Submission).filter(Submission.id == id).update({Submission.revised: True, Submission.approved: False}, synchronize_session=False)
-        db.session.query(Point).filter(Point.submission_id == id).update({Point.revised: True, Point.approved: False}, synchronize_session=False)
+        db.session.query(Submission).filter(Submission.id == id)\
+            .update({Submission.revised: True,Submission.approved: False}, synchronize_session=False)
+        db.session.query(Point).filter(Point.submission_id == id).update({Point.revised: True, Point.approved: False},
+                                                                         synchronize_session=False)
         db.session.commit()
         submission = db.session.query(Submission).filter(Submission.revised == False).first()
         return redirect(url_for('submissions_index'))
@@ -129,13 +133,24 @@ class SubmissionsController:
             user_id = db.session.query(Submission.user_id).filter(Submission.id == id).subquery()
 
             # Add activity points for submitter
-            power_element_tag = new_point.properties.get('tags', {}).get('power_element_tags', None)
-            if 'transformer' in power_element_tag:
-                activityPoints = Activity.existing_tranformer.value
+            power_element_tags = new_point.properties.get('tags', {}).get('power_element_tags', None)
+
+            # if old point not submitted by app (= no picture exists)
+            if old_point.submission_id == None:
+                if 'power=transformer' in power_element_tags:
+                    activityPoints = Activity.new_transformer.value
+                else:
+                    activityPoints = Activity.new_other_point.value
+
             else:
-                activityPoints = Activity.existing_other_point.value
+                if 'power=transformer' in power_element_tags:
+                    activityPoints = Activity.existing_transformer.value
+                else:
+                    activityPoints = Activity.existing_other_point.value
             db.session.query(User).filter(User.id == user_id) \
-                .update({User.activity_points: User.activity_points + activityPoints}, synchronize_session=False)
+                .update({User.activity_points: User.activity_points + activityPoints,
+                         User.activity_points_total: User.activity_points_total + activityPoints},
+                        synchronize_session=False)
 
             db.session.commit()
             # copy the necessary rows in picture table and adapt them
