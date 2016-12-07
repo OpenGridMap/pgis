@@ -342,7 +342,7 @@ class TransnetRelation(db.Model):
                                                     FROM scigrid_station s
                                                     WHERE s.type ~ 'station|substation|merge|sub_station|plant' and %s
                                                 ) ss ON st_dwithin(ST_GeographyFromText('SRID=4326;POINT(' || ts.lon || ' ' || ts.lat || ')'),
-                                                                  ST_GeographyFromText(ss.geom_str), 500);''' % (
+                                                                  ST_GeographyFromText(ss.geom_str), 1000);''' % (
                             country, where_clause)
 
                         transnet_hit_join_count_count = \
