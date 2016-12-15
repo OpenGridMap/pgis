@@ -2,6 +2,7 @@ import csv
 import shutil
 import uuid
 from io import BytesIO
+from math import ceil
 from os import makedirs
 
 from os.path import dirname, exists, basename
@@ -159,21 +160,29 @@ class CSVWriter:
                     cables_selected = CSVWriter.convert_max_set_to_string(cables)
                     voltage_selected = CSVWriter.convert_max_set_to_string(voltages)
                     wires_selected = CSVWriter.convert_max_set_to_string(wires)
-                    if length_selected and cables_selected and int(
-                            voltage_selected) in self.coeffs_of_voltage and wires_selected:
-                        coeffs = self.coeffs_of_voltage[int(voltage_selected)]
+
+                    voltage_selected_round = 0
+                    if 360000 <= int(voltage_selected) <= 400000:
+                        voltage_selected_round = 380000
+                    elif 180000 <= int(voltage_selected) <= 260000:
+                        voltage_selected_round = 220000
+
+                    if length_selected and int(length_selected) and cables_selected and int(cables_selected) and int(
+                            voltage_selected_round) in self.coeffs_of_voltage and wires_selected and int(
+                            wires_selected):
+                        coeffs = self.coeffs_of_voltage[int(voltage_selected_round)]
                         # Specific resistance of the transmission lines.
-                        r_ohm_kms = coeffs['r'] / (int(wires_selected) / coeffs['wires_typical']) / (
-                            int(cables_selected) / 3.0)
+                        r_ohm_kms = ceil((coeffs['r'] / (int(wires_selected) / coeffs['wires_typical']) / (
+                            int(cables_selected) / 3.0)) * 10000) / 1000.0
                         # Specific reactance of the transmission lines.
-                        x_ohm_kms = coeffs['x'] / (int(wires_selected) / coeffs['wires_typical']) / (
-                            int(cables_selected) / 3.0)
+                        x_ohm_kms = ceil((coeffs['x'] / (int(wires_selected) / coeffs['wires_typical']) / (
+                            int(cables_selected) / 3.0)) * 10000) / 10000.0
                         # Specific capacitance of the transmission lines.
-                        c_nf_kms = coeffs['c'] * (int(wires_selected) / coeffs['wires_typical']) * (
-                            int(cables_selected) / 3.0)
+                        c_nf_kms = ceil((coeffs['c'] * (int(wires_selected) / coeffs['wires_typical']) * (
+                            int(cables_selected) / 3.0)) * 10000) / 10000.0
                         # Specific maximum current of the transmission lines.
-                        i_th_max_kms = coeffs['i'] * (int(wires_selected) / coeffs['wires_typical']) * (
-                            int(cables_selected) / 3.0)
+                        i_th_max_kms = ceil((coeffs['i'] * (int(wires_selected) / coeffs['wires_typical']) * (
+                            int(cables_selected) / 3.0)) * 10000) / 10000.0
 
                     lines_writer.writerow([str(line_counter),
                                            str(station1['id']),
