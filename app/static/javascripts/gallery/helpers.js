@@ -3,6 +3,8 @@ var registerHandleBarHelpers = function () {
         if (img == undefined)
             return '';
 
+        img = img.split(".")[0] + '.jpg';
+
         return 'gallery/thumb/' + img;
     });
 
