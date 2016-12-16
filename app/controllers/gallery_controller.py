@@ -46,5 +46,8 @@ class GalleryController:
 
         thumb_dir = os.path.join(os.getcwd(), 'app', 'static', 'uploads', 'cache')
 
+        thumb_filename = thumb_filename.split('.')[0]
+        thumb_filename += '.jpg'
+
         return send_from_directory(directory=thumb_dir, filename=thumb_filename, mimetype='image/jpg',
                                    as_attachment=False)
