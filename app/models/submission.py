@@ -22,6 +22,8 @@ class Submission(db.Model):
         point = points[0]
         properties = point['properties']['tags']
 
+        print(properties)
+
         serialized_submission = {
             'id': self.id,
             'latlng': point['latlng'],
