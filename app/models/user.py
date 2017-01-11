@@ -10,6 +10,7 @@ class User(db.Model):
     activity_points     = db.Column(db.Numeric, default=0.0)
     activity_points_total = db.Column(db.Numeric, default=0.0)
     submissions         = db.relationship('Submission', back_populates='user')
+    pictures = db.relationship('Picture', back_populates='user')
 
     def is_authenticated(self):
         return True
@@ -25,3 +26,6 @@ class User(db.Model):
 
     def get_acitivity_points(self):
         return {'activity_points': self.activity_points}
+
+    def get_username(self):
+        return self.email.partition("@")[0][0:6]
