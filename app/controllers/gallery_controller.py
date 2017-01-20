@@ -26,7 +26,7 @@ class GalleryController:
 
     def data(self):
         submissions = db.session.query(Submission). \
-            join(Submission.points).outerjoin(Point.pictures).join(Submission.user).all()
+            join(Submission.points).outerjoin(Point.pictures).all()
 
         submissions = list(map(lambda submission: submission.serialize_for_gallery(), submissions))
 
