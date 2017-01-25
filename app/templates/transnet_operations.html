@@ -49,3 +49,7 @@
         <p class="list-group-item-text">Download MATLAB script needed for generating Simulink models</p>
     </a>
 </div>
+{% if  last_updated[0][0]  %}
+    <small>Last Transnet Update: {{ last_updated[0][0] }}</small>
+{% endif %}
+

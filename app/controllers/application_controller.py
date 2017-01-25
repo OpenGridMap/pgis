@@ -2,6 +2,7 @@ from flask import render_template
 
 import app.helpers.point_form
 from app.models.transnet_country import TransnetCountry
+from app.models.transnet_stats import TransnetStats
 
 
 class ApplicationController:
@@ -9,7 +10,9 @@ class ApplicationController:
         point_form = app.helpers.point_form.PointForm()
         voltages = TransnetCountry.get_voltages()
         world = TransnetCountry.get_countries()
-        return render_template('map.html', point_form=point_form, voltages=voltages, world=world)
+        last_updated = TransnetStats.get_last_updated()
+        return render_template('map.html', point_form=point_form, voltages=voltages, world=world,
+                               last_updated=last_updated)
 
     def update(self):
         return None
