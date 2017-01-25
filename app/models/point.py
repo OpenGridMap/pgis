@@ -13,7 +13,7 @@ class Point(db.Model):
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
     submission = db.relationship('Submission', back_populates='points')
     merged_to = db.Column(db.Integer, db.ForeignKey('point.id'))
-    pictures = db.relationship('Picture')
+    pictures = db.relationship('Picture', order_by='desc(Picture.id)', lazy='dynamic')
 
     def serialize(self):
         return {
@@ -21,7 +21,7 @@ class Point(db.Model):
             'latlng': [self.shape().x, self.shape().y],
             'tags' : self.properties.get('tags', {}),
             'osmid': self.properties.get('osmid', None),
-            'pictures' : list(map((lambda p: p.serialize()), self.pictures)),
+            'pictures' : list(map((lambda p: p.serialize()), self.pictures.limit(5))),
             'revised': self.revised
         }
 

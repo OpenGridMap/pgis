@@ -22,18 +22,29 @@ class Submission(db.Model):
         point = points[0]
         properties = point['properties']['tags']
 
+        altitude = self.get_value_from_properties(properties, 'altitude')
+        power_element_tags = self.get_value_from_properties(properties, 'power_element_tags')
+        timestamp = self.get_value_from_properties(properties, 'timestamp')
+
         serialized_submission = {
             'id': self.id,
             'latlng': point['latlng'],
             'image_src': point['pictures'][0]['filepath'],
-            'altitude': properties['altitude'],
-            'power_element_tag': properties['power_element_tags'],
-            'timestamp': properties['timestamp'],
+            'altitude': altitude,
+            'power_element_tag': power_element_tags,
+            'timestamp': timestamp,
             'revised': point['revised'],
             'approved': point['approved']
         }
 
         return serialized_submission
+
+    @staticmethod
+    def get_value_from_properties(properties, key):
+        try:
+            return properties[key]
+        except KeyError as e:
+            return ''
 
     def images(self):
         pass
