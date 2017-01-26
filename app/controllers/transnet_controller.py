@@ -1,9 +1,14 @@
 from datetime import datetime
-
-from flask import render_template, send_from_directory
-from flask import request, json, Response
 from os.path import join, dirname
 
+from flask import make_response
+from flask import render_template, send_from_directory, jsonify
+from flask import request, json, Response
+
+from app.helpers.transnet_download_user_form import TransnetDownloadUserForm
+from app.helpers.transnet_export_type_enum import TransnetExportType
+from app.models.transnet_download_log import TransnetDownloadLog
+from app.models.transnet_download_user import TransnetDownloadUser
 from app.models.transnet_relation import TransnetRelation
 from app.presenters.relations_presenter import RelationsPresenter
 from app.utils.csv_writer import CSVWriter
@@ -37,10 +42,18 @@ class TransnetController:
 
         return render_template('stations_info.html', relations=relations)
 
-    def export(self):
+    def export(self, file_type):
         if (not request.args.get('bounds') and
                 not request.args.get('ids')):
             return Response(json.dumps([]), mimetype='application/json')
+
+        if not TransnetDownloadLog.add_log(uuid=request.args.get("token"),
+                                           bounds=request.args.get("bounds"),
+                                           countries=request.args.get("countries"),
+                                           voltages=request.args.get("voltages"),
+                                           relations_ids=request.args.get('ids'),
+                                           file_type=file_type):
+            return make_response('Bad Formatted User Token', 400)
 
         countries = None
         voltages = None
@@ -61,7 +74,7 @@ class TransnetController:
         return relations
 
     def export_xml(self):
-        relations = self.export()
+        relations = self.export(TransnetExportType.XML)
 
         headers = {
             'Content-Type': 'application/xml',
@@ -72,7 +85,7 @@ class TransnetController:
         return Response(presenter.as_osm_xml(), headers=headers)
 
     def export_csv(self):
-        relations = self.export()
+        relations = self.export(TransnetExportType.CSV)
 
         headers = {
             'Content-Type': 'application/zip',
@@ -82,9 +95,15 @@ class TransnetController:
         csv_writer = CSVWriter(relations)
         return Response(csv_writer.publish(), headers=headers)
 
-    def export_countries(self):
+    def export_countries(self, file_type):
         if not request.args.get("countries"):
             return Response(json.dumps([]), mimetype='application/json')
+
+        if not TransnetDownloadLog.add_log(uuid=request.args.get("token"),
+                                           countries=request.args.get("countries"),
+                                           voltages=request.args.get("voltages"),
+                                           file_type=file_type):
+            return make_response('Bad Formatted User Token', 400)
 
         voltages = None
         bounds_parts = None
@@ -95,7 +114,7 @@ class TransnetController:
         return TransnetRelation.get_filtered_relations(bounds_parts, voltages, countries, None)
 
     def export_countries_xml(self):
-        relations = self.export_countries()
+        relations = self.export_countries(TransnetExportType.XML)
 
         headers = {
             'Content-Type': 'application/xml',
@@ -106,7 +125,7 @@ class TransnetController:
         return Response(presenter.as_osm_xml(), headers=headers)
 
     def export_countries_csv(self):
-        relations = self.export_countries()
+        relations = self.export_countries(TransnetExportType.CSV)
 
         headers = {
             'Content-Type': 'application/zip',
@@ -125,3 +144,10 @@ class TransnetController:
 
     def matlab_scripts(self):
         return send_from_directory(join(dirname(__file__), '../../resources/'), 'matlab.zip')
+
+    def create_download_user(self):
+        form = TransnetDownloadUserForm()
+        user_uuid = TransnetDownloadUser.create_user(form)
+        if user_uuid:
+            return jsonify(uuid=user_uuid)
+        return jsonify(uuid="Nan")

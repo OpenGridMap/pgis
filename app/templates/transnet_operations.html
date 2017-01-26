@@ -1,46 +1,79 @@
 <div class="page-header">
     <h3>Transnet Operations</h3>
 </div>
+
+<div class="alert alert-info" role="alert" id="downloader-info-alert">Before exporting data, please provide some
+    information about yourself.
+    <button type="button" class="btn btn-primary btn-xs" id="downloader-info-button">Submit Info</button>
+</div>
+
+<form id="downloader-info-form" style="display: none">
+    {{ download_user_form.hidden_tag() }}
+    <div class="form-group required">
+        <label for="downloader-name-input">Name</label>
+        <input type="text" class="form-control" id="downloader-name-input" placeholder="Name" required>
+    </div>
+    <div class="form-group required">
+        <label for="downloader-organization-input">Organization</label>
+        <input type="text" class="form-control" id="downloader-organization-input" placeholder="Organization" required>
+    </div>
+    <div class="form-group">
+        <label for="downloader-email-input">Email</label>
+        <input type="email" class="form-control" id="downloader-email-input" placeholder="Email">
+    </div>
+    <div class="form-group">
+        <label for="downloader-url-input">Organization's Url</label>
+        <input type="url" class="form-control" id="downloader-url-input" placeholder="Organization's Url">
+    </div>
+    <div class="form-group required">
+        <label for="downloader-purpose-input">Purpose of use</label>
+        <textarea class="form-control" rows="3" id="downloader-purpose-input" placeholder="Purpose" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" id="downloader-info-submit">Submit</button>
+    <button type="button" class="btn btn-default" id="downloader-info-cancel">Cancel</button>
+</form>
+
 <div class="list-group">
-    <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-relations-xml">
+    <a type="button" class="list-group-item export-button disabled" href="javascript:void(0)"
+       id="transnet-export-relations-xml">
         <h4 class="list-group-item-heading">Export Relations in Bound (XML)</h4>
         <p class="list-group-item-text">export relations in bound in XML format</p>
     </a>
-    <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-relations-csv">
+    <a type="button" class="list-group-item export-button disabled" href="javascript:void(0)"
+       id="transnet-export-relations-csv">
         <h4 class="list-group-item-heading">Export Relations in Bound (CSV)</h4>
         <p class="list-group-item-text">export relations in the bound in CSV format</p>
     </a>
-    <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-relations-countries-xml">
+    <a type="button" class="list-group-item export-button disabled" href="javascript:void(0)"
+       id="transnet-export-relations-countries-xml">
         <h4 class="list-group-item-heading">Export Relations of Countries (XML)</h4>
         <p class="list-group-item-text">export relations of selected countries and voltages from the Transnet filters in
-            XML
-            format</p>
+            XML format</p>
     </a>
-    <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-relations-countries-csv">
+    <a type="button" class="list-group-item export-button disabled" href="javascript:void(0)"
+       id="transnet-export-relations-countries-csv">
         <h4 class="list-group-item-heading">Export Relations of Countries (CSV)</h4>
         <p class="list-group-item-text">export relations of selected countries and voltages from the Transnet filters in
-            CSV
-            format</p>
+            CSV format</p>
     </a>
-    <a type="button" class="list-group-item" href="javascript:void(0)" id="transnet-export-cim-bound">
+    <a type="button" class="list-group-item export-button disabled" href="javascript:void(0)"
+       id="transnet-export-cim-bound">
         <h4 class="list-group-item-heading">Export CIM Models in Bound</h4>
         <p class="list-group-item-text">export CIM models in bound in XML format</p>
     </a>
-    <a type="button" class="list-group-item " href="javascript:void(0)" id="transnet-export-cim-countries">
+    <a type="button" class="list-group-item export-button disabled" href="javascript:void(0)"
+       id="transnet-export-cim-countries">
         <h4 class="list-group-item-heading">Export CIM Models of Countries</h4>
         <p class="list-group-item-text">export CIM models of selected countries and voltages from the Transnet filters
-            in XML
-            format</p>
+            in XML format</p>
     </a>
     <a type="button" class="list-group-item " href="javascript:void(0)" id="transnet-validations">
         <h4 class="list-group-item-heading">Show Evaluations of Countries</h4>
         <p class="list-group-item-text">show evaluations of inferred relations for selected countries</p>
         <div class="checkbox">
             <label>
-                <input type="checkbox"
-                       id="transnet-evaluation-hit-rate-checkbox">
-                <span class="cr"> <i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                Enable Hit Rate
+                <input type="checkbox" id="transnet-evaluation-hit-rate-checkbox">
+                <span class="cr"> <i class="cr-icon glyphicon glyphicon-ok"></i></span> Enable Hit Rate
             </label>
         </div>
     </a>
@@ -49,7 +82,6 @@
         <p class="list-group-item-text">Download MATLAB script needed for generating Simulink models</p>
     </a>
 </div>
-{% if  last_updated[0][0]  %}
+{% if  last_updated[0][0] %}
     <small>Last Transnet Update: {{ last_updated[0][0] }}</small>
 {% endif %}
-

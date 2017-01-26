@@ -1,5 +1,5 @@
 from flask import redirect, session, url_for, request, json, jsonify, current_app
-from flask.ext.login import LoginManager, login_user, login_required, logout_user, current_user
+from flask.ext.login import LoginManager, login_user, logout_user, current_user, login_required
 from flask.ext.principal import ActionNeed, identity_loaded, UserNeed, identity_changed, \
     Identity
 from flask_oauthlib.client import OAuth
@@ -12,6 +12,7 @@ import app.controllers.admin.submissions_controller
 import app.controllers.admin.users_controller
 import app.controllers.application_controller
 import app.controllers.bonus_system_controller
+import app.controllers.gallery_controller
 import app.controllers.points_controller
 import app.controllers.powerlines_controller
 import app.controllers.ranking_controller
@@ -19,12 +20,13 @@ import app.controllers.relations_controller
 import app.controllers.submissions_controller
 import app.controllers.transnet_controller
 import app.controllers.userprofile_controller
-import app.controllers.gallery_controller
 import app.models.point
 import app.models.powerline
 import app.models.user
 import app.permissions
 from app import GisApp
+from app.controllers.admin.transnset_logs_controller import TransnetLogsController
+from app.controllers.admin.transnset_users_controller import TransnetUsersController
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
@@ -199,6 +201,13 @@ def transnet_matlab_scripts():
     controller = app.controllers.transnet_controller.TransnetController()
     return controller.matlab_scripts()
 
+
+@GisApp.route('/transnet/create_download_user', methods=['POST'])
+def create_download_user():
+    controller = app.controllers.transnet_controller.TransnetController()
+    return controller.create_download_user()
+
+
 @GisApp.route('/relations')
 def relations():
     controller = app.controllers.relations_controller.RelationsController()
@@ -331,8 +340,8 @@ def admin_points_new():
 
 
 @GisApp.route('/admin/points/create', methods=['POST'])
-@login_required
-@app.permissions.admin_points_create.require(http_exception=403)
+##@login_required
+##@app.permissions.admin_points_create.require(http_exception=403)
 def admin_points_create():
     controller = app.controllers.admin.points_controller.PointsController()
     return controller.create()
@@ -512,6 +521,34 @@ def submissions_reject(id):
 @app.permissions.admin_points_delete.require(http_exception=403)
 def submissions_delete(id):
     controller = app.controllers.admin.submissions_controller.SubmissionsController()
+    return controller.delete(id)
+
+
+@GisApp.route('/admin/transnet_users')
+@login_required
+def transnet_users():
+    controller = TransnetUsersController()
+    return controller.index()
+
+
+@GisApp.route('/admin/transnet_users/delete/<id>', methods=['GET'])
+@login_required
+def transnet_users_delete(id):
+    controller = TransnetUsersController()
+    return controller.delete(id)
+
+
+@GisApp.route('/admin/transnet_logs')
+@login_required
+def transnet_logs():
+    controller = TransnetLogsController()
+    return controller.index()
+
+
+@GisApp.route('/admin/transnet_logs/delete/<id>', methods=['GET'])
+@login_required
+def transnet_logs_delete(id):
+    controller = TransnetLogsController()
     return controller.delete(id)
 
 
