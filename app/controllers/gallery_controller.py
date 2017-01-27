@@ -26,7 +26,7 @@ class GalleryController:
 
     def data(self):
         submissions = db.session.query(Submission). \
-            join(Submission.points).outerjoin(Point.pictures). \
+            join(Submission.points).outerjoin(Point.pictures).join(Submission.user). \
             options(contains_eager(Submission.points).contains_eager(Point.pictures)). \
             all()
 
