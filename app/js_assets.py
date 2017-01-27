@@ -15,6 +15,7 @@ non_admin_js_files = common_js_files + [
     'javascripts/libraries/L.Control.Sidebar.js',
     'javascripts/libraries/Control.Loading.js',
     'javascripts/libraries/Map.SelectArea.min.js',
+    'javascripts/libraries/js.cookie.js',
     'javascripts/libraries/color-hash.js',
     'javascripts/non-admin/leaflet.pgis.relation.markerClusterGroup.js',
     'javascripts/non-admin/leaflet.pgis.relation.featureGroup.js',
@@ -26,6 +27,7 @@ non_admin_js_files = common_js_files + [
     'javascripts/non-admin/L.Polyline.measuredDistanceInsideBoundingBox.js',
     'javascripts/non-admin/statistics.js',
     'javascripts/non-admin/main.js',
+    'javascripts/non-admin/downloader-info-collector.js',
 ]
 
 admin_js_files = common_js_files + [

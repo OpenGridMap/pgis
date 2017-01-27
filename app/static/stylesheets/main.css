@@ -121,3 +121,13 @@ td, th {
 .panel-stats {
     margin-bottom: 5px
 }
+
+#downloader-info-form {
+    padding-bottom: 10px;
+}
+
+.form-group.required label:after {
+    content: " *";
+    color: red;
+}
+
