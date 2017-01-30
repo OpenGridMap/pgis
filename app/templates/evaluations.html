@@ -92,8 +92,16 @@
                                 {% for voltage, length in country_stat['relation_length_by_voltages']|dictsort %}
                                     <tr>
                                         <td>{{ "{:,.0f}".format(voltage) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[0]) }}</td>
-                                        <td>{{ "{:,.0f}".format(length[1]) }}</td>
+                                        <td>
+                                            {% if length[0] %}
+                                                {{ "{:,.0f}".format(length[0]) }}
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if  length[1] %}
+                                                {{ "{:,.0f}".format(length[1]) }}
+                                            {% endif %}
+                                        </td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>

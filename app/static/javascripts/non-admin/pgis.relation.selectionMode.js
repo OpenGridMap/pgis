@@ -127,76 +127,95 @@ Pgis.Relation.selectionMode = {
 
 
         $(document).on('click', '#transnet-export-relations-xml', function () {
-            window.open(
-                '/transnet' +
-                '/export_xml?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
-                + '&zoom=' + _this.pgisMap.map.getZoom()
-                + '&countries=' + _this.pgisMap.selectedCountries.toString()
-                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
+
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                window.open(
+                    '/transnet' +
+                    '/export_xml?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
+                    + '&zoom=' + _this.pgisMap.map.getZoom()
+                    + '&token=' + Cookies.get('downloader')
+                    + '&countries=' + _this.pgisMap.selectedCountries.toString()
+                    + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                    '_blank'
+                )
+            }
         });
 
         $(document).on('click', '#transnet-export-relations-csv', function () {
-            window.open(
-                '/transnet' +
-                '/export_csv?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
-                + '&zoom=' + _this.pgisMap.map.getZoom()
-                + '&countries=' + _this.pgisMap.selectedCountries.toString()
-                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                window.open(
+                    '/transnet' +
+                    '/export_csv?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
+                    + '&zoom=' + _this.pgisMap.map.getZoom()
+                    + '&token=' + Cookies.get('downloader')
+                    + '&countries=' + _this.pgisMap.selectedCountries.toString()
+                    + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                    '_blank'
+                )
+            }
         });
 
         $(document).on('click', '#transnet-export-relations-countries-xml', function () {
-            if (_this.pgisMap.selectedCountries.length == 0) {
-                alert('No Country is Selected!');
-                return;
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                if (_this.pgisMap.selectedCountries.length == 0) {
+                    alert('No Country is Selected!');
+                    return;
+                }
+                window.open(
+                    '/transnet' +
+                    '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString()
+                    + '&token=' + Cookies.get('downloader')
+                    + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                    '_blank'
+                )
             }
-            window.open(
-                '/transnet' +
-                '/export_countries_xml?countries=' + _this.pgisMap.selectedCountries.toString()
-                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
         });
 
         $(document).on('click', '#transnet-export-relations-countries-csv', function () {
-            if (_this.pgisMap.selectedCountries.length == 0) {
-                alert('No Country is Selected!');
-                return;
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                if (_this.pgisMap.selectedCountries.length == 0) {
+                    alert('No Country is Selected!');
+                    return;
+                }
+                window.open(
+                    '/transnet' +
+                    '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString()
+                    + '&token=' + Cookies.get('downloader')
+                    + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                    '_blank'
+                )
             }
-            window.open(
-                '/transnet' +
-                '/export_countries_csv?countries=' + _this.pgisMap.selectedCountries.toString()
-                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
 
         });
 
         $(document).on('click', '#transnet-export-cim-bound', function () {
-            window.open(
-                '/transnet' +
-                '/export_cim?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
-                + '&zoom=' + _this.pgisMap.map.getZoom()
-                + '&countries=' + _this.pgisMap.selectedCountries.toString()
-                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                window.open(
+                    '/transnet' +
+                    '/export_cim?bounds=' + _this.pgisMap.map.getBounds().toBBoxString()
+                    + '&zoom=' + _this.pgisMap.map.getZoom()
+                    + '&token=' + Cookies.get('downloader')
+                    + '&countries=' + _this.pgisMap.selectedCountries.toString()
+                    + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                    '_blank'
+                )
+            }
         });
 
         $(document).on('click', '#transnet-export-cim-countries', function () {
-            if (_this.pgisMap.selectedCountries.length == 0) {
-                alert('No Country is Selected!');
-                return;
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                if (_this.pgisMap.selectedCountries.length == 0) {
+                    alert('No Country is Selected!');
+                    return;
+                }
+                window.open(
+                    '/transnet' +
+                    '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString()
+                    + '&token=' + Cookies.get('downloader')
+                    + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
+                    '_blank'
+                )
             }
-            window.open(
-                '/transnet' +
-                '/export_cim_countries?countries=' + _this.pgisMap.selectedCountries.toString()
-                + '&voltages=' + _this.pgisMap.selectedVoltages.toString(),
-                '_blank'
-            )
         });
 
         $(document).on('click', '#transnet-validations', function () {

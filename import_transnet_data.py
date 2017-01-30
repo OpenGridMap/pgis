@@ -1,6 +1,7 @@
 import ast
 import json
 import urllib
+from datetime import date
 from os import makedirs
 from os import walk
 from os.path import dirname
@@ -51,7 +52,7 @@ def download_latest_relation_files():
                                     '{0}/planet_json/planet.json'.format(base_dir))
 
         query_country = '''INSERT INTO transnet_country(continent, country, voltages)
-                                            VALUES (%s, %s, %s);'''
+                                            VALUES (%S, %S, %S);'''
 
         cur.execute('''DELETE FROM transnet_country;''')
         conn.commit()
@@ -116,6 +117,12 @@ def try_parse_int(string):
         return 0
 
 
+def transnet_add_last_update():
+    cur.execute('''INSERT INTO transnet_stats(last_updated) VALUES (%s)''', [date.today()])
+
+    conn.commit()
+
+
 def transnet_delete_country(country):
     cur.execute('''DELETE FROM transnet_relation_powerline WHERE country=%s;''', [country])
     cur.execute('''DELETE FROM transnet_relation_station WHERE country=%s;''', [country])
@@ -132,23 +139,23 @@ def transnet_import_relations(json_file):
         print('importing relations of {0}'.format(country))
 
         query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
-                                        VALUES (%s, %s, %s, %s) RETURNING id'''
+                                        VALUES (%S, %S, %S, %S) RETURNING id'''
 
         query_powerline = '''INSERT INTO transnet_powerline(country, geom, tags, raw_geom, voltage, type, nodes,
                                                                       lat, lon, cables, name, length, osm_id, srs_geom, osm_replication)
-                                                        VALUES (%s, ST_FlipCoordinates(%s), %s  , %s,%s, %s, %s, %s,%s, %s, %s, %s
-                                                        ,%s ,ST_FlipCoordinates(%s), %s) RETURNING id'''
+                                                        VALUES (%S, ST_FlipCoordinates(%S), %S  , %S,%S, %S, %S, %S,%S, %S, %S, %S
+                                                        ,%S ,ST_FlipCoordinates(%S), %S) RETURNING id'''
 
         query_station = '''INSERT INTO transnet_station(country, geom, tags, raw_geom, lat, lon, name,
                                                           length, osm_id, voltage, type, osm_replication)
-                                                        VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s
-                                                          , %s, %s) RETURNING id'''
+                                                        VALUES (%S, ST_FlipCoordinates(%S), %S, %S,%S, %S, %S, %S,%S, %S
+                                                          , %S, %S) RETURNING id'''
 
         query_relation_station = '''INSERT INTO transnet_relation_station(country, relation_id, station_id)
-                                                VALUES (%s, %s, %s)'''
+                                                VALUES (%S, %S, %S)'''
 
         query_relation_powerline = '''INSERT INTO transnet_relation_powerline(country, relation_id, powerline_id)
-                                                VALUES (%s, %s, %s)'''
+                                                VALUES (%S, %S, %S)'''
 
         query_powerline_count = '''SELECT count(id) FROM transnet_powerline WHERE osm_id = %s'''
         query_station_count = '''SELECT count(id) FROM transnet_station WHERE osm_id = %s'''
@@ -232,10 +239,10 @@ def transnet_import_relations(json_file):
 if __name__ == '__main__':
     download_latest_relation_files()
     find_and_import_relation_files()
+    transnet_add_last_update()
     # transnet_delete_country('germany')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/germany/relations.json')
     # transnet_delete_country('usa')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/usa/relations.json')
     # transnet_delete_country('india')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/india/relations.json')
-

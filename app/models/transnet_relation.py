@@ -219,24 +219,27 @@ class TransnetRelation(db.Model):
                     with open(join(dirname(__file__), file_path)) as w_s:
                         where_clause = w_s.readline()
                         country_stat['scigrid_available'] = True
-                        #where_clause = 'True'
+                        # where_clause = 'True'
 
                 for voltage in relations_voltages:
                     country_stat['relation_length_by_voltages'][voltage[0]] = []
 
-                    length_without_dup = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')).filter(
-                        TransnetPowerline.country == country).filter(
-                        TransnetPowerline.relations.any(TransnetRelation.voltage.in_([voltage])))
+                    length_without_dup = db.session.query(func.sum(TransnetPowerline.length).label('sum_line')) \
+                        .filter(TransnetPowerline.country == country) \
+                        .filter(TransnetPowerline.voltage.any(voltage)) \
+                        .filter(TransnetPowerline.relations.any(TransnetRelation.voltage.in_([voltage])))
+
                     if length_without_dup.count() and length_without_dup[0][0]:
                         country_stat['relation_length_by_voltages'][voltage[0]].append(length_without_dup[0][0] / 1000)
                     else:
                         country_stat['relation_length_by_voltages'][voltage[0]].append(0)
 
-                    length_with_dup = db.session.query(
-                        func.sum(TransnetPowerline.length * TransnetPowerline.osm_replication).label(
-                            'sum_line')).filter(
-                        TransnetPowerline.country == country).filter(
-                        TransnetPowerline.relations.any(TransnetRelation.voltage.in_([voltage])))
+                    length_with_dup = db.session \
+                        .query(func.sum(TransnetPowerline.length * TransnetPowerline.osm_replication).label('sum_line')) \
+                        .filter(TransnetPowerline.country == country) \
+                        .filter(TransnetPowerline.voltage.any(voltage)) \
+                        .filter(TransnetPowerline.relations.any(TransnetRelation.voltage.in_([voltage])))
+
                     if length_with_dup.count() and length_with_dup[0][0]:
                         country_stat['relation_length_by_voltages'][voltage[0]].append(length_with_dup[0][0] / 1000)
                     else:
