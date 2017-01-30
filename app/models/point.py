@@ -13,7 +13,7 @@ class Point(db.Model):
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
     submission = db.relationship('Submission', back_populates='points')
     merged_to = db.Column(db.Integer, db.ForeignKey('point.id'))
-    pictures = db.relationship('Picture', order_by='desc(Picture.id)', lazy='dynamic')
+    pictures = db.relationship('Picture', order_by='desc(Picture.id)')
 
     def serialize(self):
         return {
