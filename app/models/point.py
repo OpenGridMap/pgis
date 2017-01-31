@@ -23,7 +23,7 @@ class Point(db.Model):
             'latlng': [self.shape().x, self.shape().y],
             'tags' : self.properties.get('tags', {}),
             'osmid': self.properties.get('osmid', None),
-            'pictures' : list(map((lambda p: p.serialize()), self.pictures2.limit(5))),
+            'pictures' : list(map((lambda p: p.serialize()), self.pictures.limit(5))),
             'revised': self.revised
         }
 
