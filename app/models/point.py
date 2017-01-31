@@ -13,7 +13,9 @@ class Point(db.Model):
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
     submission = db.relationship('Submission', back_populates='points')
     merged_to = db.Column(db.Integer, db.ForeignKey('point.id'))
-    pictures = db.relationship('Picture', order_by='desc(Picture.id)')
+    pictures = db.relationship('Picture', order_by='desc(Picture.id)', lazy='dynamic')
+    # dynamic loading is not possible with eager_loading, so for gallery, dynamic loading isn't applied
+    pictures_for_gallery = db.relationship('Picture', order_by='desc(Picture.id)')
 
     def serialize(self):
         return {
@@ -21,7 +23,7 @@ class Point(db.Model):
             'latlng': [self.shape().x, self.shape().y],
             'tags' : self.properties.get('tags', {}),
             'osmid': self.properties.get('osmid', None),
-            'pictures' : list(map((lambda p: p.serialize()), self.pictures.limit(5))),
+            'pictures' : list(map((lambda p: p.serialize()), self.pictures2.limit(5))),
             'revised': self.revised
         }
 
@@ -37,7 +39,7 @@ class Point(db.Model):
         return {
             'latlng': [self.shape().x, self.shape().y],
             'properties': self.properties,
-            'pictures': list(map((lambda p: p.serialize()), self.pictures)),
+            'pictures': list(map((lambda p: p.serialize()), self.pictures_for_gallery)),
             'revised': self.revised,
             'approved': self.approved
         }

@@ -28,8 +28,6 @@ class PointsController:
             )
         ).filter(
             or_(Point.approved, Point.revised == False)
-        ).options(
-            lazyload('children')
         ).all()
         points = list(map(lambda point: point.serialize(), points))
 
