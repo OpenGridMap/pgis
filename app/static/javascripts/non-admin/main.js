@@ -36,6 +36,14 @@ $(document).ready(function () {
             || _.contains(_pgisMap.selectedOverlayLayers, "transnet")) {
             MapDataLoader.fetchAndPlotRelations(_pgisMap);
         }
+        else if (_.contains(_pgisMap.selectedOverlayLayers, "contribute")) {
+            MapDataLoader.loadLinesWithMissingData(
+                this,
+                this.markerLayers.markers,
+                this.markerLayers.clusterGroup,
+                this.markerLayers.powerlinesLayerGroup
+            );
+        }
         else {
             MapDataLoader.loadBaseMapDataForMapFragment(
                 this,
@@ -57,6 +65,12 @@ $(document).ready(function () {
     pgisMap.addOverlayLayer({
         name: "Transnet",
         ref: 'transnet',
+        layer: new L.LayerGroup()
+    });
+
+    pgisMap.addOverlayLayer({
+        name: "Contribute",
+        ref: 'contribute',
         layer: new L.LayerGroup()
     });
 

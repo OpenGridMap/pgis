@@ -52,7 +52,7 @@ def download_latest_relation_files():
                                     '{0}/planet_json/planet.json'.format(base_dir))
 
         query_country = '''INSERT INTO transnet_country(continent, country, voltages)
-                                            VALUES (%S, %S, %S);'''
+                                            VALUES (%s, %s, %s);'''
 
         cur.execute('''DELETE FROM transnet_country;''')
         conn.commit()
@@ -139,23 +139,23 @@ def transnet_import_relations(json_file):
         print('importing relations of {0}'.format(country))
 
         query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
-                                        VALUES (%S, %S, %S, %S) RETURNING id'''
+                                        VALUES (%s, %s, %s, %s) RETURNING id'''
 
         query_powerline = '''INSERT INTO transnet_powerline(country, geom, tags, raw_geom, voltage, type, nodes,
                                                                       lat, lon, cables, name, length, osm_id, srs_geom, osm_replication)
-                                                        VALUES (%S, ST_FlipCoordinates(%S), %S  , %S,%S, %S, %S, %S,%S, %S, %S, %S
-                                                        ,%S ,ST_FlipCoordinates(%S), %S) RETURNING id'''
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s  , %s,%s, %s, %s, %s,%s, %s, %s, %s
+                                                        ,%s ,ST_FlipCoordinates(%s), %s) RETURNING id'''
 
         query_station = '''INSERT INTO transnet_station(country, geom, tags, raw_geom, lat, lon, name,
                                                           length, osm_id, voltage, type, osm_replication)
-                                                        VALUES (%S, ST_FlipCoordinates(%S), %S, %S,%S, %S, %S, %S,%S, %S
-                                                          , %S, %S) RETURNING id'''
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s, %s, %s, %s,%s, %s
+                                                          , %s, %s) RETURNING id'''
 
         query_relation_station = '''INSERT INTO transnet_relation_station(country, relation_id, station_id)
-                                                VALUES (%S, %S, %S)'''
+                                                VALUES (%s, %s, %s)'''
 
         query_relation_powerline = '''INSERT INTO transnet_relation_powerline(country, relation_id, powerline_id)
-                                                VALUES (%S, %S, %S)'''
+                                                VALUES (%s, %s, %s)'''
 
         query_powerline_count = '''SELECT count(id) FROM transnet_powerline WHERE osm_id = %s'''
         query_station_count = '''SELECT count(id) FROM transnet_station WHERE osm_id = %s'''
@@ -236,13 +236,63 @@ def transnet_import_relations(json_file):
         print(e)
 
 
+def transnet_import_lines_with_missing_data(json_file):
+    try:
+        country = json_file.split('/')[-2]
+        print('importing lines with missing data of {0}'.format(country))
+
+        cur.execute('''DELETE FROM transnet_line_missing_data WHERE country=%s;''', [country])
+
+        query_powerline = '''INSERT INTO transnet_line_missing_data(country, geom, tags, raw_geom, voltage, type, nodes,
+                                                                      lat, lon, cables, name, length, osm_id, srs_geom, estimated_voltage, estimated_cables)
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s  , %s,%s, %s, %s, %s,%s, %s, %s, %s
+                                                        ,%s ,ST_FlipCoordinates(%s), %s, %s)'''
+        query_powerline_count = '''SELECT count(id) FROM transnet_line_missing_data WHERE osm_id = %s'''
+
+        with open(json_file, 'r+') as lines_file:
+            lines = json.load(lines_file)
+            for line in lines:
+                voltages = [try_parse_int(x) for x in line['voltage'].split(';')]
+                estimated_voltages = [try_parse_int(x) for x in line['estimated_voltage'].split(';')]
+                estimated_cables = [try_parse_int(x) for x in line['estimated_cables'].split(';')]
+                cur.execute(query_powerline_count, [line['id']])
+                powerline_count = cur.fetchone()[0]
+                if not powerline_count:
+                    tags_list = ast.literal_eval(line['tags'])
+                    tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
+                    cur.execute(query_powerline, [country,
+                                                  line['geom'],
+                                                  tags,
+                                                  line['raw_geom'],
+                                                  voltages,
+                                                  line['type'],
+                                                  line['nodes'],
+                                                  line['lat'],
+                                                  line['lon'],
+                                                  try_parse_int(line['cables']),
+                                                  line['name'],
+                                                  line['length'],
+                                                  line['id'],
+                                                  line['srs_geom'],
+                                                  estimated_voltages,
+                                                  estimated_cables])
+
+                conn.commit()
+
+    except Exception as e:
+        print(e)
+
+
 if __name__ == '__main__':
-    download_latest_relation_files()
-    find_and_import_relation_files()
-    transnet_add_last_update()
+    # download_latest_relation_files()
+    # find_and_import_relation_files()
+    # transnet_add_last_update()
+
     # transnet_delete_country('germany')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/germany/relations.json')
     # transnet_delete_country('usa')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/usa/relations.json')
     # transnet_delete_country('india')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/india/relations.json')
+
+    transnet_import_lines_with_missing_data('/home/epezhman/Projects/pgis/./data/relations/europe/austria/lines_with_missing_data.json')
