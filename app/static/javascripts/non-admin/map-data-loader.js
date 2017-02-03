@@ -150,9 +150,25 @@ var MapDataLoader = {
             success: function (data) {
                 powerlinesLayerGroup.clearLayers();
                 for (var i = 0; i < data.length; i++) {
-                    var polyline = L.polyline(data[i].latlngs, {color: 'red'});
+
+                    var color = '';
+                    switch (data[i].type) {
+                        case 'line':
+                            color = "#0000ff";
+                            break;
+                        case 'cable':
+                            color = "#00ff00";
+                            break;
+                        case 'minor_line':
+                            color = "#ff0000";
+                            break;
+                        default:
+                            color = "red";
+                    }
+
+                    var polyline = L.polyline(data[i].latlngs, {color: color});
                     polyline.data = data[i];
-                    MapHelpers.bindPowerlinePopup(polyline, data[i]);
+                    MapHelpers.bindPowerlineMissingDataPopup(polyline, data[i]);
                     powerlinesLayerGroup.addLayer(polyline);
                 }
                 map.fireEvent("dataload");

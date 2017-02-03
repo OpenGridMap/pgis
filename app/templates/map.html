@@ -74,40 +74,76 @@
             <div class="panel-heading">Powerline {{ id }}</div>
             <div class="panel-body">
                 <p><strong>Tags:</strong> {{ json tags }}</p>
-                <p><a href="/admin/powerlines/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p>
-          </div>
+                <p><a href="/admin/powerlines/edit/{{id}}?redirect_back=true">
+                    <button class="btn btn-default">Edit</button>
+                </a></p>
+            </div>
         </div>
-</script>
-{% endraw %}
-{% raw %}
-<script id="relation-sidebar-template" type="text/x-handlebars-template">
-      <div class='relation-sidebar'>
-        <div class="sidebar"><h1>Relation: OSM-ID-{{ relation.properties.osmid }}</h1></div>
-        <hr/>
-        <div class="sidebar-tags-table">
-          <strong>Tags:</strong>
-          <table>
-            <tr>
-              <th>Tag</th>
-              <th>Value</th>
-            </tr>
-            {{#each relation.properties.tags}}
-            <tr>
-              <td>{{@key}}:</td>
-              <td>{{this}}</td>
-            </tr>
-            {{/each}}
-          </table>
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="polyline-missing_data-popup-template" type="text/x-handlebars-template">
+        <div class="panel panel-default line-missing-data-panel">
+            <div class="panel-heading">Powerline {{ osm_id }}</div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Voltage</dt>
+                    <dd>{{ voltage }} V</dd>
+                    <dt>Possible Voltages</dt>
+                    <dd>{{ estimated_voltage }} V</dd>
+                    <dt>Cables</dt>
+                    <dd>{{ cables }}</dd>
+                    <dt>Possible Cables</dt>
+                    <dd>{{ estimated_cables }}</dd>
+                    <dt>Type</dt>
+                    <dd>{{ type }}</dd>
+                    <dt>Length</dt>
+                    <dd>{{ length }} m</dd>
+                    <dt>OSM ID</dt>
+                    <dd>{{ osm_id }}</dd>
+                    <dt>Tags</dt>
+                    <dd>{{ json tags }}</dd>
+                    <dt></dt>
+                </dl>
+                <p>
+                    <a class="btn btn-default" href="https://www.openstreetmap.org/edit#map=18/{{ lat }}/{{ lon }}"
+                       target="_blank">
+                        Edit on OSM
+                    </a>
+                </p>
+            </div>
         </div>
-        <hr/>
-        <div>
-          {{relationSelectionButton}}
-          <br/>
-          <br/>
-          {{relationSelectionSummaryAndActions}}
-        </div>
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="relation-sidebar-template" type="text/x-handlebars-template">
+        <div class='relation-sidebar'>
+            <div class="sidebar"><h1>Relation: OSM-ID-{{ relation.properties.osmid }}</h1></div>
+            <hr/>
+            <div class="sidebar-tags-table">
+                <strong>Tags:</strong>
+                <table>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Value</th>
+                    </tr>
+                    {{#each relation.properties.tags}}
+                    <tr>
+                        <td>{{@key}}:</td>
+                        <td>{{this}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+            <hr/>
+            <div>
+                {{relationSelectionButton}}
+                <br/>
+                <br/>
+                {{relationSelectionSummaryAndActions}}
+            </div>
 
-          {{#if relation.points}}
+            {{#if relation.points}}
             <hr>
             <div class="sidebar-tags-table">
                 <strong>Stations:</strong>
@@ -158,73 +194,73 @@
             </div>
             {{/if}}
 
-      </div>
-</script>
+        </div>
+    </script>
 
-<script id="statistic-sidebar-template" type="text/x-handlebars-template">
+    <script id="statistic-sidebar-template" type="text/x-handlebars-template">
         <div class="sidebar"><h1>Statistics</h1></div>
         <div>
 
             {{#unless numPowerElements.markers}}
-              {{#if numPowerElements.clusteredMarkers}}
-                <strong>clustered Markers:</strong> {{ numPowerElements.clusteredMarkers }} <br>
-                Please zoom in to get more details!
-              {{else}}
-                <strong>No markers inside this area.</strong>
-              {{/if}}
+            {{#if numPowerElements.clusteredMarkers}}
+            <strong>clustered Markers:</strong> {{ numPowerElements.clusteredMarkers }} <br>
+            Please zoom in to get more details!
             {{else}}
-                <strong>All markers:</strong> {{ numPowerElements.markers }}
-              <ul>
+            <strong>No markers inside this area.</strong>
+            {{/if}}
+            {{else}}
+            <strong>All markers:</strong> {{ numPowerElements.markers }}
+            <ul>
                 {{#if numPowerElements.transformers}}
-                  <li><strong>Transformers:</strong> {{ numPowerElements.transformers }}</li>
+                <li><strong>Transformers:</strong> {{ numPowerElements.transformers }}</li>
                 {{/if}}
                 {{#if numPowerElements.substations}}
-                  <li><strong>Substations:</strong> {{ numPowerElements.substations }}</li>
+                <li><strong>Substations:</strong> {{ numPowerElements.substations }}</li>
                 {{/if}}
                 {{#if numPowerElements.powerPoles}}
-                  <li><strong>Power poles:</strong> {{ numPowerElements.powerPoles }}</li>
+                <li><strong>Power poles:</strong> {{ numPowerElements.powerPoles }}</li>
                 {{/if}}
                 {{#if numPowerElements.powerTowers}}
-                  <li><strong>Power towers:</strong> {{ numPowerElements.powerTowers }}</li>
+                <li><strong>Power towers:</strong> {{ numPowerElements.powerTowers }}</li>
                 {{/if}}
                 {{#if numPowerElements.powerPlants}}
-                  <li><strong>Power plants:</strong> {{ numPowerElements.powerPlants }}</li>
+                <li><strong>Power plants:</strong> {{ numPowerElements.powerPlants }}</li>
                 {{/if}}
                 {{#if numPowerElements.windPower}}
-                  <li><strong>Wind power:</strong> {{ numPowerElements.windPower }}</li>
+                <li><strong>Wind power:</strong> {{ numPowerElements.windPower }}</li>
                 {{/if}}
                 {{#if numPowerElements.solarPower}}
-                  <li><strong>Solar power:</strong> {{ numPowerElements.solarPower }}</li>
+                <li><strong>Solar power:</strong> {{ numPowerElements.solarPower }}</li>
                 {{/if}}
                 {{#if numPowerElements.waterPower}}
-                  <li><strong>Water power:</strong> {{ numPowerElements.waterPower }}</li>
+                <li><strong>Water power:</strong> {{ numPowerElements.waterPower }}</li>
                 {{/if}}
                 {{#if numPowerElements.otherGenerators}}
-                  <li><strong>Other generators:</strong> {{ numPowerElements.otherGenerators }}</li>
+                <li><strong>Other generators:</strong> {{ numPowerElements.otherGenerators }}</li>
                 {{/if}}
                 {{#if numPowerElements.others}}
-                  <li><strong>Other power related markers:</strong> {{ numPowerElements.others }}</li>
+                <li><strong>Other power related markers:</strong> {{ numPowerElements.others }}</li>
                 {{/if}}
-              </ul>
+            </ul>
             {{/unless}}
         </div>
         <div>
-          <strong>All powerlines:</strong> {{ numberOfPowerlines }}
-          {{#if numberOfPowerlines}}
+            <strong>All powerlines:</strong> {{ numberOfPowerlines }}
+            {{#if numberOfPowerlines}}
             <ul>
-              <li><strong>Length of all visible parts of powerlines:</strong> {{ lengthOfPowerlines.all }}</li>
+                <li><strong>Length of all visible parts of powerlines:</strong> {{ lengthOfPowerlines.all }}</li>
                 <li>
-                  <strong>Length by voltage</strong>
-                  <ul>
-                    {{#each lengthOfPowerlines.voltage}}
-                      <li><strong>{{@key}}:</strong> {{this}}</li>
-                    {{/each}}
-                  </ul>
+                    <strong>Length by voltage</strong>
+                    <ul>
+                        {{#each lengthOfPowerlines.voltage}}
+                        <li><strong>{{@key}}:</strong> {{this}}</li>
+                        {{/each}}
+                    </ul>
                 </li>
             </ul>
-          {{/if}}
+            {{/if}}
         </div>
 
-</script>
-{% endraw %}
+    </script>
+    {% endraw %}
 {% endblock %}

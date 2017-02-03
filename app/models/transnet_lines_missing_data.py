@@ -44,8 +44,8 @@ class TransnetPowerLineMissingData(db.Model):
             )
         ).all()
 
-        if len(powerlines_sample) > 2000:
-            powerlines_sample = random.sample(powerlines_sample, 2000)
+        if len(powerlines_sample) > 1000:
+            powerlines_sample = random.sample(powerlines_sample, 1000)
 
         powerlines = TransnetPowerLineMissingData.query.filter(
             TransnetPowerLineMissingData.id.in_(powerlines_sample)).all()
@@ -53,7 +53,10 @@ class TransnetPowerLineMissingData(db.Model):
         return list(map(lambda powerline: powerline.serialize(), powerlines))
 
     def serialize(self):
-        return {"id": self.id, "latlngs": list(self.shape().coords), "tags": self.tags}
+        return {"id": self.id, "latlngs": list(self.shape().coords), "tags": self.tags, "lat": self.lat,
+                "lon": self.lon, "osm_id": self.osm_id, "estimated_voltage": self.estimated_voltage,
+                "estimated_cables": self.estimated_cables, "length": round(self.length), "voltage": self.voltage,
+                "cables": self.cables, "type": self.type}
 
     def shape(self):
         return to_shape(self.geom)
