@@ -157,6 +157,15 @@ $(document).ready(function () {
     });
     pgisMap.hideLinkButton(pgisMap.linkButtons.transnetOperations);
 
+    pgisMap.addLinkButton({
+        ref: 'contributionFilters',
+        text: 'Electrical Components Filters',
+        onclick: function () {
+            pgisMap.contributionFilterSidebar.toggle();
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.contributionFilters);
+
 
     window.pgisMap = pgisMap;
 
@@ -168,7 +177,10 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetOperations);
+        }
 
+        if (layer.name == 'Contribute') {
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.contributionFilters);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
@@ -185,6 +197,11 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetOperations);
+        }
+
+         if (layer.name == 'Contribute') {
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.contributionFilters);
+            _pgisMap.contributionFilterSidebar.hide();
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();

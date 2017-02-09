@@ -209,10 +209,16 @@ def create_download_user():
     return controller.create_download_user()
 
 
-@GisApp.route('/contribute')
-def contribute():
+@GisApp.route('/contribute/lines')
+def contribute_lines():
     controller = ContributionController()
-    return controller.index()
+    return controller.get_lines()
+
+
+@GisApp.route('/contribute/stations')
+def contribute_stations():
+    controller = ContributionController()
+    return controller.get_stations()
 
 
 @GisApp.route('/relations')

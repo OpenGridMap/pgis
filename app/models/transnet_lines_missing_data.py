@@ -31,7 +31,7 @@ class TransnetPowerLineMissingData(db.Model):
     estimated_cables = db.Column(ARRAY(db.INTEGER), nullable=True)
 
     @staticmethod
-    def get_filtered_relations(bounds):
+    def get_filtered_lines(bounds):
         powerlines_sample = db.session.query(TransnetPowerLineMissingData.id).filter(
             func.ST_Intersects(
                 func.ST_MakeEnvelope(

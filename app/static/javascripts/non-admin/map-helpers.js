@@ -39,7 +39,7 @@ var MapHelpers = {
 
     // Binds a the popup to a powerline with missing data
     bindPowerlineMissingDataPopup: function (polyline, powerline) {
-        var source = $("#polyline-missing_data-popup-template").html();
+        var source = $("#polyline-missing-data-popup-template").html();
         var polylinePopupTemplate = Handlebars.compile(source);
 
         var popup = L.popup().setContent(
@@ -47,6 +47,18 @@ var MapHelpers = {
         );
 
         polyline.bindPopup(popup);
+    },
+
+    // Binds a the popup to a power station with missing data
+    bindPowerStationMissingDataPopup: function (marker, powerstation) {
+        var source = $("#station-missing-data-popup-template").html();
+        var markerPopupTemplate = Handlebars.compile(source);
+
+        var popup = L.popup().setContent(
+            markerPopupTemplate(powerstation)
+        );
+
+        marker.bindPopup(popup);
     },
 
     getOsmTile: function () {

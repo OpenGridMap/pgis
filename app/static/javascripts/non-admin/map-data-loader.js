@@ -136,16 +136,76 @@ var MapDataLoader = {
         });
     },
 
-
     loadLinesWithMissingData: function (pgisMap, markers, clusterGroup, powerlinesLayerGroup) {
         var map = pgisMap.map;
+        var currentStationsRequest = null;
+        var currentPowerlinesRequest = null;
+
+        var substationIcon = L.icon({
+            iconUrl: 'static/images/marker-powersubstation.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34]
+        });
+
+        var stationIcon = L.icon({
+            iconUrl: 'static/images/marker-powerstation.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34]
+        });
+
+        var plantIcon = L.icon({
+            iconUrl: 'static/images/marker-powerplant.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34]
+        });
 
         map.fireEvent("dataloading");
 
-        $.ajax({
-            url: "/contribute",
+        currentStationsRequest = $.ajax({
+            url: "/contribute/stations",
             data: {
                 "bounds": map.getBounds().toBBoxString()
+            },
+            beforeSend: function () {
+                if (currentStationsRequest != null) {
+                    currentStationsRequest.abort();
+                }
+            },
+            success: function (data) {
+                markers.clearLayers();
+                clusterGroup.clearLayers();
+
+                var newMarkers = [];
+                for (var i = 0; i < data.length; i++) {
+                    var marker = null;
+                    if (data[i].type == 'substation' || data[i].type == 'sub_station')
+                        marker = new L.Marker(data[i]['latlng'], {icon: substationIcon});
+                    else if (data[i].type == 'station')
+                        marker = new L.Marker(data[i]['latlng'], {icon: stationIcon});
+                    else if (data[i].type == 'plant' || data[i].type == 'generator')
+                        marker = new L.Marker(data[i]['latlng'], {icon: plantIcon});
+                    marker.data = data[i];
+                    newMarkers.push(marker);
+                    MapHelpers.bindPowerStationMissingDataPopup(marker, data[i]);
+                    pgisMap.markerMap[data[i].id] = marker;
+                }
+                markers.addLayers(newMarkers);
+
+            }
+        });
+
+        currentPowerlinesRequest = $.ajax({
+            url: "/contribute/lines",
+            data: {
+                "bounds": map.getBounds().toBBoxString()
+            },
+            beforeSend: function () {
+                if (currentPowerlinesRequest != null) {
+                    currentPowerlinesRequest.abort();
+                }
             },
             success: function (data) {
                 powerlinesLayerGroup.clearLayers();
@@ -165,7 +225,6 @@ var MapDataLoader = {
                         default:
                             color = "red";
                     }
-
                     var polyline = L.polyline(data[i].latlngs, {color: color});
                     polyline.data = data[i];
                     MapHelpers.bindPowerlineMissingDataPopup(polyline, data[i]);
@@ -208,7 +267,7 @@ var MapDataLoader = {
             }
 
             // if the relation was selected to be exported. Add the required highlighting
-            selectedRelationsIds = (JSON.parse(localStorage.getItem('selectedRelations')) || [])
+            selectedRelationsIds = (JSON.parse(localStorage.getItem('selectedRelations')) || []);
             if (selectedRelationsIds.indexOf(relation.id.toString()) > -1) {
                 relationFeatureLayer.highlightForExport();
             }
@@ -222,4 +281,4 @@ var MapDataLoader = {
             });
         });
     }
-}
+};

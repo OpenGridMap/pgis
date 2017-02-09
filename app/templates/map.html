@@ -42,6 +42,9 @@
     <div id="transnet-validations-sidebar">
         {% include 'transnet_evaluations.html' %}
     </div>
+     <div id="contribution-filter-sidebar">
+        {% include 'contribution_filter.html' %}
+    </div>
 
     {% raw %}
     <script id="marker-sidebar-template" type="text/x-handlebars-template">
@@ -82,11 +85,13 @@
     </script>
     {% endraw %}
     {% raw %}
-    <script id="polyline-missing_data-popup-template" type="text/x-handlebars-template">
+    <script id="polyline-missing-data-popup-template" type="text/x-handlebars-template">
         <div class="panel panel-default line-missing-data-panel">
             <div class="panel-heading">Powerline {{ osm_id }}</div>
             <div class="panel-body">
                 <dl class="dl-horizontal">
+                    <dt>Type</dt>
+                    <dd>{{ type }}</dd>
                     <dt>Voltage</dt>
                     <dd>{{ voltage }} V</dd>
                     <dt>Possible Voltages</dt>
@@ -95,8 +100,6 @@
                     <dd>{{ cables }}</dd>
                     <dt>Possible Cables</dt>
                     <dd>{{ estimated_cables }}</dd>
-                    <dt>Type</dt>
-                    <dd>{{ type }}</dd>
                     <dt>Length</dt>
                     <dd>{{ length }} m</dd>
                     <dt>OSM ID</dt>
@@ -107,6 +110,43 @@
                 </dl>
                 <p>
                     <a class="btn btn-default" href="https://www.openstreetmap.org/edit#map=18/{{ lat }}/{{ lon }}"
+                       target="_blank">
+                        Edit on OSM
+                    </a>
+                </p>
+            </div>
+        </div>
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="station-missing-data-popup-template" type="text/x-handlebars-template">
+        <div class="panel panel-default line-missing-data-panel">
+            <div class="panel-heading">Station {{ osm_id }}</div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Type</dt>
+                    <dd>{{ type }}</dd>
+                    <dt>Voltage</dt>
+                    <dd>{{ voltage }} V</dd>
+                    <dt>Possible Voltages</dt>
+                    <dd>{{ estimated_voltage }} V</dd>
+                    <dt>Missing connection
+                        <br> to nearby power lines</dt>
+                    <dd>
+                        {{#if missing_connection}}
+                        Yes
+                        {{ else }}
+                        No
+                        {{/if}}
+                    </dd>
+                    <dt>OSM ID</dt>
+                    <dd>{{ osm_id }}</dd>
+                    <dt>Tags</dt>
+                    <dd>{{ json tags }}</dd>
+                    <dt></dt>
+                </dl>
+                <p>
+                    <a class="btn btn-default" href="https://www.openstreetmap.org/edit#map=20/{{ lat }}/{{ lon }}"
                        target="_blank">
                         Edit on OSM
                     </a>
