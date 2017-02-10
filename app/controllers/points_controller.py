@@ -9,6 +9,7 @@ import sys
 import os
 from app import db
 from sqlalchemy.sql import text
+from sqlalchemy.orm import lazyload
 
 class PointsController:
     def index(self):
