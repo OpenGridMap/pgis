@@ -28,6 +28,10 @@ function PgisMap() {
     this.selectedCountries = [];
     this.selectedVoltages = [];
 
+    this.selectedFilterGenral = ['voltage','cable','connection'];
+    this.selectedFilterLineType = ['minor_line', 'cable' , 'line' ];
+    this.selectedFilterStationType = ['substation', 'station', 'plant', 'generator'];
+
     this.createMap = function (baseLayer) {
         L.Icon.Default.imagePath = APP_IMAGES_URL;
         this.baseLayer = baseLayer;

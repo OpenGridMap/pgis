@@ -10,7 +10,10 @@ class ContributionController:
             return Response(json.dumps([]), mimetype='application/json')
 
         bounds_parts = request.args.get("bounds").split(',')
-        lines = TransnetPowerLineMissingData.get_filtered_lines(bounds_parts)
+        general_filter = request.args.get("general").split(',') if request.args.get("general") else []
+        lines_filter = request.args.get("lines").split(',') if request.args.get("lines") else []
+
+        lines = TransnetPowerLineMissingData.get_filtered_lines(bounds_parts, general_filter, lines_filter)
 
         return Response(json.dumps(lines), mimetype='application/json')
 
@@ -19,6 +22,9 @@ class ContributionController:
             return Response(json.dumps([]), mimetype='application/json')
 
         bounds_parts = request.args.get("bounds").split(',')
-        stations = TransnetPowerStationMissingData.get_filtered_stations(bounds_parts)
+        general_filter = request.args.get("general").split(',') if request.args.get("general") else []
+        stations_filter = request.args.get("stations").split(',') if request.args.get("stations") else []
+
+        stations = TransnetPowerStationMissingData.get_filtered_stations(bounds_parts, general_filter, stations_filter)
 
         return Response(json.dumps(stations), mimetype='application/json')

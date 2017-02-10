@@ -31,8 +31,14 @@ class TransnetPowerLineMissingData(db.Model):
     estimated_cables = db.Column(ARRAY(db.INTEGER), nullable=True)
 
     @staticmethod
-    def get_filtered_lines(bounds):
-        powerlines_sample = db.session.query(TransnetPowerLineMissingData.id).filter(
+    def get_filtered_lines(bounds, general_filter, lines_filter):
+
+        if not len(lines_filter):
+            return []
+
+        powerlines_sample = db.session.query(TransnetPowerLineMissingData.id) \
+            .filter(TransnetPowerLineMissingData.type.in_(lines_filter)) \
+            .filter(
             func.ST_Intersects(
                 func.ST_MakeEnvelope(
                     bounds[1],
@@ -42,7 +48,16 @@ class TransnetPowerLineMissingData(db.Model):
                 ),
                 cast(TransnetPowerLineMissingData.geom, Geography)
             )
-        ).all()
+        )
+
+        if 'voltage' not in general_filter:
+            powerlines_sample = powerlines_sample.filter(TransnetPowerLineMissingData.voltage != {0})
+
+        if 'cable' not in general_filter:
+            powerlines_sample = powerlines_sample.filter(
+                TransnetPowerLineMissingData.cables != 0)
+
+        powerlines_sample = powerlines_sample.all()
 
         if len(powerlines_sample) > 1000:
             powerlines_sample = random.sample(powerlines_sample, 1000)

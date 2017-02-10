@@ -167,7 +167,9 @@ var MapDataLoader = {
         currentStationsRequest = $.ajax({
             url: "/contribute/stations",
             data: {
-                "bounds": map.getBounds().toBBoxString()
+                "bounds": map.getBounds().toBBoxString(),
+                "stations": pgisMap.selectedFilterStationType.toString(),
+                "general": pgisMap.selectedFilterGenral.toString()
             },
             beforeSend: function () {
                 if (currentStationsRequest != null) {
@@ -200,7 +202,9 @@ var MapDataLoader = {
         currentPowerlinesRequest = $.ajax({
             url: "/contribute/lines",
             data: {
-                "bounds": map.getBounds().toBBoxString()
+                "bounds": map.getBounds().toBBoxString(),
+                "lines": pgisMap.selectedFilterLineType.toString(),
+                "general": pgisMap.selectedFilterGenral.toString()
             },
             beforeSend: function () {
                 if (currentPowerlinesRequest != null) {

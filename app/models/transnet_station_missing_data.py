@@ -27,8 +27,14 @@ class TransnetPowerStationMissingData(db.Model):
     missing_connection = db.Column(db.BOOLEAN, nullable=False, default=False)
 
     @staticmethod
-    def get_filtered_stations(bounds):
-        power_stations_sample = db.session.query(TransnetPowerStationMissingData.id).filter(
+    def get_filtered_stations(bounds, general_filter, stations_filter):
+
+        if not len(stations_filter):
+            return []
+
+        power_stations_sample = db.session.query(TransnetPowerStationMissingData.id) \
+            .filter(TransnetPowerStationMissingData.type.in_(stations_filter)) \
+            .filter(
             func.ST_Intersects(
                 func.ST_MakeEnvelope(
                     bounds[1],
@@ -38,7 +44,16 @@ class TransnetPowerStationMissingData(db.Model):
                 ),
                 cast(TransnetPowerStationMissingData.geom, Geography)
             )
-        ).all()
+        )
+
+        if 'voltage' not in general_filter:
+            power_stations_sample = power_stations_sample.filter(TransnetPowerStationMissingData.voltage != {0})
+
+        if 'connection' not in general_filter:
+            power_stations_sample = power_stations_sample.filter(
+                TransnetPowerStationMissingData.missing_connection == False)
+
+        power_stations_sample = power_stations_sample.all()
 
         if len(power_stations_sample) > 5000:
             power_stations_sample = random.sample(power_stations_sample, 5000)
@@ -51,5 +66,5 @@ class TransnetPowerStationMissingData(db.Model):
     def serialize(self):
         return {"id": self.id, "latlng": [self.lat, self.lon], "tags": self.tags, "lat": self.lat,
                 "lon": self.lon, "osm_id": self.osm_id, "estimated_voltage": self.estimated_voltage,
-                "missing_connection": self.missing_connection,"voltage": self.voltage,
+                "missing_connection": self.missing_connection, "voltage": self.voltage,
                 "type": self.type}
