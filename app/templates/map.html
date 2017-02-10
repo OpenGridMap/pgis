@@ -42,7 +42,7 @@
     <div id="transnet-validations-sidebar">
         {% include 'transnet_evaluations.html' %}
     </div>
-     <div id="contribution-filter-sidebar">
+    <div id="contribution-filter-sidebar">
         {% include 'contribution_filter.html' %}
     </div>
 
@@ -92,14 +92,14 @@
                 <dl class="dl-horizontal">
                     <dt>Type</dt>
                     <dd>{{ type }}</dd>
-                    <dt>Voltage</dt>
-                    <dd>{{ voltage }} V</dd>
-                    <dt>Possible Voltages</dt>
-                    <dd>{{ estimated_voltage }} V</dd>
-                    <dt>Cables</dt>
-                    <dd>{{ cables }}</dd>
-                    <dt>Possible Cables</dt>
-                    <dd>{{ estimated_cables }}</dd>
+                    <dt class="missing{{ voltage }}">Voltage</dt>
+                    <dd class="missing{{ voltage }}">{{ voltage }} V</dd>
+                    <dt class="suggested{{ voltage }}">Possible Voltages</dt>
+                    <dd class="suggested{{ voltage }}">{{ estimated_voltage }} V</dd>
+                    <dt class="missing{{ cables }}">Cables</dt>
+                    <dd class="missing{{ cables }}">{{ cables }}</dd>
+                    <dt class="suggested{{ cables }}">Possible Cables</dt>
+                    <dd class="suggested{{ cables }}">{{ estimated_cables }}</dd>
                     <dt>Length</dt>
                     <dd>{{ length }} m</dd>
                     <dt>OSM ID</dt>
@@ -126,13 +126,14 @@
                 <dl class="dl-horizontal">
                     <dt>Type</dt>
                     <dd>{{ type }}</dd>
-                    <dt>Voltage</dt>
-                    <dd>{{ voltage }} V</dd>
-                    <dt>Possible Voltages</dt>
-                    <dd>{{ estimated_voltage }} V</dd>
-                    <dt>Missing connection
-                        <br> to nearby power lines</dt>
-                    <dd>
+                    <dt class="missing{{ voltage }}">Voltage</dt>
+                    <dd class="missing{{ voltage }}">{{ voltage }} V</dd>
+                    <dt class="suggested{{ voltage }}">Possible Voltages</dt>
+                    <dd class="suggested{{ voltage }}">{{ estimated_voltage }} V</dd>
+                    <dt class="missing{{ missing_connection }}">Missing connection
+                        <br> to nearby power lines
+                    </dt>
+                    <dd class="missing{{ missing_connection }}">
                         {{#if missing_connection}}
                         Yes
                         {{ else }}

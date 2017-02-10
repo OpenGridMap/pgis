@@ -146,3 +146,11 @@ td, th {
 .panel .dl-horizontal dd {
     width: 100px;
 }
+
+.missing0, .missingtrue {
+    color: red;
+}
+
+.suggested0 {
+    color: blue;
+}

@@ -68,8 +68,11 @@ class TransnetPowerLineMissingData(db.Model):
         return list(map(lambda powerline: powerline.serialize(), powerlines))
 
     def serialize(self):
-        return {"id": self.id, "latlngs": list(self.shape().coords), "tags": self.tags, "lat": self.lat,
-                "lon": self.lon, "osm_id": self.osm_id, "estimated_voltage": self.estimated_voltage,
+        latlangs = list(self.shape().coords)
+        lat = latlangs[0][0] if len(latlangs) else self.lat
+        lon = latlangs[0][1] if len(latlangs) else self.lon
+        return {"id": self.id, "latlngs": latlangs, "tags": self.tags, "lat": lat,
+                "lon": lon, "osm_id": self.osm_id, "estimated_voltage": self.estimated_voltage,
                 "estimated_cables": self.estimated_cables, "length": round(self.length), "voltage": self.voltage,
                 "cables": self.cables, "type": self.type}
 
