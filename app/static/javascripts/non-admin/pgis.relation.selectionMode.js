@@ -18,6 +18,7 @@ Pgis.Relation.selectionMode = {
         this.pgisMap = pgisMap;
         this._bindRelationSelectionEvents();
         this._bindTransnetFilterEvents();
+        this._bindContributionFilterEvents();
         var _this = this;
         this.pgisMap.addLinkButton({
             ref: 'exportRelationsWithId',
@@ -309,8 +310,48 @@ Pgis.Relation.selectionMode = {
         });
     },
 
+    _bindContributionFilterEvents: function () {
+
+        var _this = this;
+
+        $(document).on('click', '.contribution-filter', function () {
+            var general_filter = $(this).attr('data-general');
+            var line_type = $(this).attr('data-line');
+            var station_type = $(this).attr('data-station');
+
+            if (typeof general_filter !== typeof undefined && general_filter !== false) {
+                var index = _this.pgisMap.selectedFilterGenral.indexOf(general_filter);
+                if (index > -1) {
+                    _this.pgisMap.selectedFilterGenral.splice(index, 1);
+                }
+                else {
+                    _this.pgisMap.selectedFilterGenral.push(general_filter);
+                }
+            }
+            else if (typeof line_type !== typeof undefined && line_type !== false) {
+                var index = _this.pgisMap.selectedFilterLineType.indexOf(line_type);
+                if (index > -1) {
+                    _this.pgisMap.selectedFilterLineType.splice(index, 1);
+                }
+                else {
+                    _this.pgisMap.selectedFilterLineType.push(line_type);
+                }
+            }
+            else if (typeof station_type !== typeof undefined && station_type !== false) {
+                var index = _this.pgisMap.selectedFilterStationType.indexOf(station_type);
+                if (index > -1) {
+                    _this.pgisMap.selectedFilterStationType.splice(index, 1);
+                }
+                else {
+                    _this.pgisMap.selectedFilterStationType.push(station_type);
+                }
+            }
+
+        });
+
+    },
+
     _checkAndToggleExportButtonDisplay: function () {
-        console.log(this._getSelectedRelations());
         if (this._getSelectedRelations().length > 0) {
             this.pgisMap.showLinkButton(this.pgisMap.linkButtons.exportRelationsWithId);
         } else {

@@ -27,6 +27,7 @@ import app.permissions
 from app import GisApp
 from app.controllers.admin.transnset_logs_controller import TransnetLogsController
 from app.controllers.admin.transnset_users_controller import TransnetUsersController
+from app.controllers.contribution_controller import ContributionController
 
 login_manager = LoginManager()
 login_manager.init_app(GisApp)
@@ -206,6 +207,18 @@ def transnet_matlab_scripts():
 def create_download_user():
     controller = app.controllers.transnet_controller.TransnetController()
     return controller.create_download_user()
+
+
+@GisApp.route('/contribute/lines')
+def contribute_lines():
+    controller = ContributionController()
+    return controller.get_lines()
+
+
+@GisApp.route('/contribute/stations')
+def contribute_stations():
+    controller = ContributionController()
+    return controller.get_stations()
 
 
 @GisApp.route('/relations')

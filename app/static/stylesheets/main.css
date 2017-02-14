@@ -131,3 +131,26 @@ td, th {
     color: red;
 }
 
+.line-missing-data-panel {
+    width: 300px;
+}
+
+.panel .dl-horizontal {
+    margin-left: -10px;
+}
+
+.panel .dl-horizontal dt {
+    width: 140px;
+}
+
+.panel .dl-horizontal dd {
+    width: 100px;
+}
+
+.missing0, .missingtrue {
+    color: red;
+}
+
+.suggested0 {
+    color: blue;
+}

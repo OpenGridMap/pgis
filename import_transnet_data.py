@@ -52,7 +52,7 @@ def download_latest_relation_files():
                                     '{0}/planet_json/planet.json'.format(base_dir))
 
         query_country = '''INSERT INTO transnet_country(continent, country, voltages)
-                                            VALUES (%S, %S, %S);'''
+                                            VALUES (%s, %s, %s);'''
 
         cur.execute('''DELETE FROM transnet_country;''')
         conn.commit()
@@ -77,7 +77,6 @@ def download_latest_relation_files():
 
                         print('Downloading {0} relation json'.format(country))
                         try:
-                            pass
                             urllib.URLopener().retrieve(
                                 '{0}/models/{1}/{2}/relations.json'.format(base_url, continent, country),
                                 '{0}/relations/{1}/{2}/relations.json'.format(base_dir, continent, country))
@@ -139,23 +138,25 @@ def transnet_import_relations(json_file):
         print('importing relations of {0}'.format(country))
 
         query_relation = '''INSERT INTO transnet_relation(country, ref, name, voltage)
-                                        VALUES (%S, %S, %S, %S) RETURNING id'''
+                                        VALUES (%s, %s, %s, %s) RETURNING id'''
 
         query_powerline = '''INSERT INTO transnet_powerline(country, geom, tags, raw_geom, voltage, type, nodes,
-                                                                      lat, lon, cables, name, length, osm_id, srs_geom, osm_replication)
-                                                        VALUES (%S, ST_FlipCoordinates(%S), %S  , %S,%S, %S, %S, %S,%S, %S, %S, %S
-                                                        ,%S ,ST_FlipCoordinates(%S), %S) RETURNING id'''
+                                                                      lat, lon, cables, name, length,
+                                                                       osm_id, srs_geom, osm_replication)
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s , %s,%s, %s,
+                                                         %s, %s,%s, %s, %s, %s
+                                                        ,%s ,ST_FlipCoordinates(%s), %s) RETURNING id'''
 
         query_station = '''INSERT INTO transnet_station(country, geom, tags, raw_geom, lat, lon, name,
                                                           length, osm_id, voltage, type, osm_replication)
-                                                        VALUES (%S, ST_FlipCoordinates(%S), %S, %S,%S, %S, %S, %S,%S, %S
-                                                          , %S, %S) RETURNING id'''
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s
+                                                        , %s, %s, %s,%s, %s, %s, %s) RETURNING id'''
 
         query_relation_station = '''INSERT INTO transnet_relation_station(country, relation_id, station_id)
-                                                VALUES (%S, %S, %S)'''
+                                                VALUES (%s, %s, %s)'''
 
         query_relation_powerline = '''INSERT INTO transnet_relation_powerline(country, relation_id, powerline_id)
-                                                VALUES (%S, %S, %S)'''
+                                                VALUES (%s, %s, %s)'''
 
         query_powerline_count = '''SELECT count(id) FROM transnet_powerline WHERE osm_id = %s'''
         query_station_count = '''SELECT count(id) FROM transnet_station WHERE osm_id = %s'''
@@ -163,8 +164,10 @@ def transnet_import_relations(json_file):
         query_powerline_get_one_id = '''SELECT id FROM transnet_powerline WHERE osm_id = %s LIMIT 1'''
         query_station_get_one_id = '''SELECT id FROM transnet_station WHERE osm_id = %s LIMIT 1'''
 
-        query_powerline_increment_osm_rep = '''UPDATE transnet_powerline SET osm_replication = osm_replication + 1 WHERE id = %s'''
-        query_station_increment_osm_rep = '''UPDATE transnet_station SET osm_replication = osm_replication + 1 WHERE id = %s'''
+        query_powerline_increment_osm_rep = '''UPDATE transnet_powerline 
+                                                SET osm_replication = osm_replication + 1 WHERE id = %s'''
+        query_station_increment_osm_rep = '''UPDATE transnet_station 
+                                                  SET osm_replication = osm_replication + 1 WHERE id = %s'''
 
         powerline_tags = ['line', 'cable', 'minor_line']
         station_tags = ['substation', 'station', 'sub_station', 'plant', 'generator']
@@ -236,13 +239,213 @@ def transnet_import_relations(json_file):
         print(e)
 
 
+def download_large_missing_line_data_files(base_url, continent, country):
+    file_extensions = ['aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah', 'ai', 'aj', 'ak']
+    for file_extension in file_extensions:
+        try:
+            urllib.URLopener().retrieve(
+                '{0}/models/{1}/{2}/_lines_missing_data{3}'.format(base_url, continent, country, file_extension),
+                '{0}/missing_data/{1}/{2}/_lines_missing_data{3}'.format(base_dir, continent, country, file_extension))
+        except IOError as e:
+            print('lines part {0} for {1} not found.'.format(file_extension, country))
+    try:
+        command = 'cat {0}/missing_data/{1}/{2}/_lines_missing_data* > ' \
+                  '{0}/missing_data/{1}/{2}/lines_missing_data.json ' \
+                  '&& rm {0}/missing_data/{1}/{2}/_lines_missing_data*'.format(base_dir, continent, country, )
+        call(command, shell=True)
+    except Exception as e:
+        print(e)
+
+
+def download_large_missing_station_data_files(base_url, continent, country):
+    file_extensions = ['aa', 'ab', 'ac', 'ad', 'ae', 'af', 'ag', 'ah', 'ai', 'aj', 'ak']
+    for file_extension in file_extensions:
+        try:
+            urllib.URLopener().retrieve(
+                '{0}/models/{1}/{2}/_stations_missing_data{3}'.format(base_url, continent, country, file_extension),
+                '{0}/missing_data/{1}/{2}/_stations_missing_data{3}'.format(base_dir, continent, country,
+                                                                            file_extension))
+        except IOError as e:
+            print('station missing data part {0} for {1} not found.'.format(file_extension, country))
+    try:
+        command = 'cat {0}/missing_data/{1}/{2}/_stations_missing_data* >' \
+                  ' {0}/missing_data/{1}/{2}/stations_missing_data.json ' \
+                  '&& rm {0}/missing_data/{1}/{2}/_stations_missing_data*'.format(base_dir, continent, country, )
+        call(command, shell=True)
+    except Exception as e:
+        print(e)
+
+
+def download_latest_missing_data_files():
+    try:
+        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/planet-models'
+
+        # For every country we should download the missing data files.
+
+        with open('{0}/planet_json/planet.json'.format(base_dir), 'r+') as planet_file:
+            continents = json.load(planet_file)
+            for continent in continents:
+                with open('{0}/planet_json/{1}.json'.format(base_dir, continent), 'r+') as continent_file:
+                    countries = json.load(continent_file)
+                    for country in countries:
+                        country_folder = '{0}/missing_data/{1}/{2}/'.format(base_dir, continent, country)
+                        if not exists(country_folder):
+                            makedirs(country_folder)
+
+                        print('Downloading {0} missing data files json'.format(country))
+                        try:
+                            urllib.URLopener().retrieve(
+                                '{0}/models/{1}/{2}/lines_missing_data.json'.format(base_url, continent, country),
+                                '{0}/missing_data/{1}/{2}/lines_missing_data.json'.format(base_dir, continent, country))
+                        except IOError as e:
+                            print('missing line for {0} not found.'.format(country))
+                            download_large_missing_line_data_files(base_url, continent, country)
+                        try:
+                            urllib.URLopener().retrieve(
+                                '{0}/models/{1}/{2}/stations_missing_data.json'.format(base_url, continent, country),
+                                '{0}/missing_data/{1}/{2}/stations_missing_data.json'.format(base_dir, continent,
+                                                                                             country))
+                        except IOError as e:
+                            print('missing station for {0} not found.'.format(country))
+                            download_large_missing_station_data_files(base_url, continent, country)
+    except Exception as e:
+        print(e)
+
+
+def find_and_import_missing_data_files():
+    try:
+        cur.execute('''DELETE FROM transnet_line_missing_data;''')
+        cur.execute('''DELETE FROM transnet_station_missing_data;''')
+
+        conn.commit()
+
+        dirs = [x[0] for x in walk(join(dirname(__file__), '{0}/missing_data/'.format(base_dir)))]
+        for dir in dirs[1:]:
+            missing_line_data = '{0}/lines_missing_data.json'.format(dir)
+            if exists(missing_line_data):
+                transnet_import_lines_with_missing_data(missing_line_data)
+            else:
+                print('missing line data not exist {0}'.format(dir))
+            missing_station_data = '{0}/stations_missing_data.json'.format(dir)
+            if exists(missing_station_data):
+                transnet_import_stations_with_missing_data(missing_station_data)
+            else:
+                print('missing line data not exist {0}'.format(dir))
+
+    except Exception as e:
+        print(e)
+
+
+def transnet_import_lines_with_missing_data(json_file):
+    try:
+        country = json_file.split('/')[-2]
+        print('importing lines with missing data of {0}'.format(country))
+
+        query_powerline = '''INSERT INTO transnet_line_missing_data(country, geom, tags, raw_geom, voltage, type, nodes,
+                                                                      lat, lon, cables, name, length, osm_id, srs_geom, 
+                                                                      estimated_voltage, estimated_cables)
+                                                        VALUES (%s, ST_FlipCoordinates(%s), %s, 
+                                                        %s,%s, %s, %s, %s,%s, %s, %s, %s
+                                                        ,%s ,ST_FlipCoordinates(%s), %s, %s)'''
+        query_powerline_count = '''SELECT count(id) FROM transnet_line_missing_data WHERE osm_id = %s'''
+
+        with open(json_file, 'r+') as lines_file:
+            lines = json.load(lines_file)
+            for line in lines:
+                voltages = [try_parse_int(x) for x in line['voltage'].split(';')]
+                estimated_voltages = [try_parse_int(x) for x in line['estimated_voltage'].split(';')] \
+                    if 'estimated_voltage' in line else [0]
+                estimated_cables = [try_parse_int(x) for x in line['estimated_cables'].split(';')] \
+                    if 'estimated_cables' in line else [0]
+                cur.execute(query_powerline_count, [line['id']])
+                powerline_count = cur.fetchone()[0]
+                if not powerline_count:
+                    tags_list = ast.literal_eval(line['tags'])
+                    tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
+                    cur.execute(query_powerline, [country,
+                                                  line['geom'],
+                                                  tags,
+                                                  line['raw_geom'],
+                                                  voltages,
+                                                  line['type'],
+                                                  line['nodes'],
+                                                  line['lat'],
+                                                  line['lon'],
+                                                  try_parse_int(line['cables']),
+                                                  line['name'],
+                                                  line['length'],
+                                                  line['id'],
+                                                  line['srs_geom'],
+                                                  estimated_voltages,
+                                                  estimated_cables])
+
+                conn.commit()
+
+    except Exception as e:
+        print(e)
+
+
+def transnet_import_stations_with_missing_data(json_file):
+    try:
+        country = json_file.split('/')[-2]
+        print('importing stations with missing data of {0}'.format(country))
+
+        query_station = '''INSERT INTO transnet_station_missing_data(country, geom, tags, raw_geom, lat, lon, name,
+                                                                  length, osm_id, voltage, type,
+                                                                   missing_connection, estimated_voltage)
+                                                                VALUES (%s, ST_FlipCoordinates(%s), %s, %s,%s
+                                                                , %s, %s, %s,%s, %s, %s, %s, %s)'''
+
+        query_station_count = '''SELECT count(id) FROM transnet_station_missing_data WHERE osm_id = %s'''
+
+        with open(json_file, 'r+') as stations_file:
+            stations = json.load(stations_file)
+            for station in stations:
+                voltages = [try_parse_int(x) for x in station['voltage'].split(';')]
+                missing_connection = True if 'missing_connection' in station else False
+                estimated_voltages = [try_parse_int(x) for x in station['estimated_voltage'].split(';')] \
+                    if 'estimated_voltage' in station else [0]
+                cur.execute(query_station_count, [station['id']])
+                station_count = cur.fetchone()[0]
+                if not station_count:
+                    tags_list = [x.replace('"', "").replace('\\', "") for x in
+                                 station['tags'].replace(',', '=>').split('=>')]
+                    tags = json.dumps(dict(zip(tags_list[::2], tags_list[1::2])))
+                    cur.execute(query_station, [country,
+                                                station['geom'],
+                                                tags,
+                                                station['raw_geom'],
+                                                station['lat'],
+                                                station['lon'],
+                                                station['name'],
+                                                station['length'],
+                                                station['id'],
+                                                voltages,
+                                                station['type'],
+                                                missing_connection,
+                                                estimated_voltages])
+
+                conn.commit()
+
+
+    except Exception as e:
+        print(e)
+
+
 if __name__ == '__main__':
     download_latest_relation_files()
     find_and_import_relation_files()
+    download_latest_missing_data_files()
+    find_and_import_missing_data_files()
     transnet_add_last_update()
+
     # transnet_delete_country('germany')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/germany/relations.json')
     # transnet_delete_country('usa')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/planet/usa/relations.json')
     # transnet_delete_country('india')
     # transnet_import_relations('/home/epezhman/Projects/pgis/./data/relations/asia/india/relations.json')
+    # transnet_import_lines_with_missing_data(
+    #     '/home/epezhman/Projects/pgis/./data/relations/europe/austria/lines_with_missing_data.json')
+    # transnet_import_stations_with_missing_data(
+    #     '/home/epezhman/Projects/pgis/./data/relations/europe/austria/stations_missing_data.json')

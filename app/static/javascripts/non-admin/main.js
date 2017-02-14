@@ -36,6 +36,14 @@ $(document).ready(function () {
             || _.contains(_pgisMap.selectedOverlayLayers, "transnet")) {
             MapDataLoader.fetchAndPlotRelations(_pgisMap);
         }
+        else if (_.contains(_pgisMap.selectedOverlayLayers, "contribute")) {
+            MapDataLoader.loadLinesWithMissingData(
+                this,
+                this.markerLayers.markers,
+                this.markerLayers.clusterGroup,
+                this.markerLayers.powerlinesLayerGroup
+            );
+        }
         else {
             MapDataLoader.loadBaseMapDataForMapFragment(
                 this,
@@ -57,6 +65,12 @@ $(document).ready(function () {
     pgisMap.addOverlayLayer({
         name: "Transnet",
         ref: 'transnet',
+        layer: new L.LayerGroup()
+    });
+
+    pgisMap.addOverlayLayer({
+        name: "Contribute",
+        ref: 'contribute',
         layer: new L.LayerGroup()
     });
 
@@ -143,6 +157,15 @@ $(document).ready(function () {
     });
     pgisMap.hideLinkButton(pgisMap.linkButtons.transnetOperations);
 
+    pgisMap.addLinkButton({
+        ref: 'contributionFilters',
+        text: 'Electrical Components Filters',
+        onclick: function () {
+            pgisMap.contributionFilterSidebar.toggle();
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.contributionFilters);
+
 
     window.pgisMap = pgisMap;
 
@@ -154,7 +177,10 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetOperations);
+        }
 
+        if (layer.name == 'Contribute') {
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.contributionFilters);
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();
@@ -171,6 +197,11 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetOperations);
+        }
+
+         if (layer.name == 'Contribute') {
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.contributionFilters);
+            _pgisMap.contributionFilterSidebar.hide();
         }
         _.each(_pgisMap.markerLayers, function (layer) {
             layer.clearLayers();

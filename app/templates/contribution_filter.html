@@ -1,0 +1,97 @@
+<div class="page-header">
+    <h3>Electrical Components Filters</h3>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a href="#general-filters" aria-controls="profile" role="tab"
+           data-toggle="tab">General</a>
+    </li>
+    <li role="presentation">
+        <a href="#lines-filters" aria-controls="home" role="tab"
+           data-toggle="tab">Power Lines Type</a>
+    </li>
+    <li role="presentation">
+        <a href="#stations-filters" aria-controls="home" role="tab"
+           data-toggle="tab">Power Stations Type</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="general-filters">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-general="voltage" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Lines and Stations with missing voltage
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-general="cable" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Lines with missing cables count
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-general="connection" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Stations with missing connections
+            </label>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="lines-filters">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-line="minor_line" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Minor Line
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-line="cable" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Underground Cable
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-line="line" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Power Line
+            </label>
+        </div>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="stations-filters">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-station="substation" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Substation
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-station="station" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Station
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-station="plant" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Power plant
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" class="contribution-filter" data-station="generator" checked>
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Generator
+            </label>
+        </div>
+    </div>
+</div>
