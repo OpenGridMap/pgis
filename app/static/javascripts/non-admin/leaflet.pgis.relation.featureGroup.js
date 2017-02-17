@@ -8,10 +8,12 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     isHighlightedForExport: false,
     colorHash: new ColorHash({saturation: 1}),
 
+
     initialize: function (relation, layers) {
         L.FeatureGroup.prototype.initialize.call(this, layers);
 
         this.relation = relation;
+        this.visibleVoltages = [];
         this._initMarkerClusterGroup();
         this._handleRelationPoints();
         this._handleRelationPowerlines();
@@ -25,8 +27,11 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
     },
 
     voltageColor: function (voltage) {
+        var _this = this;
         var color = '#ff0000';
         var chosenVoltage = -1;
+        var colors = ['#FF0000', '#00FFFF', '#0000FF', '#0000A0', '#ADD8E6', '#800080', '#FFFF00', '#00FF00', '#FF00FF'
+            , '#FFA500', '#A52A2A', '#800000', '#008000', '#808000', '#254117', '#7D0552'];
         try {
             if (voltage) {
                 if (voltage.constructor === Array) {
@@ -41,8 +46,15 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
                     chosenVoltage = parseInt(voltage)
                 }
             }
+            var index = _this.visibleVoltages.indexOf(chosenVoltage);
+            if (index <= -1) {
+                _this.visibleVoltages.push(voltage);
+            }
             if (chosenVoltage >= 0) {
-                color = this.colorHash.hex(chosenVoltage.toString());
+                //color = this.colorHash.hex(chosenVoltage.toString());
+                var colorPick = Math.floor(chosenVoltage / 50000);
+                if (colorPick <= 15)
+                    return colors[colorPick];
             }
         }
         catch (err) {

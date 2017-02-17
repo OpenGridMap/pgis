@@ -28,9 +28,13 @@ function PgisMap() {
     this.selectedCountries = [];
     this.selectedVoltages = [];
 
-    this.selectedFilterGenral = ['voltage','cable','connection'];
-    this.selectedFilterLineType = ['minor_line', 'cable' , 'line' ];
+    this.visibleVoltages = [];
+
+    this.selectedFilterGenral = ['voltage', 'cable', 'connection'];
+    this.selectedFilterLineType = ['minor_line', 'cable', 'line'];
     this.selectedFilterStationType = ['substation', 'station', 'plant', 'generator'];
+
+    this.voltagesLegend = undefined;
 
     this.createMap = function (baseLayer) {
         L.Icon.Default.imagePath = APP_IMAGES_URL;
@@ -145,7 +149,7 @@ function PgisMap() {
                 toBeAddedOverlayLayer.name
             )
         }
-    }
+    };
 
     this.addMarkerLayer = function (toBeAddedMarkerLayer) {
         /*
@@ -242,9 +246,9 @@ function PgisMap() {
     };
 
     this.onOverlayAdd = function (layer) {
-    } // override these as needed
+    };// override these as needed
     this.onOverlayRemove = function (layer) {
-    } //override these as needed.
+    }; //override these as needed.
 
     this.bindOverlayLayerAddRemoveEvent = function () {
         var _this = this;
@@ -256,7 +260,7 @@ function PgisMap() {
 
         this.map.addEventListener("overlayremove", function (layer) {
             // First remove the overrlay layer from _this.selectedOverlayLayers
-            selectedLayerIndex = index = _this.selectedOverlayLayers.indexOf(layer.name.toLowerCase());
+            var selectedLayerIndex = _this.selectedOverlayLayers.indexOf(layer.name.toLowerCase());
             if (selectedLayerIndex > -1) {
                 _this.selectedOverlayLayers.splice(selectedLayerIndex, 1);
             }

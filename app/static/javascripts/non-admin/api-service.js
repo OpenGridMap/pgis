@@ -6,6 +6,8 @@ var ApiService = {
 
         var url = "/" + pgisMap.selectedOverlayLayers[0];
 
+        pgisMap.visibleVoltages = [];
+
         currentRequest = $.ajax({
             url: url,
             data: {

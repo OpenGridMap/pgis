@@ -243,17 +243,64 @@ var MapDataLoader = {
         var _this = this;
 
         ApiService.fetchRelationsData(pgisMap, function (data) {
-            relations = data;
-            _this.plotRelationsOnMap(pgisMap, relations);
+            _this.plotRelationsOnMap(pgisMap, data);
+            _this.addVoltagesLegend(pgisMap);
         });
     },
 
+    mergeVisibleVoltages: function (voltages) {
+        var a = voltages.concat();
+        for (var i = 0; i < a.length; ++i) {
+            for (var j = i + 1; j < a.length; ++j) {
+                if (a[i] === a[j])
+                    a.splice(j--, 1);
+            }
+        }
+        return a;
+    },
+
+    addVoltagesLegend: function (pgisMap) {
+
+        var colors = ['#FF0000', '#00FFFF', '#0000FF', '#0000A0', '#ADD8E6', '#800080', '#FFFF00', '#00FF00', '#FF00FF'
+            , '#FFA500', '#A52A2A', '#800000', '#008000', '#808000', '#254117', '#7D0552'];
+
+        if (pgisMap.voltagesLegend != undefined)
+            pgisMap.voltagesLegend.removeFrom(pgisMap.map);
+
+        pgisMap.voltagesLegend = L.control({position: 'bottomleft'});
+        pgisMap.voltagesLegend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend');
+
+            pgisMap.visibleVoltages = pgisMap.visibleVoltages.sort();
+
+            div.innerHTML += '<h4>Legend<\h4>';
+
+            for (var i = 0; i < pgisMap.visibleVoltages.length; i++) {
+                var color = '#ff0000';
+                if (pgisMap.visibleVoltages[i] >= 0) {
+                    var colorPick = Math.floor(pgisMap.visibleVoltages[i] / 50000);
+                    if (colorPick <= 15)
+                        color = colors[colorPick];
+                }
+
+                div.innerHTML +=
+                    '<div class="box" style="background-color: ' + color + '"></div> ' + pgisMap.visibleVoltages[i] + ' V <br>';
+            }
+
+            return div;
+        };
+
+        pgisMap.voltagesLegend.addTo(pgisMap.map);
+    },
+
     plotRelationsOnMap: function (pgisMap, relations) {
+        var _this = this;
         pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].layer.clearLayers();
 
         _.each(relations, function (relation) {
             var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
             pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].layer.addLayer(relationFeatureLayer);
+            pgisMap.visibleVoltages = _this.mergeVisibleVoltages(pgisMap.visibleVoltages.concat(relationFeatureLayer.visibleVoltages));
 
             // if relation with this id was previously selected for sidebar, hightlight it
             //  This is needed because when clicked on a relation, the display of sidebar
@@ -284,5 +331,7 @@ var MapDataLoader = {
                 pgisMap.map.fireEvent("relation-click", {relationFeatureLayer: relationFeatureLayer});
             });
         });
+
+
     }
 };
