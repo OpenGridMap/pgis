@@ -42,6 +42,9 @@
     <div id="transnet-validations-sidebar">
         {% include 'transnet_evaluations.html' %}
     </div>
+    <div id="contribution-filter-sidebar">
+        {% include 'contribution_filter.html' %}
+    </div>
 
     {% raw %}
     <script id="marker-sidebar-template" type="text/x-handlebars-template">
@@ -74,38 +77,112 @@
             <div class="panel-heading">Powerline {{ id }}</div>
             <div class="panel-body">
                 <p><strong>Tags:</strong> {{ json tags }}</p>
-                <p><a href="/admin/powerlines/edit/{{id}}?redirect_back=true"><button class="btn btn-default">Edit</button></a></p>
-          </div>
+                <p><a href="/admin/powerlines/edit/{{id}}?redirect_back=true">
+                    <button class="btn btn-default">Edit</button>
+                </a></p>
+            </div>
         </div>
-</script>
-{% endraw %}
-{% raw %}
-<script id="relation-sidebar-template" type="text/x-handlebars-template">
-      <div class='relation-sidebar'>
-        <div class="sidebar"><h1>Relation: OSM-ID-{{ relation.properties.osmid }}</h1></div>
-        <hr/>
-        <div class="sidebar-tags-table">
-          <strong>Tags:</strong>
-          <table>
-            <tr>
-              <th>Tag</th>
-              <th>Value</th>
-            </tr>
-            {{#each relation.properties.tags}}
-            <tr>
-              <td>{{@key}}:</td>
-              <td>{{this}}</td>
-            </tr>
-            {{/each}}
-          </table>
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="polyline-missing-data-popup-template" type="text/x-handlebars-template">
+        <div class="panel panel-default line-missing-data-panel">
+            <div class="panel-heading">Powerline {{ osm_id }}</div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Type</dt>
+                    <dd>{{ type }}</dd>
+                    <dt class="missing{{ voltage }}">Voltage</dt>
+                    <dd class="missing{{ voltage }}">{{ voltage }} V</dd>
+                    <dt class="suggested{{ voltage }}">Possible Voltages</dt>
+                    <dd class="suggested{{ voltage }}">{{ estimated_voltage }} V</dd>
+                    <dt class="missing{{ cables }}">Cables</dt>
+                    <dd class="missing{{ cables }}">{{ cables }}</dd>
+                    <dt class="suggested{{ cables }}">Possible Cables</dt>
+                    <dd class="suggested{{ cables }}">{{ estimated_cables }}</dd>
+                    <dt>Length</dt>
+                    <dd>{{ length }} m</dd>
+                    <dt>OSM ID</dt>
+                    <dd>{{ osm_id }}</dd>
+                    <dt>Tags</dt>
+                    <dd>{{ json tags }}</dd>
+                    <dt></dt>
+                </dl>
+                <p>
+                    <a class="btn btn-default" href="https://www.openstreetmap.org/edit#map=18/{{ lat }}/{{ lon }}"
+                       target="_blank">
+                        Edit on OSM
+                    </a>
+                </p>
+            </div>
         </div>
-        <hr/>
-        <div>
-          {{relationSelectionButton}}
-          <br/>
-          <br/>
-          {{relationSelectionSummaryAndActions}}
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="station-missing-data-popup-template" type="text/x-handlebars-template">
+        <div class="panel panel-default line-missing-data-panel">
+            <div class="panel-heading">Station {{ osm_id }}</div>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt>Type</dt>
+                    <dd>{{ type }}</dd>
+                    <dt class="missing{{ voltage }}">Voltage</dt>
+                    <dd class="missing{{ voltage }}">{{ voltage }} V</dd>
+                    <dt class="suggested{{ voltage }}">Possible Voltages</dt>
+                    <dd class="suggested{{ voltage }}">{{ estimated_voltage }} V</dd>
+                    <dt class="missing{{ missing_connection }}">Missing connection
+                        <br> to nearby power lines
+                    </dt>
+                    <dd class="missing{{ missing_connection }}">
+                        {{#if missing_connection}}
+                        Yes
+                        {{ else }}
+                        No
+                        {{/if}}
+                    </dd>
+                    <dt>OSM ID</dt>
+                    <dd>{{ osm_id }}</dd>
+                    <dt>Tags</dt>
+                    <dd>{{ json tags }}</dd>
+                    <dt></dt>
+                </dl>
+                <p>
+                    <a class="btn btn-default" href="https://www.openstreetmap.org/edit#map=20/{{ lat }}/{{ lon }}"
+                       target="_blank">
+                        Edit on OSM
+                    </a>
+                </p>
+            </div>
         </div>
+    </script>
+    {% endraw %}
+    {% raw %}
+    <script id="relation-sidebar-template" type="text/x-handlebars-template">
+        <div class='relation-sidebar'>
+            <div class="sidebar"><h1>Relation: OSM-ID-{{ relation.properties.osmid }}</h1></div>
+            <hr/>
+            <div class="sidebar-tags-table">
+                <strong>Tags:</strong>
+                <table>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Value</th>
+                    </tr>
+                    {{#each relation.properties.tags}}
+                    <tr>
+                        <td>{{@key}}:</td>
+                        <td>{{this}}</td>
+                    </tr>
+                    {{/each}}
+                </table>
+            </div>
+            <hr/>
+            <div>
+                {{relationSelectionButton}}
+                <br/>
+                <br/>
+                {{relationSelectionSummaryAndActions}}
+            </div>
 
           {{#if relation.points}}
             <hr>
