@@ -131,3 +131,20 @@ td, th {
     color: red;
 }
 
+#add-point button {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px;
+    background-color: #f6f6f6;
+    line-height: 50px;
+    font-size: 12px;
+    font-weight: bold;
+    width: 100%;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.placepoint {
+    font-size: 1.5em;
+    text-align: center;
+    font-weight: bold;
+}

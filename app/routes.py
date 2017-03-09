@@ -466,6 +466,12 @@ def submissions_create():
     controller = app.controllers.submissions_controller.SubmissionsController()
     return controller.create()
 
+@GisApp.route('/submissions/create_by_webapp', methods=['POST'])
+@login_required
+def submissions_create_by_webapp():
+    controller = app.controllers.submissions_controller.SubmissionsController()
+    return controller.create_by_webapp()
+
 
 @GisApp.route('/admin/submissions')
 @login_required

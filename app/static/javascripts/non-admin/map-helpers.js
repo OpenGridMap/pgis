@@ -25,6 +25,18 @@ var MapHelpers = {
 
     return statisticSidebarTemplate(statisticData);
   },
+  getAddPointSidebarContent: function(latlng){
+    var source   = $("#add-point-sidebar-template").html();
+    var addPointSidebarTemplate = Handlebars.compile(source);
+
+    return addPointSidebarTemplate(latlng);
+  },
+  getPlacePointSidebarContent: function(){
+    var source   = $("#place-point-sidebar-template").html();
+    var placePointSidebarTemplate = Handlebars.compile(source);
+
+    return placePointSidebarTemplate();
+  },
   // Binds a the popup to a powerline
   bindPowerlinePopup: function(polyline, powerline){
     var source   = $("#polyline-popup-template").html();
