@@ -142,6 +142,11 @@ def points_update(id):
     controller = app.controllers.points_controller.PointsController()
     return controller.update(id)
 
+@GisApp.route('/points/delete_by_user/<id>')
+def points_delete_by_user(id):
+    controller = app.controllers.points_controller.PointsController()
+    return controller.delete_by_user(id)
+
 
 @GisApp.route('/powerlines', methods=['GET'])
 def powerlines():

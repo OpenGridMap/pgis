@@ -27,6 +27,8 @@ class PointsController:
                 Point.geom
             )
         ).filter(
+            Point.deleted_by_user.isnot(True)
+        ).filter(
             or_(Point.approved, Point.revised == False)
         ).all()
         points = list(map(lambda point: point.serialize(), points))
@@ -63,6 +65,7 @@ class PointsController:
                         point.geom
                     )
                     AND (point.approved = TRUE OR point.revised = FALSE)
+                    AND point.deleted_by_user IS NOT TRUE
             ) AS ksub
             GROUP BY kmeans ORDER BY kmeans;
         """)
@@ -116,5 +119,12 @@ class PointsController:
         fh = open(directory + "/test.png", "wb")
         fh.write(base64.b64decode(encoded_string))
         fh.close()
+
+    def delete_by_user(self, id):
+        point = Point.query.get(id)
+        point.deleted_by_user = True
+        db.session.add(point)
+        db.session.commit()
+        return redirect(url_for('index'))
 
 
