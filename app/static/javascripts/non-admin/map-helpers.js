@@ -37,6 +37,12 @@ var MapHelpers = {
 
     return placePointSidebarTemplate();
   },
+  getDeletePointSidebarContent: function(point_id){
+    var source   = $("#delete-point-sidebar-template").html();
+    var deletePointSidebarTemplate = Handlebars.compile(source);
+
+    return deletePointSidebarTemplate(point_id);
+  },
   // Binds a the popup to a powerline
   bindPowerlinePopup: function(polyline, powerline){
     var source   = $("#polyline-popup-template").html();

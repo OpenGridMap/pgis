@@ -27,5 +27,20 @@ var MiscHelpers = {
     var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
     var string = reg.exec(href);
     return string ? string[1] : null;
+  },
+
+  deletePoint: function (point_id) {
+    $.get('/points/delete_by_user/' + point_id)
+      .done(function( data ) {
+        $('#pointdeletion').modal('hide');
+        sidebarPointData = new Array();
+        sidebarPointData['point_id'] = point_id;
+        pgisMap.sidebar.setContent(MapHelpers.getDeletePointSidebarContent(sidebarPointData));
+        pgisMap.map.removeLayer(pgisMap.markerMap[point_id]);
+
+      })
+      .fail(function () {
+        alert('An error occured. Please try again!');
+      })
   }
-}
+};

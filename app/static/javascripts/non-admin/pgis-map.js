@@ -79,7 +79,8 @@ function PgisMap() {
                 pgisMap.selectedPoint = null;
             }
 
-            if (typeof(_this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer) != 'undefined') {
+            if (typeof(_this.selectedOverlayLayers[0]) != 'undefined' &&
+                typeof(_this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer) != 'undefined') {
                 _this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer.removeHighlightForSidebar();
                 _this.overlayLayers[_this.selectedOverlayLayers[0]].lastClickedRelationFeatureLayer = undefined
             }

@@ -60,9 +60,12 @@
                 <a href="/admin/points/edit/{{id}}?redirect_back=true">
                     <button class="btn btn-default">Edit</button>
                 </a>
-                <a href="/points/delete_by_user/{{id}}">
-                    <button class="btn btn-default">Delete</button>
-                </a>
+                <button class="btn btn-default" data-toggle="modal" data-target="#pointdeletion"">
+                    Delete
+                </button>
+                <!--<a href="/points/delete_by_user/{{id}}">
+                    <button type="button" class="btn btn-default">Delete</button>
+                </a>-->
             </p>
         </div>
         <br/>
@@ -345,7 +348,17 @@
 <script id="place-point-sidebar-template" type="text/x-handlebars-template">
     <div class="sidebar" id="add-point"><h1>Add point</h1>
         <div>
-            <p class="placepoint">Please click on map where you want to place your point
+            <p class="short-sidebar-text">Please click on map where you want to place your point
+            </p>
+        </div>
+
+    </div>
+</script>
+
+<script id="delete-point-sidebar-template" type="text/x-handlebars-template">
+    <div class="sidebar"><h1>Delete Point</h1>
+        <div>
+            <p class="short-sidebar-text">Point {{ point_id }} successfully deleted!
             </p>
         </div>
 
@@ -353,4 +366,23 @@
 </script>
 
 {% endraw %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="pointdeletion">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Are you shure?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Do you really want to delete this point?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">No, Chancel</button>
+        <button type="button" class="btn btn-danger" onclick="MiscHelpers.deletePoint(pgisMap.selectedPoint);">Yes, Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 {% endblock %}
