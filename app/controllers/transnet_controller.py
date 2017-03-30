@@ -140,7 +140,7 @@ class TransnetController:
             return Response(json.dumps([]), mimetype='application/json')
 
         return render_template('evaluations.html', countries_stats=TransnetRelation.get_evaluations(
-            request.args.get("countries").split(','), request.args.get("hit_rate")))
+            request.args.get("countries").split(',')))
 
     def matlab_scripts(self):
         return send_from_directory(join(dirname(__file__), '../../resources/'), 'matlab.zip')
