@@ -11,6 +11,9 @@ class TransnetCountry(db.Model):
     continent = db.Column(db.String)
     voltages = db.Column(ARRAY(db.INTEGER), nullable=True)
 
+    def get_pretty_voltages(self):
+        return ', '.join(["{:,.0f}".format(v / 1000) for v in self.voltages])
+
     @staticmethod
     def get_countries():
         continents = db.session.query(TransnetCountry.continent).distinct()

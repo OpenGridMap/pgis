@@ -207,7 +207,7 @@ var MapDataLoader = {
                 "general": pgisMap.selectedFilterGenral.toString()
             },
             beforeSend: function () {
-                if (currentPowerlinesRequest != null) {
+                if (currentPowerlinesRequest !== null) {
                     currentPowerlinesRequest.abort();
                 }
             },
@@ -243,17 +243,68 @@ var MapDataLoader = {
         var _this = this;
 
         ApiService.fetchRelationsData(pgisMap, function (data) {
-            relations = data;
-            _this.plotRelationsOnMap(pgisMap, relations);
+            _this.plotRelationsOnMap(pgisMap, data);
+            _this.addVoltagesLegend(pgisMap);
         });
     },
 
+    mergeVisibleVoltages: function (voltages) {
+        var a = voltages.concat();
+        for (var i = 0; i < a.length; ++i) {
+            for (var j = i + 1; j < a.length; ++j) {
+                if (a[i] === a[j])
+                    a.splice(j--, 1);
+            }
+        }
+        return a;
+    },
+    numberWithCommas: function (voltage) {
+        return voltage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    },
+    addVoltagesLegend: function (pgisMap) {
+        var _this = this;
+
+        var colors = ['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C', '#16A085', '#27AE60'
+            , '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400', '#34495E', '#566573'];
+
+        if (pgisMap.voltagesLegend !== undefined)
+            pgisMap.voltagesLegend.removeFrom(pgisMap.map);
+
+        pgisMap.voltagesLegend = L.control({position: 'bottomleft'});
+        pgisMap.voltagesLegend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend');
+
+            var voltages = pgisMap.visibleVoltages.sort();
+            // if (pgisMap.selectedVoltages.length)
+            //     voltages = pgisMap.selectedVoltages.sort();
+
+            div.innerHTML += '<h4>Legend<\h4>';
+
+            for (var i = 0; i < voltages.length; i++) {
+                var color = '#ff0000';
+                if (voltages[i] >= 0) {
+                    var colorPick = Math.floor(voltages[i] / 50000);
+                    if (colorPick <= 15)
+                        color = colors[colorPick];
+                }
+                div.innerHTML +=
+                    '<div class="box" style="background-color: ' + color + '"></div> ' + _this.numberWithCommas(voltages[i] / 1000) + ' kV <br>';
+            }
+            return div;
+        };
+
+        pgisMap.voltagesLegend.addTo(pgisMap.map);
+    },
+
     plotRelationsOnMap: function (pgisMap, relations) {
+        var _this = this;
         pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].layer.clearLayers();
 
         _.each(relations, function (relation) {
             var relationFeatureLayer = L.pgisRelationFeatureGroup(relation);
             pgisMap.overlayLayers[pgisMap.selectedOverlayLayers[0]].layer.addLayer(relationFeatureLayer);
+            pgisMap.visibleVoltages = _this.mergeVisibleVoltages(pgisMap.visibleVoltages.concat(relationFeatureLayer.visibleVoltages));
 
             // if relation with this id was previously selected for sidebar, hightlight it
             //  This is needed because when clicked on a relation, the display of sidebar
@@ -284,5 +335,7 @@ var MapDataLoader = {
                 pgisMap.map.fireEvent("relation-click", {relationFeatureLayer: relationFeatureLayer});
             });
         });
+
+
     }
 };

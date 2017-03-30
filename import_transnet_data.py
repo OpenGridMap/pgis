@@ -26,7 +26,7 @@ def download_large_relations(base_url, continent, country):
     for file_extension in file_extensions:
         try:
             urllib.URLopener().retrieve(
-                '{0}/models/{1}/{2}/_relations{3}'.format(base_url, continent, country, file_extension),
+                '{0}/{1}/{2}/_relations{3}'.format(base_url, continent, country, file_extension),
                 '{0}/relations/{1}/{2}/_relations{3}'.format(base_dir, continent, country, file_extension))
         except IOError as e:
             print('relations part {0} for {1} not found.'.format(file_extension, country))
@@ -40,7 +40,8 @@ def download_large_relations(base_url, continent, country):
 
 def download_latest_relation_files():
     try:
-        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/planet-models'
+        base_url_transnet = 'https://raw.githubusercontent.com/OpenGridMap/transnet/master'
+        base_url_transnet_models = 'https://raw.githubusercontent.com/OpenGridMap/transnet-models/master'
 
         # Download planet json to get the list of continent
         planet_folder = '{0}/planet_json/'.format(base_dir)
@@ -48,7 +49,7 @@ def download_latest_relation_files():
             makedirs(planet_folder)
 
         print('Downloading planet config json')
-        urllib.URLopener().retrieve('{0}/app/meta/planet.json'.format(base_url),
+        urllib.URLopener().retrieve('{0}/app/meta/planet.json'.format(base_url_transnet),
                                     '{0}/planet_json/planet.json'.format(base_dir))
 
         query_country = '''INSERT INTO transnet_country(continent, country, voltages)
@@ -63,7 +64,7 @@ def download_latest_relation_files():
             continents = json.load(planet_file)
             for continent in continents:
                 print('Downloading {0} config json'.format(continent))
-                urllib.URLopener().retrieve('{0}/app/meta/{1}.json'.format(base_url, continent),
+                urllib.URLopener().retrieve('{0}/app/meta/{1}.json'.format(base_url_transnet, continent),
                                             '{0}/planet_json/{1}.json'.format(base_dir, continent))
                 with open('{0}/planet_json/{1}.json'.format(base_dir, continent), 'r+') as continent_file:
                     countries = json.load(continent_file)
@@ -78,11 +79,11 @@ def download_latest_relation_files():
                         print('Downloading {0} relation json'.format(country))
                         try:
                             urllib.URLopener().retrieve(
-                                '{0}/models/{1}/{2}/relations.json'.format(base_url, continent, country),
+                                '{0}/{1}/{2}/relations.json'.format(base_url_transnet_models, continent, country),
                                 '{0}/relations/{1}/{2}/relations.json'.format(base_dir, continent, country))
                         except IOError as e:
                             print('relation for {0} not found.'.format(country))
-                            download_large_relations(base_url, continent, country)
+                            download_large_relations(base_url_transnet_models, continent, country)
     except Exception as e:
         print(e)
 
@@ -244,7 +245,7 @@ def download_large_missing_line_data_files(base_url, continent, country):
     for file_extension in file_extensions:
         try:
             urllib.URLopener().retrieve(
-                '{0}/models/{1}/{2}/_lines_missing_data{3}'.format(base_url, continent, country, file_extension),
+                '{0}/{1}/{2}/_lines_missing_data{3}'.format(base_url, continent, country, file_extension),
                 '{0}/missing_data/{1}/{2}/_lines_missing_data{3}'.format(base_dir, continent, country, file_extension))
         except IOError as e:
             print('lines part {0} for {1} not found.'.format(file_extension, country))
@@ -262,7 +263,7 @@ def download_large_missing_station_data_files(base_url, continent, country):
     for file_extension in file_extensions:
         try:
             urllib.URLopener().retrieve(
-                '{0}/models/{1}/{2}/_stations_missing_data{3}'.format(base_url, continent, country, file_extension),
+                '{0}/{1}/{2}/_stations_missing_data{3}'.format(base_url, continent, country, file_extension),
                 '{0}/missing_data/{1}/{2}/_stations_missing_data{3}'.format(base_dir, continent, country,
                                                                             file_extension))
         except IOError as e:
@@ -278,7 +279,7 @@ def download_large_missing_station_data_files(base_url, continent, country):
 
 def download_latest_missing_data_files():
     try:
-        base_url = 'https://raw.githubusercontent.com/OpenGridMap/transnet/planet-models'
+        base_url_transnet_models = 'https://raw.githubusercontent.com/OpenGridMap/transnet-models/master'
 
         # For every country we should download the missing data files.
 
@@ -295,19 +296,19 @@ def download_latest_missing_data_files():
                         print('Downloading {0} missing data files json'.format(country))
                         try:
                             urllib.URLopener().retrieve(
-                                '{0}/models/{1}/{2}/lines_missing_data.json'.format(base_url, continent, country),
+                                '{0}/{1}/{2}/lines_missing_data.json'.format(base_url_transnet_models, continent, country),
                                 '{0}/missing_data/{1}/{2}/lines_missing_data.json'.format(base_dir, continent, country))
                         except IOError as e:
                             print('missing line for {0} not found.'.format(country))
-                            download_large_missing_line_data_files(base_url, continent, country)
+                            download_large_missing_line_data_files(base_url_transnet_models, continent, country)
                         try:
                             urllib.URLopener().retrieve(
-                                '{0}/models/{1}/{2}/stations_missing_data.json'.format(base_url, continent, country),
+                                '{0}/{1}/{2}/stations_missing_data.json'.format(base_url_transnet_models, continent, country),
                                 '{0}/missing_data/{1}/{2}/stations_missing_data.json'.format(base_dir, continent,
                                                                                              country))
                         except IOError as e:
                             print('missing station for {0} not found.'.format(country))
-                            download_large_missing_station_data_files(base_url, continent, country)
+                            download_large_missing_station_data_files(base_url_transnet_models, continent, country)
     except Exception as e:
         print(e)
 
