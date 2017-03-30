@@ -28,6 +28,7 @@ non_admin_js_files = common_js_files + [
     'javascripts/non-admin/statistics.js',
     'javascripts/non-admin/main.js',
     'javascripts/non-admin/downloader-info-collector.js',
+    'javascripts/non-admin/map-editor.js',
 ]
 
 admin_js_files = common_js_files + [

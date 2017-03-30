@@ -122,6 +122,15 @@ $(document).ready(function () {
     };
     pgisMap.addLinkButton(galleryLinkProperties);
 
+    var addPointProperties = {
+        ref: 'addPoint',
+        text: 'Add Point',  // string
+        onclick: function () {
+            MapEditor.addPoint(pgisMap);
+        }
+    };
+    pgisMap.addLinkButton(addPointProperties);
+
     pgisMap.addLinkButton({
         ref: 'exportRelations',
         text: 'Export Relations in Bound',

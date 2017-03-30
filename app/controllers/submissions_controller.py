@@ -26,6 +26,38 @@ class SubmissionsController:
         submissions = list(map(lambda submission: submission.serialize_for_mobileapp(), submissions))
         return Response(json.dumps(submissions),  mimetype='application/json')
 
+    def create_by_webapp(self):
+        submission = Submission()
+        submission.submission_id = 12345
+        submission.number_of_points = 1
+        submission.user_id = current_user.get_id()
+        submission.revised = False
+        submission.approved = False
+        db.session.add(submission)
+        db.session.flush()
+        new_point = Point()
+        new_point.geom = "POINT({} {})".format(request.form['latitude'], request.form['longitude'])
+        new_point.properties = json.loads(request.form['properties'])
+        new_point.revised = False
+        new_point.approved = False
+        new_point.submission_id = submission.id
+        db.session.add(new_point)
+        db.session.flush()
+        if 'images' in request.files:
+            new_picture = self.__make_picture(submission.id, new_point.id, submission.user_id)
+            directory = "app/static/uploads/submissions/" + str(submission.id)
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            fh = open(directory + "/" + str(new_point.id) + ".jpg", "wb")
+            fh.write(request.files['pictures[0]'])
+            fh.close()
+            new_picture.filepath = "static/uploads/submissions/" + str(submission.id) + "/" + str(new_point.id) + ".jpg"
+            db.session.add(new_picture)
+        db.session.commit()
+        resp = Response(json.dumps({"status": "ok", "point": str(new_point)}))
+        resp.headers['Content-Type'] = "application/json"
+        return resp
+
     def create(self):
         
         try:

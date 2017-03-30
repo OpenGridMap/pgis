@@ -56,9 +56,17 @@
             (made by user {{ this.username }})
             {{/each}}
             <p><a href="index?point_id={{ id }}&lat={{ latlng.[0] }}&long={{ latlng.[1] }}&zoom=18">Share Point</a></p>
-            <p><a href="/admin/points/edit/{{id}}?redirect_back=true">
-                <button class="btn btn-default">Edit</button>
-            </a></p>
+            <p>
+                <a href="/admin/points/edit/{{id}}?redirect_back=true">
+                    <button class="btn btn-default">Edit</button>
+                </a>
+                <button class="btn btn-default" data-toggle="modal" data-target="#pointdeletion"">
+                    Delete
+                </button>
+                <!--<a href="/points/delete_by_user/{{id}}">
+                    <button type="button" class="btn btn-default">Delete</button>
+                </a>-->
+            </p>
         </div>
         <br/>
         OSM-ID:
@@ -184,7 +192,7 @@
                 {{relationSelectionSummaryAndActions}}
             </div>
 
-            {{#if relation.points}}
+          {{#if relation.points}}
             <hr>
             <div class="sidebar-tags-table">
                 <strong>Stations:</strong>
@@ -235,73 +243,146 @@
             </div>
             {{/if}}
 
-        </div>
-    </script>
+      </div>
+</script>
 
-    <script id="statistic-sidebar-template" type="text/x-handlebars-template">
+<script id="statistic-sidebar-template" type="text/x-handlebars-template">
         <div class="sidebar"><h1>Statistics</h1></div>
         <div>
 
             {{#unless numPowerElements.markers}}
-            {{#if numPowerElements.clusteredMarkers}}
-            <strong>clustered Markers:</strong> {{ numPowerElements.clusteredMarkers }} <br>
-            Please zoom in to get more details!
+              {{#if numPowerElements.clusteredMarkers}}
+                <strong>clustered Markers:</strong> {{ numPowerElements.clusteredMarkers }} <br>
+                Please zoom in to get more details!
+              {{else}}
+                <strong>No markers inside this area.</strong>
+              {{/if}}
             {{else}}
-            <strong>No markers inside this area.</strong>
-            {{/if}}
-            {{else}}
-            <strong>All markers:</strong> {{ numPowerElements.markers }}
-            <ul>
+                <strong>All markers:</strong> {{ numPowerElements.markers }}
+              <ul>
                 {{#if numPowerElements.transformers}}
-                <li><strong>Transformers:</strong> {{ numPowerElements.transformers }}</li>
+                  <li><strong>Transformers:</strong> {{ numPowerElements.transformers }}</li>
                 {{/if}}
                 {{#if numPowerElements.substations}}
-                <li><strong>Substations:</strong> {{ numPowerElements.substations }}</li>
+                  <li><strong>Substations:</strong> {{ numPowerElements.substations }}</li>
                 {{/if}}
                 {{#if numPowerElements.powerPoles}}
-                <li><strong>Power poles:</strong> {{ numPowerElements.powerPoles }}</li>
+                  <li><strong>Power poles:</strong> {{ numPowerElements.powerPoles }}</li>
                 {{/if}}
                 {{#if numPowerElements.powerTowers}}
-                <li><strong>Power towers:</strong> {{ numPowerElements.powerTowers }}</li>
+                  <li><strong>Power towers:</strong> {{ numPowerElements.powerTowers }}</li>
                 {{/if}}
                 {{#if numPowerElements.powerPlants}}
-                <li><strong>Power plants:</strong> {{ numPowerElements.powerPlants }}</li>
+                  <li><strong>Power plants:</strong> {{ numPowerElements.powerPlants }}</li>
                 {{/if}}
                 {{#if numPowerElements.windPower}}
-                <li><strong>Wind power:</strong> {{ numPowerElements.windPower }}</li>
+                  <li><strong>Wind power:</strong> {{ numPowerElements.windPower }}</li>
                 {{/if}}
                 {{#if numPowerElements.solarPower}}
-                <li><strong>Solar power:</strong> {{ numPowerElements.solarPower }}</li>
+                  <li><strong>Solar power:</strong> {{ numPowerElements.solarPower }}</li>
                 {{/if}}
                 {{#if numPowerElements.waterPower}}
-                <li><strong>Water power:</strong> {{ numPowerElements.waterPower }}</li>
+                  <li><strong>Water power:</strong> {{ numPowerElements.waterPower }}</li>
                 {{/if}}
                 {{#if numPowerElements.otherGenerators}}
-                <li><strong>Other generators:</strong> {{ numPowerElements.otherGenerators }}</li>
+                  <li><strong>Other generators:</strong> {{ numPowerElements.otherGenerators }}</li>
                 {{/if}}
                 {{#if numPowerElements.others}}
-                <li><strong>Other power related markers:</strong> {{ numPowerElements.others }}</li>
+                  <li><strong>Other power related markers:</strong> {{ numPowerElements.others }}</li>
                 {{/if}}
-            </ul>
+              </ul>
             {{/unless}}
         </div>
         <div>
-            <strong>All powerlines:</strong> {{ numberOfPowerlines }}
-            {{#if numberOfPowerlines}}
+          <strong>All powerlines:</strong> {{ numberOfPowerlines }}
+          {{#if numberOfPowerlines}}
             <ul>
-                <li><strong>Length of all visible parts of powerlines:</strong> {{ lengthOfPowerlines.all }}</li>
+              <li><strong>Length of all visible parts of powerlines:</strong> {{ lengthOfPowerlines.all }}</li>
                 <li>
-                    <strong>Length by voltage</strong>
-                    <ul>
-                        {{#each lengthOfPowerlines.voltage}}
-                        <li><strong>{{@key}}:</strong> {{this}}</li>
-                        {{/each}}
-                    </ul>
+                  <strong>Length by voltage</strong>
+                  <ul>
+                    {{#each lengthOfPowerlines.voltage}}
+                      <li><strong>{{@key}}:</strong> {{this}}</li>
+                    {{/each}}
+                  </ul>
                 </li>
             </ul>
-            {{/if}}
+          {{/if}}
         </div>
 
-    </script>
-    {% endraw %}
+</script>
+
+<script id="add-point-sidebar-template" type="text/x-handlebars-template">
+    <div class="sidebar" id="add-point"><h1>Add point</h1>
+      <div id="addPowerObject">
+        <p><b>Latitude:</b> {{ latlng.lat }}<br />
+          <b>Longitude:</b> {{ latlng.lng }}</p>
+          <p><b>Please choose the correct type:</b>
+            <button name="powerType" value="transformer">Transfomer</button>
+            <button name="powerType" value="substation">Substation</button>
+            <button name="powerType" value="generator">Generator</button>
+            <button name="powerType" value="wind">Wind Farm</button>
+            <button name="powerType" value="solar">Solar PV</button>
+            <button name="powerType" value="other">Other</button>
+          </p>
+      </div>
+      <div id="addPowerDetails" style="display: none">
+        <button id="backToPowerObject"><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span> Back</button><h2 id="powerDetailsTitle"></h2>
+        <form name="addPoint" id="addPoint" method="post" enctype="multipart/form-data">
+          <p>
+            <input type="text" name="latitude" id="latitude" value="{{ latlng.lat }}"><br>
+            <input type="text" name="longitude" id="longitude" value="{{ latlng.lng }}"><br>
+            Properties:<br>
+            <textarea name="properties" id="properties"></textarea>
+          </p>
+
+            Picture: <input type="file" id="picture" name="picture" />
+            <output id="list"></output>
+            <button type="button" onclick="MapEditor.submitPoint()">Add point to OpenGridMap</button>
+          </form>
+
+        </div>
+    </div>
+</script>
+
+<script id="place-point-sidebar-template" type="text/x-handlebars-template">
+    <div class="sidebar" id="add-point"><h1>Add point</h1>
+        <div>
+            <p class="short-sidebar-text">Please click on map where you want to place your point
+            </p>
+        </div>
+
+    </div>
+</script>
+
+<script id="delete-point-sidebar-template" type="text/x-handlebars-template">
+    <div class="sidebar"><h1>Delete Point</h1>
+        <div>
+            <p class="short-sidebar-text">Point {{ point_id }} successfully deleted!
+            </p>
+        </div>
+
+    </div>
+</script>
+
+{% endraw %}
+
+<div class="modal fade" tabindex="-1" role="dialog" id="pointdeletion">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Are you shure?</h4>
+      </div>
+      <div class="modal-body">
+        <p>Do you really want to delete this point?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">No, Chancel</button>
+        <button type="button" class="btn btn-danger" onclick="MiscHelpers.deletePoint(pgisMap.selectedPoint);">Yes, Delete</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 {% endblock %}

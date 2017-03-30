@@ -10,6 +10,7 @@ class Point(db.Model):
     properties = db.Column(JSON)
     revised = db.Column(db.Boolean)
     approved = db.Column(db.Boolean)
+    deleted_by_user = db.Column(db.Boolean)
     submission_id = db.Column(db.Integer, db.ForeignKey('submission.id'))
     submission = db.relationship('Submission', back_populates='points')
     merged_to = db.Column(db.Integer, db.ForeignKey('point.id'))

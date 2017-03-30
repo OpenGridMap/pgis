@@ -25,17 +25,33 @@ var MapHelpers = {
 
         return statisticSidebarTemplate(statisticData);
     },
-    // Binds a the popup to a powerline
-    bindPowerlinePopup: function (polyline, powerline) {
-        var source = $("#polyline-popup-template").html();
-        var polylinePopupTemplate = Handlebars.compile(source);
+  getAddPointSidebarContent: function(latlng){
+    var source   = $("#add-point-sidebar-template").html();
+    var addPointSidebarTemplate = Handlebars.compile(source);
 
-        var popup = L.popup().setContent(
-            polylinePopupTemplate(powerline)
-        );
+    return addPointSidebarTemplate(latlng);
+  },
+  getPlacePointSidebarContent: function(){
+    var source   = $("#place-point-sidebar-template").html();
+    var placePointSidebarTemplate = Handlebars.compile(source);
 
-        polyline.bindPopup(popup);
-    },
+    return placePointSidebarTemplate();
+  },
+  getDeletePointSidebarContent: function(point_id){
+    var source   = $("#delete-point-sidebar-template").html();
+    var deletePointSidebarTemplate = Handlebars.compile(source);
+
+    return deletePointSidebarTemplate(point_id);
+  },
+  // Binds a the popup to a powerline
+  bindPowerlinePopup: function(polyline, powerline){
+    var source   = $("#polyline-popup-template").html();
+    var polylinePopupTemplate = Handlebars.compile(source);
+    var popup = L.popup().setContent(
+      polylinePopupTemplate(powerline)
+    );
+    polyline.bindPopup(popup);
+  },
 
     // Binds a the popup to a powerline with missing data
     bindPowerlineMissingDataPopup: function (polyline, powerline) {
