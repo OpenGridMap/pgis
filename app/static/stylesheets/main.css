@@ -156,7 +156,7 @@ td, th {
 }
 
 #add-point button {
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     background-color: #f6f6f6;
     line-height: 50px;
@@ -172,3 +172,46 @@ td, th {
     text-align: center;
     font-weight: bold;
 }
+
+.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+
+.legend {
+    line-height: 18px;
+    color: #555;
+}
+
+.legend .box {
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin-right: 8px;
+}
+
+/*.legend {*/
+/*line-height: 30px;*/
+/*color: #555;*/
+/*font-size: 30px;*/
+/*}*/
+
+/*.legend .box {*/
+/*width: 25px;*/
+/*height: 25px;*/
+/*float: left;*/
+/*margin-right: 8px;*/
+/*}*/
+
+/*.legend h4 {*/
+/*font-size: 30px;*/
+/*}*/
