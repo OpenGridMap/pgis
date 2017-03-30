@@ -172,3 +172,7 @@ td, th {
     text-align: center;
     font-weight: bold;
 }
+
+#pointdeletion.modal {
+    z-index: 9999;
+}
