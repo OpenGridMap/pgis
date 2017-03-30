@@ -30,12 +30,13 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
         var _this = this;
         var color = '#ff0000';
         var chosenVoltage = -1;
-        var colors = ['#FF0000', '#00FFFF', '#0000FF', '#0000A0', '#ADD8E6', '#800080', '#FFFF00', '#00FF00', '#FF00FF'
-            , '#FFA500', '#A52A2A', '#800000', '#008000', '#808000', '#254117', '#7D0552'];
+        var colors = ['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C', '#16A085', '#27AE60'
+            , '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400', '#34495E', '#566573'];
+
         try {
             if (voltage) {
                 if (voltage.constructor === Array) {
-                    if (voltage.length == 1) {
+                    if (voltage.length === 1) {
                         chosenVoltage = parseInt(voltage[0])
                     }
                     else {
@@ -67,7 +68,8 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
         this.isHighlightedForExport = false;
         this._markersClusterGroup.removeHighlightStyle();
         this.setStyle({
-            color: this.voltageColor(this.relation.properties.tags.voltage)
+            color: this.voltageColor(this.relation.properties.tags.voltage),
+            opacity: 1
         });
     },
 
@@ -86,7 +88,8 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
         } else {
             this._markersClusterGroup.removeHighlightStyle();
             this.setStyle({
-                color: this.voltageColor(this.relation.properties.tags.voltage)
+                color: this.voltageColor(this.relation.properties.tags.voltage),
+                opacity: 1
             });
         }
     },
@@ -105,7 +108,8 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
             var polyline = L.polyline(line.latlngs);
             polyline.data = line.properties;
             polyline.setStyle({
-                color: _this.voltageColor(_this.relation.properties.tags.voltage)
+                color: _this.voltageColor(_this.relation.properties.tags.voltage),
+                opacity: 1
             });
 
             _this.addLayer(polyline);
@@ -127,7 +131,8 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
                 var polyline = L.polyline(point.latlngs);
                 polyline.data = point.properties;
                 polyline.setStyle({
-                    color: _this.voltageColor(_this.relation.properties.tags.voltage)
+                    color: _this.voltageColor(_this.relation.properties.tags.voltage),
+                    opacity: 1
                 });
 
                 _this.addLayer(polyline);
@@ -155,13 +160,14 @@ L.PgisRelationFeatureGroup = L.FeatureGroup.extend({
             if (!_this.isHighlightedForSidebar && !_this.isHighlightedForExport) {
                 _this._markersClusterGroup.removeHighlightStyle();
                 e.target.setStyle({
-                    color: _this.voltageColor(e.target.relation.properties.tags.voltage)
+                    color: _this.voltageColor(e.target.relation.properties.tags.voltage),
+                    opacity: 1
                 });
             }
         });
     }
-})
+});
 
 L.pgisRelationFeatureGroup = function (relation, layers) {
     return new L.PgisRelationFeatureGroup(relation, layers);
-}
+};

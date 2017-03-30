@@ -207,7 +207,7 @@ var MapDataLoader = {
                 "general": pgisMap.selectedFilterGenral.toString()
             },
             beforeSend: function () {
-                if (currentPowerlinesRequest != null) {
+                if (currentPowerlinesRequest !== null) {
                     currentPowerlinesRequest.abort();
                 }
             },
@@ -258,35 +258,39 @@ var MapDataLoader = {
         }
         return a;
     },
+    numberWithCommas: function (voltage) {
+        return voltage.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+    },
     addVoltagesLegend: function (pgisMap) {
+        var _this = this;
 
-        var colors = ['#FF0000', '#00FFFF', '#0000FF', '#0000A0', '#ADD8E6', '#800080', '#FFFF00', '#00FF00', '#FF00FF'
-            , '#FFA500', '#A52A2A', '#800000', '#008000', '#808000', '#254117', '#7D0552'];
+        var colors = ['#C0392B', '#E74C3C', '#9B59B6', '#8E44AD', '#2980B9', '#3498DB', '#1ABC9C', '#16A085', '#27AE60'
+            , '#2ECC71', '#F1C40F', '#F39C12', '#E67E22', '#D35400', '#34495E', '#566573'];
 
-        if (pgisMap.voltagesLegend != undefined)
+        if (pgisMap.voltagesLegend !== undefined)
             pgisMap.voltagesLegend.removeFrom(pgisMap.map);
 
         pgisMap.voltagesLegend = L.control({position: 'bottomleft'});
         pgisMap.voltagesLegend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'info legend');
 
-            pgisMap.visibleVoltages = pgisMap.visibleVoltages.sort();
+            var voltages = pgisMap.visibleVoltages.sort();
+            // if (pgisMap.selectedVoltages.length)
+            //     voltages = pgisMap.selectedVoltages.sort();
 
             div.innerHTML += '<h4>Legend<\h4>';
 
-            for (var i = 0; i < pgisMap.visibleVoltages.length; i++) {
+            for (var i = 0; i < voltages.length; i++) {
                 var color = '#ff0000';
-                if (pgisMap.visibleVoltages[i] >= 0) {
-                    var colorPick = Math.floor(pgisMap.visibleVoltages[i] / 50000);
+                if (voltages[i] >= 0) {
+                    var colorPick = Math.floor(voltages[i] / 50000);
                     if (colorPick <= 15)
                         color = colors[colorPick];
                 }
-
                 div.innerHTML +=
-                    '<div class="box" style="background-color: ' + color + '"></div> ' + pgisMap.visibleVoltages[i] + ' V <br>';
+                    '<div class="box" style="background-color: ' + color + '"></div> ' + _this.numberWithCommas(voltages[i] / 1000) + ' kV <br>';
             }
-
             return div;
         };
 

@@ -61,7 +61,7 @@ class TransnetRelation(db.Model):
 
         powerline_relations = powerlines_qry.options(joinedload('relations')).all()
 
-        return TransnetRelation.prepare_relations_for_export(powerline_relations, [], zoom)
+        return TransnetRelation.prepare_relations_for_export(powerline_relations, [], zoom, voltages)
 
     @staticmethod
     def relations_for_export(relation_ids):
@@ -70,7 +70,7 @@ class TransnetRelation(db.Model):
             TransnetRelation.id.in_(relation_ids)
         ).all()
 
-        return TransnetRelation.prepare_relations_for_export([], relations, None)
+        return TransnetRelation.prepare_relations_for_export([], relations, None, None)
 
     @staticmethod
     def get_station_info(relation_id):
@@ -79,7 +79,7 @@ class TransnetRelation(db.Model):
             TransnetRelation.id == relation_id
         ).all()
 
-        return TransnetRelation.prepare_relations_for_export([], relations, None)
+        return TransnetRelation.prepare_relations_for_export([], relations, None, None)
 
     @staticmethod
     def make_base_relation(relation):
@@ -102,7 +102,7 @@ class TransnetRelation(db.Model):
         }
 
     @staticmethod
-    def prepare_relations_for_export(powerline_relations, relations_filtered, zoom):
+    def prepare_relations_for_export(powerline_relations, relations_filtered, zoom, voltages):
 
         relations_to_export = {}
 
@@ -113,6 +113,7 @@ class TransnetRelation(db.Model):
 
         for relation in relations_query:
             for powerline in relation.powerlines:
+                # if (not voltages or  any(v in powerline.voltage for v in voltages)) and powerline.length > 10000:
                 if relation.id not in relations_to_export:
                     relations_to_export[relation.id] = TransnetRelation.make_base_relation(relation)
 
