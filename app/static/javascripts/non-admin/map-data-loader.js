@@ -20,6 +20,20 @@ var MapDataLoader = {
             popupAnchor: [1, -34],
             shadowSize: [41, 41]
         });
+        var transformerIcon = L.icon({
+            iconUrl: 'static/images/marker-icon-transformer.png',
+            iconSize:    [32, 53],
+            iconAnchor:  [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize:  [53, 53]
+        });
+        var unverifiedTransformerIcon = L.icon({
+            iconUrl: 'static/images/marker-unverified-icon-transformer.png',
+            iconSize:    [32, 53],
+            iconAnchor:  [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize:  [53, 53]
+        });
 
         if (map.getZoom() > 11) {
             map.fireEvent("dataloading");
@@ -43,10 +57,19 @@ var MapDataLoader = {
                     }
                     var newMarkers = [];
                     for (var i = 0; i < data.length; i++) {
+                        var power_element_tags = data[i].tags.power_element_tags || "";
                         if (data[i]['revised'] == true) {
-                            var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
+                            if (power_element_tags.indexOf('power=transformer') != -1) {
+                                var marker = new L.Marker(data[i]['latlng'], {icon: transformerIcon}).on('click', onMarkerClick);
+                            } else {
+                                var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
+                            }
                         } else {
-                            var marker = new L.Marker(data[i]['latlng'], {icon: unverifiedIcon}).on('click', onMarkerClick);
+                            if (power_element_tags.indexOf('power=transformer') != -1) {
+                                var marker = new L.Marker(data[i]['latlng'], {icon: unverifiedTransformerIcon}).on('click', onMarkerClick);
+                            } else {
+                                var marker = new L.Marker(data[i]['latlng'], {icon: unverifiedIcon}).on('click', onMarkerClick);
+                            }
                         }
                         marker.data = data[i];
                         newMarkers.push(marker);
