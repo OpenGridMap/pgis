@@ -58,14 +58,17 @@ var MapDataLoader = {
                     var newMarkers = [];
                     for (var i = 0; i < data.length; i++) {
                         var power_element_tags = data[i].tags.power_element_tags || "";
+                        var power = data[i].power; // old format
                         if (data[i]['revised'] == true) {
-                            if (power_element_tags.indexOf('power=transformer') != -1) {
+                            if (power_element_tags.indexOf('power=transformer') != -1
+                                || power_element_tags.indexOf('Transformer') != -1 || power == 'transformer') {
                                 var marker = new L.Marker(data[i]['latlng'], {icon: transformerIcon}).on('click', onMarkerClick);
                             } else {
                                 var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
                             }
                         } else {
-                            if (power_element_tags.indexOf('power=transformer') != -1) {
+                            if (power_element_tags.indexOf('power=transformer') != -1
+                                || power_element_tags.indexOf('Transformer') != -1 || power == 'transformer') {
                                 var marker = new L.Marker(data[i]['latlng'], {icon: unverifiedTransformerIcon}).on('click', onMarkerClick);
                             } else {
                                 var marker = new L.Marker(data[i]['latlng'], {icon: unverifiedIcon}).on('click', onMarkerClick);
