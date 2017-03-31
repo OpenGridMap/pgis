@@ -206,9 +206,11 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetOperations);
+            if (_pgisMap.voltagesLegend !== undefined && _pgisMap.voltagesLegend._map)
+                _pgisMap.voltagesLegend.removeFrom(_pgisMap.map);
         }
 
-         if (layer.name == 'Contribute') {
+        if (layer.name == 'Contribute') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.contributionFilters);
             _pgisMap.contributionFilterSidebar.hide();
         }
