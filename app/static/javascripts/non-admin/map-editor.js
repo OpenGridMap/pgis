@@ -4,10 +4,14 @@ var MapEditor = {
     pgisMap.sidebar.setContent(MapHelpers.getPlacePointSidebarContent());
     pgisMap.sidebar.show();
 
+
     //workaround: because MapEditor.addPoint is triggered by onclick it would also trigger the pgisMap.map onclick
     // trigger without timeout
     setTimeout(function(){
-      pgisMap.map.on('click', function addMarker(e) {
+      pgisMap.map.on('click', addMarker)
+    }, 1);
+
+    function addMarker(e) {
         pgisMap.map.off('click', addMarker);
 
         var unverifiedIcon = L.icon({
@@ -18,12 +22,19 @@ var MapEditor = {
           popupAnchor: [1, -34],
           shadowSize:  [41, 41]
         });
+
         var marker = L.marker([e.latlng.lat, e.latlng.lng], {icon: unverifiedIcon}).addTo(pgisMap.map);
         $('#map').css('cursor', 'auto');
 
         MapEditor.addPointData(pgisMap, marker.getLatLng());
-      })
-    }, 1);
+      }
+
+    // if sidebar is closed before adding a point
+    pgisMap.sidebar.on('hide', function abortAddPoint () {
+      pgisMap.map.off('click', addMarker);
+      $('#map').css('cursor', 'auto');
+      pgisMap.sidebar.off('hide', abortAddPoint);
+    });
 
   },
 
