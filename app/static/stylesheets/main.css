@@ -215,3 +215,7 @@ td, th {
 /*.legend h4 {*/
 /*font-size: 30px;*/
 /*}*/
+
+#pointdeletion.modal {
+    z-index: 9999;
+}

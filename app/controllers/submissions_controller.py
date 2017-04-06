@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, abort, session, url_for, req
 from geoalchemy2 import Geometry, func
 from geoalchemy2.functions import GenericFunction
 import app.helpers.point_form
-import sys, os, traceback, base64
+import sys, os, traceback, base64, time
 import hashlib
 from app import db
 from app.models.point import Point
@@ -28,7 +28,7 @@ class SubmissionsController:
 
     def create_by_webapp(self):
         submission = Submission()
-        submission.submission_id = 12345
+        submission.submission_id = time.time() * 1000
         submission.number_of_points = 1
         submission.user_id = current_user.get_id()
         submission.revised = False
@@ -43,14 +43,13 @@ class SubmissionsController:
         new_point.submission_id = submission.id
         db.session.add(new_point)
         db.session.flush()
-        if 'images' in request.files:
+        if 'images[]' in request.files:
+            image = request.files['images[]']
             new_picture = self.__make_picture(submission.id, new_point.id, submission.user_id)
             directory = "app/static/uploads/submissions/" + str(submission.id)
             if not os.path.exists(directory):
                 os.makedirs(directory)
-            fh = open(directory + "/" + str(new_point.id) + ".jpg", "wb")
-            fh.write(request.files['pictures[0]'])
-            fh.close()
+            image.save(directory + "/" + str(new_point.id) + ".jpg")
             new_picture.filepath = "static/uploads/submissions/" + str(submission.id) + "/" + str(new_point.id) + ".jpg"
             db.session.add(new_picture)
         db.session.commit()
