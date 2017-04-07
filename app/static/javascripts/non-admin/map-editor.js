@@ -44,10 +44,11 @@ var MapEditor = {
           shadowSize:  [41, 41]
         });
 
-        var marker = L.marker([e.latlng.lat, e.latlng.lng], {icon: unverifiedIcon}).addTo(pgisMap.map);
+        var marker = L.marker([e.latlng.lat, e.latlng.lng], {icon: unverifiedIcon, draggable: true}).addTo(pgisMap.map);
         $('#map').css('cursor', 'auto');
 
-        MapEditor.addPointData(pgisMap, marker.getLatLng());
+
+        MapEditor.addPointData(pgisMap, marker);
       }
 
     // if sidebar is closed before adding a point
@@ -59,11 +60,23 @@ var MapEditor = {
 
   },
 
-  addPointData: function(pgisMap, latlng) {
+  addPointData: function(pgisMap, marker) {
     sidebarData = new Array();
-    sidebarData['latlng'] = latlng;
+    sidebarData['latlng'] = marker.getLatLng();
+    marker.on('move', moveMarker);
+
+    function moveMarker(e) {
+      sidebarData['latlng'] = e.latlng;
+      pgisMap.sidebar.setContent(MapHelpers.getAddPointSidebarContent(sidebarData));
+      $('#addPowerObject button').click(showUploadForm);
+    }
+
     pgisMap.sidebar.setContent(MapHelpers.getAddPointSidebarContent(sidebarData));
-    $('#addPowerObject button').click(function() {
+    $('#addPowerObject button').click(showUploadForm);
+
+    function showUploadForm() {
+      marker.off('move', moveMarker);
+      marker.dragging.disable();
       var powerObjectVal = $(this).val();
       var powerObjectText = $(this).text();
       var properties = {
@@ -76,10 +89,12 @@ var MapEditor = {
       $('#addPowerDetails').show();
       $('#powerDetailsTitle').text('Add ' + powerObjectText);
       $('#backToPowerObject').click(function () {
-      $('#addPowerDetails').hide();
-      $('#addPowerObject').show();
+        $('#addPowerDetails').hide();
+        $('#addPowerObject').show();
+        marker.on('move', moveMarker);
+        marker.dragging.enable();
       });
-    });
+    }
 
     var form = $( '#addPoint' );
     formdata = new FormData();
