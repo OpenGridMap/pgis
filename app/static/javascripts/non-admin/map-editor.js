@@ -8,7 +8,9 @@ var MapEditor = {
           } else {
             //pgisMap.sidebar.setContent('You need to be logged in first!<br><a target="_blank" href="/admin/do_login?next=/index&redirect_back=true">Login</a> ');
             //pgisMap.sidebar.show();
-            window.location.replace("/admin/login?next=/index&redirect_back=true");
+            window.location.replace('/admin/login?next=%2Findex%3Fredirect_back%3Dtrue%26lat%3D'
+                + pgisMap.map.getBounds().getCenter().lat + '%26long%3D' + pgisMap.map.getBounds().getCenter().lng
+                + '%26zoom%3D' + pgisMap.map.getZoom());
           }
         })
         .error(function () {
