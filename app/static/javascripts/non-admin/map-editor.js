@@ -1,5 +1,24 @@
 var MapEditor = {
+
+  checkLogin: function (pgisMap) {
+    $.get( '/is_authenticated')
+        .done(function (data) {
+          if (data.is_authenticated) {
+            MapEditor.addPoint(pgisMap);
+          } else {
+            //pgisMap.sidebar.setContent('You need to be logged in first!<br><a target="_blank" href="/admin/do_login?next=/index&redirect_back=true">Login</a> ');
+            //pgisMap.sidebar.show();
+            window.location.replace("/admin/login?next=/index&redirect_back=true");
+          }
+        })
+        .error(function () {
+          pgisMap.sidebar.setContent('There was a connection problem on your side or on our side. Please try again.');
+            pgisMap.sidebar.show();
+        })
+  },
+
   addPoint: function(pgisMap) {
+
     $('#map').css('cursor', 'url(static/images/marker-icon-red.cur) 12 41, crosshair');
     pgisMap.sidebar.setContent(MapHelpers.getPlacePointSidebarContent());
     pgisMap.sidebar.show();

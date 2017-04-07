@@ -20,6 +20,7 @@ import app.controllers.relations_controller
 import app.controllers.submissions_controller
 import app.controllers.transnet_controller
 import app.controllers.userprofile_controller
+import app.controllers.ajax_login_controller
 import app.models.point
 import app.models.powerline
 import app.models.user
@@ -152,6 +153,11 @@ def points_delete_by_user(id):
 def powerlines():
     controller = app.controllers.powerlines_controller.PowerlinesController()
     return controller.index()
+
+@GisApp.route('/is_authenticated')
+def is_authenticated():
+    controller = app.controllers.ajax_login_controller.AjaxLoginController()
+    return controller.is_authenticated()
 
 
 @GisApp.route('/transnet')

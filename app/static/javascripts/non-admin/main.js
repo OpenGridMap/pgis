@@ -126,7 +126,7 @@ $(document).ready(function () {
         ref: 'addPoint',
         text: 'Add Point',  // string
         onclick: function () {
-            MapEditor.addPoint(pgisMap);
+            MapEditor.checkLogin(pgisMap);
         }
     };
     pgisMap.addLinkButton(addPointProperties);
