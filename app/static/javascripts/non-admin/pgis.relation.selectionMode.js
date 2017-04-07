@@ -172,6 +172,22 @@ Pgis.Relation.selectionMode = {
             }
         });
 
+        $(document).on('click', '#transnet-export-relations-countries-json', function () {
+            if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
+                if (_this.pgisMap.selectedCountries.length == 0) {
+                    alert('No Country is Selected!');
+                    return;
+                }
+                var selectedCountry = $('#country-link-' + _this.pgisMap.selectedCountries[0]);
+                var continent = selectedCountry.attr('data-continent');
+                window.open(
+                    'https://github.com/OpenGridMap/transnet-models/tree/master/'
+                    + continent + '/' + _this.pgisMap.selectedCountries[0],
+                    '_blank'
+                )
+            }
+        });
+
         $(document).on('click', '#transnet-export-relations-countries-csv', function () {
             if (!$(this).hasClass('disabled') && Cookies.get('downloader')) {
                 if (_this.pgisMap.selectedCountries.length == 0) {
