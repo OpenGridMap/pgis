@@ -29,12 +29,14 @@ var Statistics = {
       }
 
       //for (var powerline in powerlines) {
+
       for(var i=0, len=powerlines.length; i < len; i++){
         if (!powerlines[i].hasOwnProperty(powerlines[i])) {
           //The current property is not a direct property of p
         }
         getPowerlineLength(powerlines[i]);
       }
+
 
       function getPowerType(marker) {
         var tags = marker.data.tags;
@@ -87,7 +89,7 @@ var Statistics = {
         var distance = powerline.measuredDistanceInsideBoundingBox();
         lengthOfPowerlines['all'] += distance;
         numberOfPowerlines++;
-        if ('voltage' in powerline.data.tags) {
+        if ('data' in powerline && 'tags' in powerline.data && 'voltage' in powerline.data.tags) {
           if (powerline.data.tags.voltage in lengthOfPowerlines['voltage']) {
             lengthOfPowerlines['voltage'][powerline.data.tags.voltage] += distance;
           } else {

@@ -164,6 +164,7 @@ var MapDataLoader = {
 
     loadCrowdsourcingData: function (pgisMap, markers, clusterGroup, powerlinesLayerGroup, polygonLayerGroup) {
         var map = pgisMap.map;
+        powerlinesLayerGroup.clearLayers();
 
         var transformerIcon = L.icon({
             iconUrl: 'static/images/marker-icon-transformer.png',
@@ -185,10 +186,6 @@ var MapDataLoader = {
 
         $.ajax({
             url: "/crowdsourcing_polygons",
-            //data: {
-            //    "bounds": map.getBounds().toBBoxString(),
-            //    "zoom": map.getZoom()
-            //},
             success: function (data) {
                 var borderColor;
                 var backColor
@@ -212,7 +209,8 @@ var MapDataLoader = {
             $.ajax({
                 url: "/points_crowdsourcing_day",
                 data: {
-                    "bounds": map.getBounds().toBBoxString()
+                    "bounds": map.getBounds().toBBoxString(),
+                    "zoom": map.getZoom()
                 },
                 success: function (data) {
                     // Clear both layers that plot points!
