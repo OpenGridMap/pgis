@@ -21,6 +21,7 @@ import app.controllers.submissions_controller
 import app.controllers.transnet_controller
 import app.controllers.userprofile_controller
 import app.controllers.ajax_login_controller
+import app.controllers.crowdsourcing_controller
 import app.models.point
 import app.models.powerline
 import app.models.user
@@ -109,12 +110,20 @@ def aubmissions():
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
+@GisApp.route('/crowdsourcing_polygons')
+def crowdsourcing_polygons():
+    controller = app.controllers.crowdsourcing_controller.CrowdsourcingController()
+    return controller.index()
+
+@GisApp.route('/points_crowdsourcing_day')
+def points_crowdsourcing_day():
+    controller = app.controllers.points_controller.PointsController()
+    return controller.points_of_crowdsourcing_day()
 
 @GisApp.route('/points')
 def points():
     controller = app.controllers.points_controller.PointsController()
     return controller.index()
-
 
 @GisApp.route('/points/with_properties')
 def points_with_properties():

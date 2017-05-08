@@ -162,6 +162,113 @@ var MapDataLoader = {
         });
     },
 
+    loadCrowdsourcingData: function (pgisMap, markers, clusterGroup, powerlinesLayerGroup, polygonLayerGroup) {
+        var map = pgisMap.map;
+
+        var transformerIcon = L.icon({
+            iconUrl: 'static/images/marker-icon-transformer.png',
+            iconSize:    [32, 53],
+            iconAnchor:  [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize:  [53, 53]
+        });
+        var selectedPointIcon = L.icon({
+            iconUrl: 'static/images/marker-icon-red-2x.png',
+            shadowUrl: 'static/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+
+        map.fireEvent("dataloading");
+
+        $.ajax({
+            url: "/crowdsourcing_polygons",
+            //data: {
+            //    "bounds": map.getBounds().toBBoxString(),
+            //    "zoom": map.getZoom()
+            //},
+            success: function (data) {
+                polygonLayerGroup.clearLayers();
+                for (var i = 0; i < data.length; i++) {
+                    var polygon = L.polygon(data[i].geom, {color: 'blue',fillColor: '#f03',fillOpacity: 0.3,weight: 2});
+                    polygonLayerGroup.addLayer(polygon);
+                }
+                map.fireEvent("dataload");
+            }
+        });
+
+        map.fireEvent("dataloading");
+            $.ajax({
+                url: "/points_crowdsourcing_day",
+                data: {
+                    "bounds": map.getBounds().toBBoxString()
+                },
+                success: function (data) {
+                    // Clear both layers that plot points!
+                    markers.clearLayers();
+                    clusterGroup.clearLayers();
+
+                    // don't delete a selected point from map.markerMap
+                    if (pgisMap.selectedPoint != null) {
+                        selectedPointReference = pgisMap.markerMap[pgisMap.selectedPoint];
+                        pgisMap.markerMap = {};
+                        pgisMap.markerMap[selectedPointReference.data.id] = selectedPointReference;
+                    } else {
+                        pgisMap.markerMap = {};
+                    }
+                    var newMarkers = [];
+                    for (var i = 0; i < data.length; i++) {
+                        var power_element_tags = data[i].tags.power_element_tags || "";
+                        var power = data[i].power; // old format
+
+                        if (power_element_tags.indexOf('power=transformer') != -1
+                            || power_element_tags.indexOf('Transformer') != -1 || power == 'transformer') {
+                            var marker = new L.Marker(data[i]['latlng'], {icon: transformerIcon}).on('click', onMarkerClick);
+                        } else {
+                            var marker = new L.Marker(data[i]['latlng']).on('click', onMarkerClick);
+                        }
+
+                        marker.data = data[i];
+                        newMarkers.push(marker);
+                        pgisMap.markerMap[data[i].id] = marker;
+                    }
+                    markers.addLayers(newMarkers);
+                    if (pgisMap.selectedPoint != null) {
+                        pgisMap.markerMap[pgisMap.selectedPoint].setIcon(selectedPointIcon);
+                    }
+
+                    function onMarkerClick(e) {
+                        pgisMap.sidebar.setContent(
+                            MapHelpers.getPointSidebarContent(e.target.data)
+                        );
+                        if (!pgisMap.sidebar.isVisible()) {
+                            pgisMap.sidebar.show();
+                        }
+                        if (pgisMap.selectedPoint != null) {
+                            // deselect old point
+                            pgisMap.markerMap[pgisMap.selectedPoint].setIcon(new L.Icon.Default());
+                        }
+                        e.target.setIcon(selectedPointIcon);
+                        pgisMap.selectedPoint = e.target.data.id; // here a refernce to the point should be saved, not an id
+                    }
+
+                    map.fireEvent("dataload");
+
+                    // if user wants to jump to a specific point, open sidebar for this point
+                    if (pgisMap.point_id != null) {
+                        marker = pgisMap.markerMap[pgisMap.point_id];
+                        marker.setIcon(selectedPointIcon);
+                        pgisMap.selectedPoint = pgisMap.point_id;
+                        pgisMap.sidebar.setContent(MapHelpers.getPointSidebarContent(marker.data));
+                        pgisMap.sidebar.show();
+                        pgisMap.point_id = null;
+                    }
+                }
+            });
+    },
+
     loadLinesWithMissingData: function (pgisMap, markers, clusterGroup, powerlinesLayerGroup) {
         var map = pgisMap.map;
         var currentStationsRequest = null;

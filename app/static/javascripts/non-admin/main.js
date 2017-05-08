@@ -28,6 +28,10 @@ $(document).ready(function () {
         name: 'powerlinesLayerGroup',
         layer: new L.LayerGroup()
     });
+    pgisMap.addMarkerLayer({
+        name: 'polygonLayerGroup',
+        layer: new L.LayerGroup()
+    });
 
     var _pgisMap = pgisMap;
 
@@ -41,6 +45,15 @@ $(document).ready(function () {
                 this,
                 this.markerLayers.markers,
                 this.markerLayers.clusterGroup,
+                this.markerLayers.powerlinesLayerGroup
+            );
+        }
+        else if (_.contains(_pgisMap.selectedOverlayLayers, "crowdsourcing")) {
+            MapDataLoader.loadCrowdsourcingData(
+                this,
+                this.markerLayers.markers,
+                this.markerLayers.clusterGroup,
+                this.markerLayers.powerlinesLayerGroup,
                 this.markerLayers.powerlinesLayerGroup
             );
         }
@@ -71,6 +84,12 @@ $(document).ready(function () {
     pgisMap.addOverlayLayer({
         name: "Contribute",
         ref: 'contribute',
+        layer: new L.LayerGroup()
+    });
+
+    pgisMap.addOverlayLayer({
+        name: "Crowdsourcing",
+        ref: 'crowdsourcing',
         layer: new L.LayerGroup()
     });
 
