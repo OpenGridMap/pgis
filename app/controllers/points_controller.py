@@ -145,6 +145,8 @@ class PointsController:
             Point.deleted_by_user.isnot(True)
         ).filter(
             or_(Point.approved, Point.revised == False)
+        ).filter(
+            or_(func.substr(Point.properties[('tags', 'timestamp')].astext, 1, 10) == "2017-05-09")
         ).all()
         points = list(map(lambda point: point.serialize(), points))
 

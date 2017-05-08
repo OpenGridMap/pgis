@@ -5,6 +5,8 @@ from geoalchemy2.functions import GenericFunction
 from geoalchemy2 import Geometry, func
 from app.models.point import Point
 from geoalchemy2.shape import to_shape
+from sqlalchemy import or_
+from sqlalchemy import and_
 
 class CrowdsourcingController:
     # highest point score, one polygon has
@@ -13,7 +15,10 @@ class CrowdsourcingController:
     winnerPolygons = []
 
     def index(self):
-        polygons = db.session.query(CrowdsourcingPolygon.id, CrowdsourcingPolygon.geom, func.count(Point.geom).label("num_points")).outerjoin(Point, func.ST_Contains(CrowdsourcingPolygon.geom, Point.geom)).group_by(CrowdsourcingPolygon.id)
+        polygons = db.session.query(
+            CrowdsourcingPolygon.id, CrowdsourcingPolygon.geom, func.count(Point.geom).label("num_points")
+        ).outerjoin(Point, and_(func.ST_Contains(CrowdsourcingPolygon.geom, Point.geom), func.substr(Point.properties[('tags', 'timestamp')].astext, 1, 10) == "2017-05-09")
+        ).group_by(CrowdsourcingPolygon.id)
 
         #map(self.mostPoints, polygons)
         for polygon in polygons:
