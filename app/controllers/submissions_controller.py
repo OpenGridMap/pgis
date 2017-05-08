@@ -52,6 +52,11 @@ class SubmissionsController:
             image.save(directory + "/" + str(new_point.id) + ".jpg")
             new_picture.filepath = "static/uploads/submissions/" + str(submission.id) + "/" + str(new_point.id) + ".jpg"
             db.session.add(new_picture)
+
+        db.session.query(User).filter(User.id == current_user.get_id()) \
+            .update({User.activity_points: User.activity_points + 1,
+                     User.activity_points_total: User.activity_points_total + 1},
+                    synchronize_session=False)
         db.session.commit()
         resp = Response(json.dumps({"status": "ok", "point": str(new_point)}))
         resp.headers['Content-Type'] = "application/json"
@@ -89,6 +94,11 @@ class SubmissionsController:
                     new_picture = self.__make_picture(submission.id, new_point.id, user.id)
                     new_picture.filepath = self.__save_image(submission.id, new_point.id, json_data['image'])
                     db.session.add(new_picture)
+
+                db.session.query(User).filter(User.id == user.id) \
+                    .update({User.activity_points: User.activity_points + 1,
+                             User.activity_points_total: User.activity_points_total + 1},
+                            synchronize_session=False)
                 db.session.commit()
 
                 hashing = Hashing(GisApp)

@@ -18,11 +18,11 @@ import flask_resize
 
 # Predefined activity points
 class Activity(Enum):
-    new_transformer = 1
-    existing_transformer = 1
-    new_other_point = 1
-    existing_other_point = 1
-    revise_submission = 1 # revise submission not implemented at moment
+    new_transformer = 0
+    existing_transformer = 0
+    new_other_point = 0
+    existing_other_point = 0
+    revise_submission = 0 # revise submission not implemented at moment
 
 class SubmissionsController:
     def index(self):
