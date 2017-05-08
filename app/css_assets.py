@@ -10,7 +10,8 @@ non_admin_css_files = common_css_files + [
     'stylesheets/L.Control.Sidebar.css',
     'stylesheets/Control.Loading.css',
     'stylesheets/Control.LinkButton.css',
-    'stylesheets/font-awesome.min.css'
+    'stylesheets/font-awesome.min.css',
+    'stylesheets/leaflet.label.css',
 ]
 
 admin_css_files = common_css_files + [

@@ -192,7 +192,7 @@ var MapDataLoader = {
             success: function (data) {
                 polygonLayerGroup.clearLayers();
                 for (var i = 0; i < data.length; i++) {
-                    var polygon = L.polygon(data[i].geom, {color: 'blue',fillColor: '#f03',fillOpacity: 0.3,weight: 2});
+                    var polygon = L.polygon(data[i].geom, {color: 'blue',fillColor: '#f03',fillOpacity: 0.3,weight: 2}).bindLabel('´Number of points:' + data[i].num_points);
                     polygonLayerGroup.addLayer(polygon);
                 }
                 map.fireEvent("dataload");

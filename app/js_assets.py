@@ -9,6 +9,7 @@ common_js_files = [
 ]
 
 non_admin_js_files = common_js_files + [
+    'javascripts/libraries/leaflet.label.js',
     'javascripts/libraries/Control.Geocoder.js',
     'javascripts/libraries/Control.LinkButton.js',
     'javascripts/libraries/underscore-min.js',
