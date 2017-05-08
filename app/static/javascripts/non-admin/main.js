@@ -186,6 +186,30 @@ $(document).ready(function () {
     pgisMap.hideLinkButton(pgisMap.linkButtons.transnetOperations);
 
     pgisMap.addLinkButton({
+        ref: 'transnetRepo',
+        text: 'Transnet Repository',
+        onclick: function () {
+             window.open(
+                'https://github.com/OpenGridMap/transnet',
+                '_blank'
+            )
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.transnetRepo);
+
+    pgisMap.addLinkButton({
+        ref: 'transnetModels',
+        text: 'Transnet Models',
+        onclick: function () {
+            window.open(
+                'https://github.com/OpenGridMap/transnet-models',
+                '_blank'
+            )
+        }
+    });
+    pgisMap.hideLinkButton(pgisMap.linkButtons.transnetModels);
+
+    pgisMap.addLinkButton({
         ref: 'contributionFilters',
         text: 'Electrical Components Filters',
         onclick: function () {
@@ -205,6 +229,8 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetOperations);
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetRepo);
+            _pgisMap.showLinkButton(_pgisMap.linkButtons.transnetModels);
         }
 
         if (layer.name == 'Contribute') {
@@ -225,9 +251,13 @@ $(document).ready(function () {
         if (layer.name == 'Transnet') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetFilters);
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetOperations);
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetRepo);
+            _pgisMap.hideLinkButton(_pgisMap.linkButtons.transnetModels);
+            if (_pgisMap.voltagesLegend !== undefined && _pgisMap.voltagesLegend._map)
+                _pgisMap.voltagesLegend.removeFrom(_pgisMap.map);
         }
 
-         if (layer.name == 'Contribute') {
+        if (layer.name == 'Contribute') {
             _pgisMap.hideLinkButton(_pgisMap.linkButtons.contributionFilters);
             _pgisMap.contributionFilterSidebar.hide();
         }

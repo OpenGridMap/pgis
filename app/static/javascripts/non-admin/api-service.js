@@ -17,7 +17,7 @@ var ApiService = {
                 "zoom": map.getZoom()
             },
             beforeSend: function () {
-                if (currentRequest != null) {
+                if (currentRequest !== null) {
                     currentRequest.abort();
                 }
             },

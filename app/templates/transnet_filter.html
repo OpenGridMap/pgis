@@ -69,8 +69,9 @@
                                                title="{{ country.get_pretty_voltages() }} kV">
                                                 <i class="fa fa-bolt" aria-hidden="true"></i>
                                             </a>
-                                            <a href="https://github.com/OpenGridMap/transnet/tree/planet-models/models/{{ continent }}/{{ country['country'] }}"
-                                               class="country-extra-links"
+                                            <a href="https://github.com/OpenGridMap/transnet-models/tree/master/{{ continent }}/{{ country['country'] }}"
+                                               class="country-extra-links" id="country-link-{{ country['country'] }}"
+                                               data-continent="{{ continent }}" data-country="{{ country['country'] }}"
                                                target="_blank"> <i class="fa fa-github" aria-hidden="true"></i>
                                             </a>
                                         </div>
