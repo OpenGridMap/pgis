@@ -190,9 +190,18 @@ var MapDataLoader = {
             //    "zoom": map.getZoom()
             //},
             success: function (data) {
+                var borderColor;
+                var backColor
                 polygonLayerGroup.clearLayers();
                 for (var i = 0; i < data.length; i++) {
-                    var polygon = L.polygon(data[i].geom, {color: 'blue',fillColor: '#f03',fillOpacity: 0.3,weight: 2}).bindLabel('´Number of points:' + data[i].num_points);
+                    if (!data[i].is_winner) {
+                        borderColor = "blue";
+                        backColor = "#0033FF"
+                    } else {
+                        borderColor = "red";
+                        backColor = '#f03'
+                    }
+                    var polygon = L.polygon(data[i].geom, {color: borderColor,fillColor: backColor,fillOpacity: 0.3,weight: 2}).bindLabel('´Number of points:' + data[i].num_points);
                     polygonLayerGroup.addLayer(polygon);
                 }
                 map.fireEvent("dataload");
