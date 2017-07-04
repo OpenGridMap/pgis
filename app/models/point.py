@@ -38,7 +38,7 @@ class Point(db.Model):
 
     def serialize_for_gallery(self):
         pictures = list(map((lambda p: p.serialize()), self.pictures_for_gallery))
-        tags = self.properties.get['tags', {}]
+        tags = self.properties.get('tags', {})
 
         if len(pictures) > 0:
             picture = pictures[0]
