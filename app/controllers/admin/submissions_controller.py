@@ -156,7 +156,7 @@ class SubmissionsController:
             # copy the necessary rows in picture table and adapt them
             query = text("INSERT INTO picture ( point_id, submission_id, user_id, filepath) SELECT :new_point_id, "
             ":new_point_submission_id, user_id, "
-            "'static/uploads/submissions/' || :new_point_submission_id || '/' || point_id || '.png' "
+            "'static/uploads/submissions/' || :new_point_submission_id || '/' || point_id || '.jpg' "
             "FROM picture WHERE point_id = :submitted_point_id or point_id = :old_point_id;")
             db.engine.execute(query, new_point_id=new_point.id, new_point_submission_id=new_point.submission_id, submitted_point_id=submitted_point.id, old_point_id=form.merge_with.data)
 
