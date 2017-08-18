@@ -1,23 +1,13 @@
-from app import GisApp
-from flask import render_template, flash, redirect, abort, session, url_for, request, g, json, Response, \
-    send_from_directory, send_file
-from geoalchemy2 import Geometry, func
-from geoalchemy2.functions import GenericFunction
-import app.helpers.point_form
-import sys, os, traceback, base64
-import hashlib
+import os
+
+from flask import render_template, json, Response, \
+    send_from_directory
+from flask_resize import generate_image
+from sqlalchemy.orm import contains_eager
+
 from app import db
 from app.models.point import Point
 from app.models.submission import Submission
-from app.models.picture import Picture
-from app.models.user import User
-from flask.ext.login import current_user
-from httplib2 import Http
-from flask.ext.hashing import Hashing
-from sqlalchemy.orm import contains_eager
-from random import randint, uniform
-from shutil import copy2
-from flask_resize import generate_image
 
 
 class GalleryController:

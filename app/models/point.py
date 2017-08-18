@@ -21,7 +21,7 @@ class Point(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'latlng': [self.shape().x, self.shape().y],
+            'latlng': self.latlng,
             'tags' : self.properties.get('tags', {}),
             'osmid': self.properties.get('osmid', None),
             'pictures' : list(map((lambda p: p.serialize()), self.pictures.limit(5))),
@@ -31,16 +31,26 @@ class Point(db.Model):
     def serialize_with_properties(self):
         return {
             'id': self.id,
-            'latlng': [self.shape().x, self.shape().y],
+            'latlng': self.latlng,
             'properties' : self.properties,
             'pictures' : list(map((lambda p: p.serialize()), self.pictures))
         }
 
     def serialize_for_gallery(self):
+        pictures = list(map((lambda p: p.serialize()), self.pictures_for_gallery))
+        tags = self.properties.get('tags', {})
+
+        if len(pictures) > 0:
+            picture = pictures[0]
+        else:
+            picture = {}
+
         return {
-            'latlng': [self.shape().x, self.shape().y],
-            'properties': self.properties,
-            'pictures': list(map((lambda p: p.serialize()), self.pictures_for_gallery)),
+            'latlng': self.latlng,
+            'image_src': picture.get('filepath', ''),
+            'altitude': tags.get('altitude', ''),
+            'power_element_tag': tags.get('power_element_tags', ''),
+            'timestamp': tags.get('timestamp', ''),
             'revised': self.revised,
             'approved': self.approved
         }
@@ -98,3 +108,14 @@ class Point(db.Model):
     @property
     def longitude(self):
         return self.shape().y
+
+    @property
+    def latlng(self):
+        return [self.latitude, self.longitude]
+
+    @staticmethod
+    def get_value_from_properties(properties, key):
+        try:
+            return properties[key]
+        except KeyError as e:
+            return ''
