@@ -163,7 +163,7 @@ class SubmissionsController:
             picture = Picture()
             picture.point_id = new_point.id
             picture.submission_id = new_point.submission_id
-            picture.filepath = 'static/uploads/submissions/' + new_point.submission_id + '/' + new_point.id
+            picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(new_point.id)
             picture.user_id = new_point.submission.user_id
             db.session.add(picture)
             all_points = db.session.query(Point).filter(Point.revised_to == new_point.id).all()
@@ -171,7 +171,7 @@ class SubmissionsController:
                 picture = Picture()
                 picture.point_id = next_point.id
                 picture.submission_id = new_point.submission_id
-                picture.filepath = 'static/uploads/submissions/' + new_point.submission_id + '/' + next_point.id
+                picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(next_point.id)
                 picture.user_id = next_point.submission.user_id
                 db.session.add(picture)
             db.session.commit()
