@@ -154,11 +154,27 @@ class SubmissionsController:
 
             db.session.commit()
             # copy the necessary rows in picture table and adapt them
-            query = text("INSERT INTO picture ( point_id, submission_id, user_id, filepath) SELECT :new_point_id, "
-            ":new_point_submission_id, user_id, "
-            "'static/uploads/submissions/' || :new_point_submission_id || '/' || point_id || '.jpg' "
-            "FROM picture WHERE point_id = :submitted_point_id or point_id = :old_point_id;")
-            db.engine.execute(query, new_point_id=new_point.id, new_point_submission_id=new_point.submission_id, submitted_point_id=submitted_point.id, old_point_id=form.merge_with.data)
+            #query = text("INSERT INTO picture ( point_id, submission_id, user_id, filepath) SELECT :new_point_id, "
+            #":new_point_submission_id, user_id, "
+            #"'static/uploads/submissions/' || :new_point_submission_id || '/' || point_id || '.jpg' "
+            #"FROM picture WHERE point_id = :submitted_point_id or point_id = :old_point_id;")
+            #db.engine.execute(query, new_point_id=new_point.id, new_point_submission_id=new_point.submission_id, submitted_point_id=submitted_point.id, old_point_id=form.merge_with.data)
+
+            picture = Picture()
+            picture.point_id = new_point.id
+            picture.submission_id = new_point.submission_id
+            picture.filepath = 'static/uploads/submissions/' + new_point.submission_id + '/' + new_point.id
+            picture.user_id = new_point.submission.user_id
+            db.session.add(picture)
+            all_points = db.session.query(Point).filter(Point.revised_to == new_point.id).all()
+            for next_point in all_points:
+                picture = Picture()
+                picture.point_id = next_point.id
+                picture.submission_id = new_point.submission_id
+                picture.filepath = 'static/uploads/submissions/' + new_point.submission_id + '/' + next_point.id
+                picture.user_id = next_point.submission.user_id
+                db.session.add(picture)
+            db.session.commit()
 
             self.__merge_photos(old_point.submission_id, new_point.submission_id)
             return redirect(url_for('submissions_index'))
