@@ -10,7 +10,7 @@ from app.models.picture import Picture
 from geoalchemy2 import Geometry, func
 from flask.ext.login import current_user
 from sqlalchemy.sql import text
-from sqlalchemy import or_
+from sqlalchemy import and_
 from enum import Enum
 GisApp.config['RESIZE_URL'] = 'http://vmjacobsen39.informatik.tu-muenchen.de/static/uploads'
 GisApp.config['RESIZE_ROOT'] = 'app/static/uploads/'
@@ -166,7 +166,7 @@ class SubmissionsController:
             #picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(new_point.id) + '.jpg'
             #picture.user_id = new_point.submission.user_id
             #db.session.add(picture)
-            all_points = db.session.query(Point).filter(Point.merged_to == new_point.id).all()
+            all_points = db.session.query(Point).filter(and_(Point.merged_to == new_point.id, Point.submission_id != new_point.submission_id)).all()
             for next_point in all_points:
                 picture = Picture()
                 picture.point_id = next_point.id
