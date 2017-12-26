@@ -160,12 +160,12 @@ class SubmissionsController:
             #"FROM picture WHERE point_id = :submitted_point_id or point_id = :old_point_id;")
             #db.engine.execute(query, new_point_id=new_point.id, new_point_submission_id=new_point.submission_id, submitted_point_id=submitted_point.id, old_point_id=form.merge_with.data)
 
-            picture = Picture()
-            picture.point_id = new_point.id
-            picture.submission_id = new_point.submission_id
-            picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(new_point.id) + '.jpg'
-            picture.user_id = new_point.submission.user_id
-            db.session.add(picture)
+            #picture = Picture()
+            #picture.point_id = new_point.id
+            #picture.submission_id = new_point.submission_id
+            #picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(new_point.id) + '.jpg'
+            #picture.user_id = new_point.submission.user_id
+            #db.session.add(picture)
             all_points = db.session.query(Point).filter(Point.merged_to == new_point.id).all()
             for next_point in all_points:
                 picture = Picture()
