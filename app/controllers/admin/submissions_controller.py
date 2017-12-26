@@ -166,7 +166,10 @@ class SubmissionsController:
             #picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(new_point.id) + '.jpg'
             #picture.user_id = new_point.submission.user_id
             #db.session.add(picture)
-            all_points = db.session.query(Point).filter(and_(Point.merged_to == new_point.id, Point.submission_id != new_point.submission_id)).all()
+
+            #changed, because point_id of pictures of a merged point should be the same
+            #all_points = db.session.query(Point).filter(and_(Point.merged_to == new_point.id, Point.submission_id != new_point.submission_id)).all()
+            all_points = db.session.query(Point).filter(Point.merged_to == new_point.id).all()
             for next_point in all_points:
                 picture = Picture()
                 picture.point_id = new_point.id
