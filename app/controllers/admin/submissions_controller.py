@@ -170,7 +170,7 @@ class SubmissionsController:
             for next_point in all_points:
                 picture = Picture()
                 picture.point_id = new_point.id
-                picture.submission_id = next_point.submission_id
+                picture.submission_id = new_point.submission_id
                 picture.filepath = 'static/uploads/submissions/' + str(new_point.submission_id) + '/' + str(next_point.id) + '.jpg'
                 picture.user_id = next_point.submission.user_id
                 db.session.add(picture)
