@@ -30,7 +30,7 @@ function checkLive() {
 }
 
 function runScript() {
-    script = exec('sh run_pgis_gen.sh',
+    script = exec('./run_pgis_gen.sh',
         (error, stdout, stderr) => {
             console.log(`${stdout}`);
             console.log(`${stderr}`);
