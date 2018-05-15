@@ -6,8 +6,8 @@ const interval = setInterval(checkDate, 60000);
 
 function checkDate() {
     const currentDate = new Date();
-    if (currentDate.getDay() === 2 && currentDate.getHours() === 16 && currentDate.getMinutes() === 59) {
-        console.log('Started importing Transnet Data!');
+    if (currentDate.getDay() === 2 && currentDate.getHours() === 16 && currentDate.getMinutes() === 49) {
+        console.log('Started Importing Transnet Data!');
         console.log(currentDate);
         runScript();
     }
@@ -22,4 +22,3 @@ function runScript() {
     script.stderr.pipe(process.stderr);
 }
 
-runScript();

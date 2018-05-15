@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source activate pgisenv
+source activate generator
 
 python import_transnet_data.py
 
