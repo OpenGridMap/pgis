@@ -1,6 +1,6 @@
 "use strict";
 
-const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 const http = require('http');
 
 let script = null;
@@ -30,12 +30,10 @@ function checkLive() {
 }
 
 function runScript() {
-    script = exec('./run_pgis.sh',
-        (error, stdout, stderr) => {
-            console.log(`${stdout}`);
-            console.log(`${stderr}`);
-            if (error !== null) {
-                console.log(`exec error: ${error}`);
-            }
-        });
+    script = spawn('bash', [__dirname + '/run_pgis.sh']);
+    script.on('exit', () => {
+        console.log('process exit');
+    });
+    script.stdout.pipe(process.stdout);
+    script.stderr.pipe(process.stderr);
 }
