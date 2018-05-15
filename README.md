@@ -142,6 +142,15 @@ for production:
 gunicorn app:GisApp --bind localhost:3000
 ```
 
+Or to run in production with PM2:
+
+```
+pm2 start check_run_pgis.js --name main_pgis
+cd generator_app/
+pm2 start check_run_pgis_gen.js --name main_pgin_generator
+pm2 startup
+```
+
 ## Testing
 
 ```
