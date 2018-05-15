@@ -434,9 +434,9 @@ def transnet_import_stations_with_missing_data(json_file):
 
 
 if __name__ == '__main__':
-    #download_latest_relation_files()
-    #find_and_import_relation_files()
-    #download_latest_missing_data_files()
+    download_latest_relation_files()
+    find_and_import_relation_files()
+    download_latest_missing_data_files()
     find_and_import_missing_data_files()
     transnet_add_last_update()
 
