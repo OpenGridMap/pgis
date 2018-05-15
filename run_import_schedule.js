@@ -21,3 +21,5 @@ function runScript() {
     script.stdout.pipe(process.stdout);
     script.stderr.pipe(process.stderr);
 }
+
+runScript();
