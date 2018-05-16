@@ -118,9 +118,12 @@ def try_parse_int(string):
 
 
 def transnet_add_last_update():
-    cur.execute('''INSERT INTO transnet_stats(last_updated) VALUES (%s)''', [date.today()])
+    try:
+        cur.execute('''INSERT INTO transnet_stats(last_updated) VALUES (%s)''', [date.today()])
 
-    conn.commit()
+        conn.commit()
+    except Exception as e:
+        print(e)
 
 
 def transnet_delete_country(country):
