@@ -12,30 +12,47 @@ process.on('exit', function () {
 });
 
 function destroyScript() {
-    if (script !== null && typeof script !== "undefined" && script.hasOwnProperty('kill')) {
-        script.kill();
+    try {
+        if (script !== null && typeof script !== "undefined" && script.hasOwnProperty('kill')) {
+            script.kill();
+        }
+    }
+    catch (err) {
+        console.error(err);
     }
 }
 
 function checkLive() {
-    http.get('http://vmjacobsen39.informatik.tu-muenchen.de/transnet/export_cim', function (res) {
-        if (res.statusCode !== 200) {
+    try {
+        http.get('http://vmjacobsen39.informatik.tu-muenchen.de/transnet/export_cim', function (res) {
+            if (res.statusCode !== 200) {
+                destroyScript();
+                runScript();
+            }
+
+        }).on('error', function (e) {
+            console.error(e);
             destroyScript();
             runScript();
-        }
-
-    }).on('error', function (e) {
-        console.error(e);
+        });
+    }
+    catch (err) {
+        console.error(err);
         destroyScript();
         runScript();
-    });
+    }
 }
 
 function runScript() {
-    script = spawn('bash', [__dirname + '/run_pgis_gen.sh']);
-    script.on('exit', () => {
-        console.log('process exit');
-    });
-    script.stdout.pipe(process.stdout);
-    script.stderr.pipe(process.stderr);
+    try {
+        script = spawn('bash', [__dirname + '/run_pgis_gen.sh']);
+        script.on('exit', () => {
+            console.log('process exit');
+        });
+        script.stdout.pipe(process.stdout);
+        script.stderr.pipe(process.stderr);
+    }
+    catch (err) {
+        console.error(err);
+    }
 }
