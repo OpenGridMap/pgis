@@ -146,8 +146,10 @@ Or to run in production with PM2:
 
 ```
 pm2 start check_run_pgis.js --name main_pgis
+pm2 start rerun_pgis.js --name rerun_pgis
 pm2 start run_import_schedule.js --name import_transnet
 sudo pm2 start check_run_nginx.js --name rerun_nginx
+sudo pm2 start rerun_nginx.js --name rerun_nginx_2
 cd generator_app/
 pm2 start check_run_pgis_gen.js --name main_pgin_generator
 sudo pm2 startup
