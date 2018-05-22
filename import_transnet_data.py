@@ -386,6 +386,7 @@ def transnet_import_lines_with_missing_data(json_file):
                 conn.commit()
 
     except Exception as e:
+        conn.rollback()
         print(e)
 
 
@@ -431,8 +432,8 @@ def transnet_import_stations_with_missing_data(json_file):
 
                 conn.commit()
 
-
     except Exception as e:
+        conn.rollback()
         print(e)
 
 
