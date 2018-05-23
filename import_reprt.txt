@@ -1,0 +1,934 @@
+Downloading planet config json
+Downloading europe config json
+Downloading romania relation json
+Downloading albania relation json
+Downloading portugal relation json
+Downloading kosovo relation json
+relation for kosovo not found.
+relations part aa for kosovo not found.
+relations part ab for kosovo not found.
+relations part ac for kosovo not found.
+relations part ad for kosovo not found.
+relations part ae for kosovo not found.
+relations part af for kosovo not found.
+relations part ag for kosovo not found.
+relations part ah for kosovo not found.
+relations part ai for kosovo not found.
+relations part aj for kosovo not found.
+relations part ak for kosovo not found.
+Downloading serbia relation json
+Downloading austria relation json
+Downloading luxembourg relation json
+Downloading greece relation json
+Downloading hungary relation json
+Downloading cyprus relation json
+Downloading turkey relation json
+Downloading italy relation json
+Downloading estonia relation json
+Downloading isle-of-man relation json
+relation for isle-of-man not found.
+relations part aa for isle-of-man not found.
+relations part ab for isle-of-man not found.
+relations part ac for isle-of-man not found.
+relations part ad for isle-of-man not found.
+relations part ae for isle-of-man not found.
+relations part af for isle-of-man not found.
+relations part ag for isle-of-man not found.
+relations part ah for isle-of-man not found.
+relations part ai for isle-of-man not found.
+relations part aj for isle-of-man not found.
+relations part ak for isle-of-man not found.
+Downloading lithuania relation json
+Downloading liechtenstein relation json
+relation for liechtenstein not found.
+relations part aa for liechtenstein not found.
+relations part ab for liechtenstein not found.
+relations part ac for liechtenstein not found.
+relations part ad for liechtenstein not found.
+relations part ae for liechtenstein not found.
+relations part af for liechtenstein not found.
+relations part ag for liechtenstein not found.
+relations part ah for liechtenstein not found.
+relations part ai for liechtenstein not found.
+relations part aj for liechtenstein not found.
+relations part ak for liechtenstein not found.
+Downloading malta relation json
+relation for malta not found.
+relations part aa for malta not found.
+relations part ab for malta not found.
+relations part ac for malta not found.
+relations part ad for malta not found.
+relations part ae for malta not found.
+relations part af for malta not found.
+relations part ag for malta not found.
+relations part ah for malta not found.
+relations part ai for malta not found.
+relations part aj for malta not found.
+relations part ak for malta not found.
+Downloading france relation json
+Downloading andorra relation json
+relation for andorra not found.
+relations part aa for andorra not found.
+relations part ab for andorra not found.
+relations part ac for andorra not found.
+relations part ad for andorra not found.
+relations part ae for andorra not found.
+relations part af for andorra not found.
+relations part ag for andorra not found.
+relations part ah for andorra not found.
+relations part ai for andorra not found.
+relations part aj for andorra not found.
+relations part ak for andorra not found.
+Downloading faroe-islands relation json
+relation for faroe-islands not found.
+relations part aa for faroe-islands not found.
+relations part ab for faroe-islands not found.
+relations part ac for faroe-islands not found.
+relations part ad for faroe-islands not found.
+relations part ae for faroe-islands not found.
+relations part af for faroe-islands not found.
+relations part ag for faroe-islands not found.
+relations part ah for faroe-islands not found.
+relations part ai for faroe-islands not found.
+relations part aj for faroe-islands not found.
+relations part ak for faroe-islands not found.
+Downloading slovakia relation json
+Downloading norway relation json
+Downloading bosnia-herzegovina relation json
+Downloading great-britain relation json
+Downloading belarus relation json
+Downloading azores relation json
+relation for azores not found.
+relations part aa for azores not found.
+relations part ab for azores not found.
+relations part ac for azores not found.
+relations part ad for azores not found.
+relations part ae for azores not found.
+relations part af for azores not found.
+relations part ag for azores not found.
+relations part ah for azores not found.
+relations part ai for azores not found.
+relations part aj for azores not found.
+relations part ak for azores not found.
+Downloading iceland relation json
+Downloading montenegro relation json
+relation for montenegro not found.
+relations part aa for montenegro not found.
+relations part ab for montenegro not found.
+relations part ac for montenegro not found.
+relations part ad for montenegro not found.
+relations part ae for montenegro not found.
+relations part af for montenegro not found.
+relations part ag for montenegro not found.
+relations part ah for montenegro not found.
+relations part ai for montenegro not found.
+relations part aj for montenegro not found.
+relations part ak for montenegro not found.
+Downloading slovenia relation json
+Downloading georgia relation json
+Downloading czech-republic relation json
+Downloading belgium relation json
+Downloading spain relation json
+Downloading ukraine relation json
+Downloading netherlands relation json
+Downloading denmark relation json
+Downloading poland relation json
+Downloading finland relation json
+Downloading ireland-and-northern-ireland relation json
+Downloading macedonia relation json
+relation for macedonia not found.
+relations part aa for macedonia not found.
+relations part ab for macedonia not found.
+relations part ac for macedonia not found.
+relations part ad for macedonia not found.
+relations part ae for macedonia not found.
+relations part af for macedonia not found.
+relations part ag for macedonia not found.
+relations part ah for macedonia not found.
+relations part ai for macedonia not found.
+relations part aj for macedonia not found.
+relations part ak for macedonia not found.
+Downloading moldova relation json
+Downloading sweden relation json
+Downloading latvia relation json
+Downloading croatia relation json
+Downloading monaco relation json
+relation for monaco not found.
+relations part aa for monaco not found.
+relations part ab for monaco not found.
+relations part ac for monaco not found.
+relations part ad for monaco not found.
+relations part ae for monaco not found.
+relations part af for monaco not found.
+relations part ag for monaco not found.
+relations part ah for monaco not found.
+relations part ai for monaco not found.
+relations part aj for monaco not found.
+relations part ak for monaco not found.
+Downloading switzerland relation json
+Downloading bulgaria relation json
+Downloading usa config json
+Downloading wyoming relation json
+Downloading colorado relation json
+Downloading massachusetts relation json
+Downloading new-hampshire relation json
+Downloading washington relation json
+Downloading alaska relation json
+relation for alaska not found.
+relations part aa for alaska not found.
+relations part ab for alaska not found.
+relations part ac for alaska not found.
+relations part ad for alaska not found.
+relations part ae for alaska not found.
+relations part af for alaska not found.
+relations part ag for alaska not found.
+relations part ah for alaska not found.
+relations part ai for alaska not found.
+relations part aj for alaska not found.
+relations part ak for alaska not found.
+Downloading tennessee relation json
+Downloading iowa relation json
+Downloading nevada relation json
+Downloading maine relation json
+Downloading mississippi relation json
+Downloading oklahoma relation json
+Downloading delaware relation json
+Downloading minnesota relation json
+Downloading illinois relation json
+Downloading nebraska relation json
+Downloading arkansas relation json
+Downloading north-dakota relation json
+Downloading indiana relation json
+Downloading maryland relation json
+Downloading louisiana relation json
+Downloading idaho relation json
+Downloading arizona relation json
+Downloading wisconsin relation json
+Downloading new-mexico relation json
+Downloading michigan relation json
+Downloading kansas relation json
+Downloading utah relation json
+Downloading virginia relation json
+Downloading south-dakota relation json
+Downloading new-jersey relation json
+Downloading connecticut relation json
+Downloading montana relation json
+Downloading california relation json
+Downloading new-york relation json
+Downloading vermont relation json
+Downloading georgia relation json
+Downloading pennsylvania relation json
+relation for pennsylvania not found.
+relations part aa for pennsylvania not found.
+relations part ab for pennsylvania not found.
+relations part ac for pennsylvania not found.
+relations part ad for pennsylvania not found.
+relations part ae for pennsylvania not found.
+relations part af for pennsylvania not found.
+relations part ag for pennsylvania not found.
+relations part ah for pennsylvania not found.
+relations part ai for pennsylvania not found.
+relations part aj for pennsylvania not found.
+relations part ak for pennsylvania not found.
+Downloading florida relation json
+Downloading hawaii relation json
+relation for hawaii not found.
+relations part aa for hawaii not found.
+relations part ab for hawaii not found.
+relations part ac for hawaii not found.
+relations part ad for hawaii not found.
+relations part ae for hawaii not found.
+relations part af for hawaii not found.
+relations part ag for hawaii not found.
+relations part ah for hawaii not found.
+relations part ai for hawaii not found.
+relations part aj for hawaii not found.
+relations part ak for hawaii not found.
+Downloading kentucky relation json
+relation for kentucky not found.
+relations part aa for kentucky not found.
+relations part ab for kentucky not found.
+relations part ac for kentucky not found.
+relations part ad for kentucky not found.
+relations part ae for kentucky not found.
+relations part af for kentucky not found.
+relations part ag for kentucky not found.
+relations part ah for kentucky not found.
+relations part ai for kentucky not found.
+relations part aj for kentucky not found.
+relations part ak for kentucky not found.
+Downloading rhode-island relation json
+Downloading north-carolina relation json
+Downloading oregon relation json
+Downloading south-carolina relation json
+Downloading west-virginia relation json
+Downloading missouri relation json
+Downloading ohio relation json
+Downloading alabama relation json
+Downloading texas relation json
+Downloading district-of-columbia relation json
+relation for district-of-columbia not found.
+relations part aa for district-of-columbia not found.
+relations part ab for district-of-columbia not found.
+relations part ac for district-of-columbia not found.
+relations part ad for district-of-columbia not found.
+relations part ae for district-of-columbia not found.
+relations part af for district-of-columbia not found.
+relations part ag for district-of-columbia not found.
+relations part ah for district-of-columbia not found.
+relations part ai for district-of-columbia not found.
+relations part aj for district-of-columbia not found.
+relations part ak for district-of-columbia not found.
+Downloading central-america config json
+Downloading haiti-and-domrep relation json
+Downloading guatemala relation json
+relation for guatemala not found.
+relations part aa for guatemala not found.
+relations part ab for guatemala not found.
+relations part ac for guatemala not found.
+relations part ad for guatemala not found.
+relations part ae for guatemala not found.
+relations part af for guatemala not found.
+relations part ag for guatemala not found.
+relations part ah for guatemala not found.
+relations part ai for guatemala not found.
+relations part aj for guatemala not found.
+relations part ak for guatemala not found.
+Downloading belize relation json
+relation for belize not found.
+relations part aa for belize not found.
+relations part ab for belize not found.
+relations part ac for belize not found.
+relations part ad for belize not found.
+relations part ae for belize not found.
+relations part af for belize not found.
+relations part ag for belize not found.
+relations part ah for belize not found.
+relations part ai for belize not found.
+relations part aj for belize not found.
+relations part ak for belize not found.
+Downloading nicaragua relation json
+Downloading cuba relation json
+Downloading north-america config json
+Downloading canada relation json
+Downloading greenland relation json
+relation for greenland not found.
+relations part aa for greenland not found.
+relations part ab for greenland not found.
+relations part ac for greenland not found.
+relations part ad for greenland not found.
+relations part ae for greenland not found.
+relations part af for greenland not found.
+relations part ag for greenland not found.
+relations part ah for greenland not found.
+relations part ai for greenland not found.
+relations part aj for greenland not found.
+relations part ak for greenland not found.
+Downloading mexico relation json
+Downloading africa config json
+Downloading chad relation json
+relation for chad not found.
+relations part aa for chad not found.
+relations part ab for chad not found.
+relations part ac for chad not found.
+relations part ad for chad not found.
+relations part ae for chad not found.
+relations part af for chad not found.
+relations part ag for chad not found.
+relations part ah for chad not found.
+relations part ai for chad not found.
+relations part aj for chad not found.
+relations part ak for chad not found.
+Downloading egypt relation json
+Downloading south-africa-and-lesotho relation json
+Downloading lesotho relation json
+relation for lesotho not found.
+relations part aa for lesotho not found.
+relations part ab for lesotho not found.
+relations part ac for lesotho not found.
+relations part ad for lesotho not found.
+relations part ae for lesotho not found.
+relations part af for lesotho not found.
+relations part ag for lesotho not found.
+relations part ah for lesotho not found.
+relations part ai for lesotho not found.
+relations part aj for lesotho not found.
+relations part ak for lesotho not found.
+Downloading guinea-bissau relation json
+relation for guinea-bissau not found.
+relations part aa for guinea-bissau not found.
+relations part ab for guinea-bissau not found.
+relations part ac for guinea-bissau not found.
+relations part ad for guinea-bissau not found.
+relations part ae for guinea-bissau not found.
+relations part af for guinea-bissau not found.
+relations part ag for guinea-bissau not found.
+relations part ah for guinea-bissau not found.
+relations part ai for guinea-bissau not found.
+relations part aj for guinea-bissau not found.
+relations part ak for guinea-bissau not found.
+Downloading kenya relation json
+Downloading niger relation json
+relation for niger not found.
+relations part aa for niger not found.
+relations part ab for niger not found.
+relations part ac for niger not found.
+relations part ad for niger not found.
+relations part ae for niger not found.
+relations part af for niger not found.
+relations part ag for niger not found.
+relations part ah for niger not found.
+relations part ai for niger not found.
+relations part aj for niger not found.
+relations part ak for niger not found.
+Downloading botswana relation json
+Downloading madagascar relation json
+relation for madagascar not found.
+relations part aa for madagascar not found.
+relations part ab for madagascar not found.
+relations part ac for madagascar not found.
+relations part ad for madagascar not found.
+relations part ae for madagascar not found.
+relations part af for madagascar not found.
+relations part ag for madagascar not found.
+relations part ah for madagascar not found.
+relations part ai for madagascar not found.
+relations part aj for madagascar not found.
+relations part ak for madagascar not found.
+Downloading congo-democratic-republic relation json
+Downloading guinea relation json
+relation for guinea not found.
+relations part aa for guinea not found.
+relations part ab for guinea not found.
+relations part ac for guinea not found.
+relations part ad for guinea not found.
+relations part ae for guinea not found.
+relations part af for guinea not found.
+relations part ag for guinea not found.
+relations part ah for guinea not found.
+relations part ai for guinea not found.
+relations part aj for guinea not found.
+relations part ak for guinea not found.
+Downloading ethiopia relation json
+Downloading somalia relation json
+relation for somalia not found.
+relations part aa for somalia not found.
+relations part ab for somalia not found.
+relations part ac for somalia not found.
+relations part ad for somalia not found.
+relations part ae for somalia not found.
+relations part af for somalia not found.
+relations part ag for somalia not found.
+relations part ah for somalia not found.
+relations part ai for somalia not found.
+relations part aj for somalia not found.
+relations part ak for somalia not found.
+Downloading nigeria relation json
+Downloading burkina-faso relation json
+relation for burkina-faso not found.
+relations part aa for burkina-faso not found.
+relations part ab for burkina-faso not found.
+relations part ac for burkina-faso not found.
+relations part ad for burkina-faso not found.
+relations part ae for burkina-faso not found.
+relations part af for burkina-faso not found.
+relations part ag for burkina-faso not found.
+relations part ah for burkina-faso not found.
+relations part ai for burkina-faso not found.
+relations part aj for burkina-faso not found.
+relations part ak for burkina-faso not found.
+Downloading benin relation json
+relation for benin not found.
+relations part aa for benin not found.
+relations part ab for benin not found.
+relations part ac for benin not found.
+relations part ad for benin not found.
+relations part ae for benin not found.
+relations part af for benin not found.
+relations part ag for benin not found.
+relations part ah for benin not found.
+relations part ai for benin not found.
+relations part aj for benin not found.
+relations part ak for benin not found.
+Downloading canary-islands relation json
+Downloading algeria relation json
+Downloading ivory-coast relation json
+Downloading sierra-leone relation json
+relation for sierra-leone not found.
+relations part aa for sierra-leone not found.
+relations part ab for sierra-leone not found.
+relations part ac for sierra-leone not found.
+relations part ad for sierra-leone not found.
+relations part ae for sierra-leone not found.
+relations part af for sierra-leone not found.
+relations part ag for sierra-leone not found.
+relations part ah for sierra-leone not found.
+relations part ai for sierra-leone not found.
+relations part aj for sierra-leone not found.
+relations part ak for sierra-leone not found.
+Downloading tunisia relation json
+Downloading liberia relation json
+relation for liberia not found.
+relations part aa for liberia not found.
+relations part ab for liberia not found.
+relations part ac for liberia not found.
+relations part ad for liberia not found.
+relations part ae for liberia not found.
+relations part af for liberia not found.
+relations part ag for liberia not found.
+relations part ah for liberia not found.
+relations part ai for liberia not found.
+relations part aj for liberia not found.
+relations part ak for liberia not found.
+Downloading libya relation json
+Downloading cameroon relation json
+relation for cameroon not found.
+relations part aa for cameroon not found.
+relations part ab for cameroon not found.
+relations part ac for cameroon not found.
+relations part ad for cameroon not found.
+relations part ae for cameroon not found.
+relations part af for cameroon not found.
+relations part ag for cameroon not found.
+relations part ah for cameroon not found.
+relations part ai for cameroon not found.
+relations part aj for cameroon not found.
+relations part ak for cameroon not found.
+Downloading tanzania relation json
+Downloading morocco relation json
+Downloading namibia relation json
+Downloading mali relation json
+relation for mali not found.
+relations part aa for mali not found.
+relations part ab for mali not found.
+relations part ac for mali not found.
+relations part ad for mali not found.
+relations part ae for mali not found.
+relations part af for mali not found.
+relations part ag for mali not found.
+relations part ah for mali not found.
+relations part ai for mali not found.
+relations part aj for mali not found.
+relations part ak for mali not found.
+Downloading asia config json
+Downloading pakistan relation json
+Downloading india relation json
+Downloading azerbaijan relation json
+relation for azerbaijan not found.
+relations part aa for azerbaijan not found.
+relations part ab for azerbaijan not found.
+relations part ac for azerbaijan not found.
+relations part ad for azerbaijan not found.
+relations part ae for azerbaijan not found.
+relations part af for azerbaijan not found.
+relations part ag for azerbaijan not found.
+relations part ah for azerbaijan not found.
+relations part ai for azerbaijan not found.
+relations part aj for azerbaijan not found.
+relations part ak for azerbaijan not found.
+Downloading uzbekistan relation json
+Downloading mongolia relation json
+Downloading japan relation json
+Downloading taiwan relation json
+Downloading tajikistan relation json
+Downloading north-korea relation json
+relation for north-korea not found.
+relations part aa for north-korea not found.
+relations part ab for north-korea not found.
+relations part ac for north-korea not found.
+relations part ad for north-korea not found.
+relations part ae for north-korea not found.
+relations part af for north-korea not found.
+relations part ag for north-korea not found.
+relations part ah for north-korea not found.
+relations part ai for north-korea not found.
+relations part aj for north-korea not found.
+relations part ak for north-korea not found.
+Downloading afghanistan relation json
+relation for afghanistan not found.
+relations part aa for afghanistan not found.
+relations part ab for afghanistan not found.
+relations part ac for afghanistan not found.
+relations part ad for afghanistan not found.
+relations part ae for afghanistan not found.
+relations part af for afghanistan not found.
+relations part ag for afghanistan not found.
+relations part ah for afghanistan not found.
+relations part ai for afghanistan not found.
+relations part aj for afghanistan not found.
+relations part ak for afghanistan not found.
+Downloading malaysia-singapore-brunei relation json
+Downloading bangladesh relation json
+Downloading nepal relation json
+Downloading cambodia relation json
+Downloading gcc-states relation json
+Downloading iran relation json
+Downloading lebanon relation json
+relation for lebanon not found.
+relations part aa for lebanon not found.
+relations part ab for lebanon not found.
+relations part ac for lebanon not found.
+relations part ad for lebanon not found.
+relations part ae for lebanon not found.
+relations part af for lebanon not found.
+relations part ag for lebanon not found.
+relations part ah for lebanon not found.
+relations part ai for lebanon not found.
+relations part aj for lebanon not found.
+relations part ak for lebanon not found.
+Downloading israel-and-palestine relation json
+relation for israel-and-palestine not found.
+relations part aa for israel-and-palestine not found.
+relations part ab for israel-and-palestine not found.
+relations part ac for israel-and-palestine not found.
+relations part ad for israel-and-palestine not found.
+relations part ae for israel-and-palestine not found.
+relations part af for israel-and-palestine not found.
+relations part ag for israel-and-palestine not found.
+relations part ah for israel-and-palestine not found.
+relations part ai for israel-and-palestine not found.
+relations part aj for israel-and-palestine not found.
+relations part ak for israel-and-palestine not found.
+Downloading south-korea relation json
+Downloading maldives relation json
+relation for maldives not found.
+relations part aa for maldives not found.
+relations part ab for maldives not found.
+relations part ac for maldives not found.
+relations part ad for maldives not found.
+relations part ae for maldives not found.
+relations part af for maldives not found.
+relations part ag for maldives not found.
+relations part ah for maldives not found.
+relations part ai for maldives not found.
+relations part aj for maldives not found.
+relations part ak for maldives not found.
+Downloading china relation json
+Downloading thailand relation json
+Downloading iraq relation json
+Downloading kazakhstan relation json
+Downloading turkmenistan relation json
+Downloading kyrgyzstan relation json
+Downloading sri-lanka relation json
+relation for sri-lanka not found.
+relations part aa for sri-lanka not found.
+relations part ab for sri-lanka not found.
+relations part ac for sri-lanka not found.
+relations part ad for sri-lanka not found.
+relations part ae for sri-lanka not found.
+relations part af for sri-lanka not found.
+relations part ag for sri-lanka not found.
+relations part ah for sri-lanka not found.
+relations part ai for sri-lanka not found.
+relations part aj for sri-lanka not found.
+relations part ak for sri-lanka not found.
+Downloading philippines relation json
+Downloading indonesia relation json
+Downloading vietnam relation json
+Downloading jordan relation json
+Downloading syria relation json
+Downloading yemen relation json
+relation for yemen not found.
+relations part aa for yemen not found.
+relations part ab for yemen not found.
+relations part ac for yemen not found.
+relations part ad for yemen not found.
+relations part ae for yemen not found.
+relations part af for yemen not found.
+relations part ag for yemen not found.
+relations part ah for yemen not found.
+relations part ai for yemen not found.
+relations part aj for yemen not found.
+relations part ak for yemen not found.
+Downloading south-america config json
+Downloading brazil relation json
+Downloading peru relation json
+Downloading chile relation json
+Downloading uruguay relation json
+Downloading colombia relation json
+Downloading paraguay relation json
+Downloading argentina relation json
+Downloading bolivia relation json
+Downloading suriname relation json
+relation for suriname not found.
+relations part aa for suriname not found.
+relations part ab for suriname not found.
+relations part ac for suriname not found.
+relations part ad for suriname not found.
+relations part ae for suriname not found.
+relations part af for suriname not found.
+relations part ag for suriname not found.
+relations part ah for suriname not found.
+relations part ai for suriname not found.
+relations part aj for suriname not found.
+relations part ak for suriname not found.
+Downloading ecuador relation json
+Downloading australia-oceania config json
+Downloading new-caledonia relation json
+relation for new-caledonia not found.
+relations part aa for new-caledonia not found.
+relations part ab for new-caledonia not found.
+relations part ac for new-caledonia not found.
+relations part ad for new-caledonia not found.
+relations part ae for new-caledonia not found.
+relations part af for new-caledonia not found.
+relations part ag for new-caledonia not found.
+relations part ah for new-caledonia not found.
+relations part ai for new-caledonia not found.
+relations part aj for new-caledonia not found.
+relations part ak for new-caledonia not found.
+Downloading australia relation json
+Downloading fiji relation json
+relation for fiji not found.
+relations part aa for fiji not found.
+relations part ab for fiji not found.
+relations part ac for fiji not found.
+relations part ad for fiji not found.
+relations part ae for fiji not found.
+relations part af for fiji not found.
+relations part ag for fiji not found.
+relations part ah for fiji not found.
+relations part ai for fiji not found.
+relations part aj for fiji not found.
+relations part ak for fiji not found.
+Downloading new-zealand relation json
+Downloading germany config json
+Downloading hessen relation json
+Downloading sachsen-anhalt relation json
+Downloading mecklenburg-vorpommern relation json
+Downloading nordrhein-westfalen relation json
+Downloading saarland relation json
+Downloading brandenburg relation json
+Downloading schleswig-holstein relation json
+Downloading bremen relation json
+Downloading niedersachsen relation json
+Downloading thueringen relation json
+Downloading berlin relation json
+Downloading baden-wuerttemberg relation json
+Downloading hamburg relation json
+Downloading bayern relation json
+Downloading rheinland-pfalz relation json
+Downloading sachsen relation json
+Downloading russia config json
+Downloading crimean-fed-district relation json
+Downloading north-caucasus-fed-district relation json
+Downloading volga-fed-district relation json
+Downloading ural-fed-district relation json
+Downloading siberian-fed-district relation json
+Downloading central-fed-district relation json
+Downloading far-eastern-fed-district relation json
+Downloading northwestern-fed-district relation json
+Downloading south-fed-district relation json
+update or delete on table "transnet_powerline" violates foreign key constraint "transnet_relation_powerline_powerline_id_fkey" on table "transnet_relation_powerline"
+DETAIL:  Key (id)=(6111125) is still referenced from table "transnet_relation_powerline".
+
+Downloading romania missing data files json
+Downloading albania missing data files json
+Downloading portugal missing data files json
+Downloading kosovo missing data files json
+Downloading serbia missing data files json
+Downloading austria missing data files json
+Downloading luxembourg missing data files json
+Downloading greece missing data files json
+Downloading hungary missing data files json
+Downloading cyprus missing data files json
+Downloading turkey missing data files json
+Downloading italy missing data files json
+Downloading estonia missing data files json
+Downloading isle-of-man missing data files json
+Downloading lithuania missing data files json
+Downloading liechtenstein missing data files json
+Downloading malta missing data files json
+Downloading france missing data files json
+Downloading andorra missing data files json
+Downloading faroe-islands missing data files json
+Downloading slovakia missing data files json
+Downloading norway missing data files json
+Downloading bosnia-herzegovina missing data files json
+Downloading great-britain missing data files json
+Downloading belarus missing data files json
+Downloading azores missing data files json
+Downloading iceland missing data files json
+Downloading montenegro missing data files json
+Downloading slovenia missing data files json
+Downloading georgia missing data files json
+Downloading czech-republic missing data files json
+Downloading belgium missing data files json
+Downloading spain missing data files json
+Downloading ukraine missing data files json
+Downloading netherlands missing data files json
+Downloading denmark missing data files json
+Downloading poland missing data files json
+Downloading finland missing data files json
+Downloading ireland-and-northern-ireland missing data files json
+Downloading macedonia missing data files json
+Downloading moldova missing data files json
+Downloading sweden missing data files json
+Downloading latvia missing data files json
+Downloading croatia missing data files json
+Downloading monaco missing data files json
+Downloading switzerland missing data files json
+Downloading bulgaria missing data files json
+Downloading wyoming missing data files json
+Downloading colorado missing data files json
+Downloading massachusetts missing data files json
+Downloading new-hampshire missing data files json
+Downloading washington missing data files json
+Downloading alaska missing data files json
+Downloading tennessee missing data files json
+Downloading iowa missing data files json
+Downloading nevada missing data files json
+Downloading maine missing data files json
+Downloading mississippi missing data files json
+Downloading oklahoma missing data files json
+Downloading delaware missing data files json
+Downloading minnesota missing data files json
+Downloading illinois missing data files json
+Downloading nebraska missing data files json
+Downloading arkansas missing data files json
+Downloading north-dakota missing data files json
+Downloading indiana missing data files json
+Downloading maryland missing data files json
+Downloading louisiana missing data files json
+Downloading idaho missing data files json
+Downloading arizona missing data files json
+Downloading wisconsin missing data files json
+Downloading new-mexico missing data files json
+Downloading michigan missing data files json
+Downloading kansas missing data files json
+Downloading utah missing data files json
+Downloading virginia missing data files json
+Downloading south-dakota missing data files json
+Downloading new-jersey missing data files json
+Downloading connecticut missing data files json
+Downloading montana missing data files json
+Downloading california missing data files json
+Downloading new-york missing data files json
+Downloading vermont missing data files json
+Downloading georgia missing data files json
+Downloading pennsylvania missing data files json
+Downloading florida missing data files json
+Downloading hawaii missing data files json
+Downloading kentucky missing data files json
+Downloading rhode-island missing data files json
+Downloading north-carolina missing data files json
+Downloading oregon missing data files json
+Downloading south-carolina missing data files json
+Downloading west-virginia missing data files json
+Downloading missouri missing data files json
+Downloading ohio missing data files json
+Downloading alabama missing data files json
+Downloading texas missing data files json
+Downloading district-of-columbia missing data files json
+Downloading haiti-and-domrep missing data files json
+Downloading guatemala missing data files json
+Downloading belize missing data files json
+Downloading nicaragua missing data files json
+Downloading cuba missing data files json
+Downloading canada missing data files json
+Downloading greenland missing data files json
+Downloading mexico missing data files json
+Downloading chad missing data files json
+Downloading egypt missing data files json
+Downloading south-africa-and-lesotho missing data files json
+Downloading lesotho missing data files json
+Downloading guinea-bissau missing data files json
+Downloading kenya missing data files json
+Downloading niger missing data files json
+Downloading botswana missing data files json
+Downloading madagascar missing data files json
+Downloading congo-democratic-republic missing data files json
+Downloading guinea missing data files json
+Downloading ethiopia missing data files json
+Downloading somalia missing data files json
+Downloading nigeria missing data files json
+Downloading burkina-faso missing data files json
+Downloading benin missing data files json
+Downloading canary-islands missing data files json
+Downloading algeria missing data files json
+Downloading ivory-coast missing data files json
+Downloading sierra-leone missing data files json
+Downloading tunisia missing data files json
+Downloading liberia missing data files json
+Downloading libya missing data files json
+Downloading cameroon missing data files json
+Downloading tanzania missing data files json
+Downloading morocco missing data files json
+Downloading namibia missing data files json
+Downloading mali missing data files json
+Downloading pakistan missing data files json
+Downloading india missing data files json
+Downloading azerbaijan missing data files json
+Downloading uzbekistan missing data files json
+Downloading mongolia missing data files json
+Downloading japan missing data files json
+Downloading taiwan missing data files json
+Downloading tajikistan missing data files json
+Downloading north-korea missing data files json
+Downloading afghanistan missing data files json
+Downloading malaysia-singapore-brunei missing data files json
+Downloading bangladesh missing data files json
+Downloading nepal missing data files json
+Downloading cambodia missing data files json
+Downloading gcc-states missing data files json
+Downloading iran missing data files json
+Downloading lebanon missing data files json
+Downloading israel-and-palestine missing data files json
+Downloading south-korea missing data files json
+Downloading maldives missing data files json
+Downloading china missing data files json
+Downloading thailand missing data files json
+Downloading iraq missing data files json
+Downloading kazakhstan missing data files json
+Downloading turkmenistan missing data files json
+Downloading kyrgyzstan missing data files json
+Downloading sri-lanka missing data files json
+Downloading philippines missing data files json
+Downloading indonesia missing data files json
+Downloading vietnam missing data files json
+Downloading jordan missing data files json
+Downloading syria missing data files json
+Downloading yemen missing data files json
+Downloading brazil missing data files json
+Downloading peru missing data files json
+Downloading chile missing data files json
+Downloading uruguay missing data files json
+Downloading colombia missing data files json
+Downloading paraguay missing data files json
+Downloading argentina missing data files json
+Downloading bolivia missing data files json
+Downloading suriname missing data files json
+Downloading ecuador missing data files json
+Downloading new-caledonia missing data files json
+Downloading australia missing data files json
+Downloading fiji missing data files json
+Downloading new-zealand missing data files json
+Downloading hessen missing data files json
+Downloading sachsen-anhalt missing data files json
+Downloading mecklenburg-vorpommern missing data files json
+Downloading nordrhein-westfalen missing data files json
+Downloading saarland missing data files json
+Downloading brandenburg missing data files json
+Downloading schleswig-holstein missing data files json
+Downloading bremen missing data files json
+Downloading niedersachsen missing data files json
+Downloading thueringen missing data files json
+Downloading berlin missing data files json
+Downloading baden-wuerttemberg missing data files json
+Downloading hamburg missing data files json
+Downloading bayern missing data files json
+Downloading rheinland-pfalz missing data files json
+Downloading sachsen missing data files json
+Downloading crimean-fed-district missing data files json
+Downloading north-caucasus-fed-district missing data files json
+Downloading volga-fed-district missing data files json
+Downloading ural-fed-district missing data files json
+Downloading siberian-fed-district missing data files json
+Downloading central-fed-district missing data files json
+Downloading far-eastern-fed-district missing data files json
+Downloading northwestern-fed-district missing data files json
+Downloading south-fed-district missing data files json
+current transaction is aborted, commands ignored until end of transaction block
+
+current transaction is aborted, commands ignored until end of transaction block
+
